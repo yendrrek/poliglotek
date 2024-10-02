@@ -5,20 +5,31 @@ plugins {
     id("io.micronaut.aot") version "4.4.2"
 }
 
-version = "0.1"
+version = "0.3"
 group = "com.topolish"
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
+
     implementation("io.micronaut.serde:micronaut-serde-jackson")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.0.1")
+    implementation("org.yaml:snakeyaml:1.8")
+
     compileOnly("io.micronaut:micronaut-http-client")
+    compileOnly("org.projectlombok:lombok:1.18.34")
+
     runtimeOnly("ch.qos.logback:logback-classic")
+
     testImplementation("io.micronaut:micronaut-http-client")
+    testCompileOnly("org.projectlombok:lombok:1.18.34")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
 }
 
 

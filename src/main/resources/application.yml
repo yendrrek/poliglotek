@@ -1,0 +1,23 @@
+#Mon Sep 30 22:30:04 UTC 2024
+micronaut:
+  application:
+    name: toPolish
+
+http:
+  client:
+    read-timeout: 30s
+
+netty:
+  default:
+    allocator:
+      max-order: 3
+
+jackson:
+  deserialization:
+    readDateTimestampsAsNanoseconds: false
+    READ_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+  serialization:
+    WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+  serialization-inclusion: always
+  bean-introspection-module: false
+
