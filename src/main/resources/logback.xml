@@ -11,4 +11,6 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
+    <logger name="com.topolish" level="info"></logger>
+<!--    <logger name="io.micronaut.http" level="trace"></logger>-->
 </configuration>
