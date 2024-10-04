@@ -5,7 +5,7 @@ plugins {
     id("io.micronaut.aot") version "4.4.2"
 }
 
-version = "0.5"
+version = "0.6"
 group = "com.topolish"
 
 repositories {
@@ -19,6 +19,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 
     implementation("io.micronaut:micronaut-jackson-databind")
+    implementation("org.jsoup:jsoup:1.18.1")
 
     compileOnly("io.micronaut:micronaut-http-client")
     compileOnly("org.projectlombok:lombok:1.18.34")
