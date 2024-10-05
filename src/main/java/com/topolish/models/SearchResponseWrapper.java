@@ -2,6 +2,8 @@ package com.topolish.models;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class SearchResponseWrapper {
     private String kind;
@@ -9,5 +11,5 @@ public class SearchResponseWrapper {
     private SearchQueries queries;
     private SearchContext context;
     private SearchInformation searchInformation;
-    private SearchItem[] items;
+    private List<SearchItem> items;
 }

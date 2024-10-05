@@ -11,12 +11,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 @Context
-public class ScrapService implements ApplicationEventListener<StartupEvent> {
+public class ScrapService {
 
     private final Logger log = LoggerFactory.getLogger(ScrapService.class);
 
-    public Document scrapWebPage() {
-        String url = "https://www.argentina.gob.ar/justicia/derechofacil/leysimple/vacunacion";
+    public Document scrapWebPage(String url) {
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36";
         try {
             Document document = Jsoup
@@ -27,10 +26,5 @@ public class ScrapService implements ApplicationEventListener<StartupEvent> {
             log.error("Error scrapping URL {}", url, e);
             return null;
         }
-    }
-
-    @Override
-    public void onApplicationEvent(StartupEvent event) {
-        scrapWebPage();
     }
 }

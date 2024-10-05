@@ -3,13 +3,15 @@ package com.topolish.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class Pagemap {
     @JsonProperty("cse_thumbnail")
-    private CseThumbnail[] cseThumbnail;
+    private List<CseThumbnail> cseThumbnail;
 
-    private Metatag[] metatags;
+    private List<Metatag> metatags;
 
     @JsonProperty("cse_image")
-    private CseImage[] cseImage;
+    private List<CseImage> cseImage;
 }

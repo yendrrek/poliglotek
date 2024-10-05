@@ -2,8 +2,10 @@ package com.topolish.models;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class SearchQueries {
-    private SearchRequest[] request;
-    private SearchRequest[] nextPage;
+    private List<SearchRequest> request;
+    private List<SearchRequest> nextPage;
 }
