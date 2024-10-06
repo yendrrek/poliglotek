@@ -5,8 +5,8 @@ plugins {
     id("io.micronaut.aot") version "4.4.2"
 }
 
-version = "0.7"
-group = "com.topolish"
+version = "0.8"
+group = "com.transtopolish"
 
 repositories {
     mavenLocal()
@@ -33,7 +33,7 @@ dependencies {
 
 
 application {
-    mainClass = "com.topolish.Application"
+    mainClass = "com.transtopolish.Application"
 }
 
 java {
@@ -48,7 +48,7 @@ micronaut {
     testRuntime("spock2")
     processing {
         incremental(true)
-        annotations("com.topolish.*")
+        annotations("com.transtopolish.*")
     }
     aot {
         // Please review carefully the optimizations enabled below

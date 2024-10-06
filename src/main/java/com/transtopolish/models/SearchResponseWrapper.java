@@ -1,4 +1,4 @@
-package com.topolish.models;
+package com.transtopolish.models;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
-package com.topolish;
+package com.transtopolish;
 
-import com.topolish.models.SearchResponseWrapper;
+import com.transtopolish.models.SearchResponseWrapper;
 import io.micronaut.context.annotation.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

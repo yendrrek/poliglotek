@@ -1,4 +1,4 @@
-package com.topolish.models;
+package com.transtopolish.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
