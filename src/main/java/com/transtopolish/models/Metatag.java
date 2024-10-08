@@ -1,9 +1,15 @@
 package com.transtopolish.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
+@Introspected
+@Serdeable
+@Data
+@AllArgsConstructor
 public class Metatag {
     @JsonProperty("og:image")
     private String ogImage;

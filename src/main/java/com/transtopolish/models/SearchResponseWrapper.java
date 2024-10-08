@@ -1,15 +1,21 @@
 package com.transtopolish.models;
 
-import lombok.Getter;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
+@Introspected
+@Serdeable
+@Data
+@AllArgsConstructor
 public class SearchResponseWrapper {
-    private String kind;
-    private SearchUrl url;
-    private SearchQueries queries;
-    private SearchContext context;
-    private SearchInformation searchInformation;
-    private List<SearchItem> items;
+    private final String kind;
+    private final SearchUrl url;
+    private final SearchQueries queries;
+    private final SearchContext context;
+    private final SearchInformation searchInformation;
+    private final List<SearchItem> items;
 }

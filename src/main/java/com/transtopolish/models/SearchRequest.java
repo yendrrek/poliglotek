@@ -1,18 +1,24 @@
 package com.transtopolish.models;
 
-import lombok.Getter;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
+@Introspected
+@Serdeable
+@Data
+@AllArgsConstructor
 public class SearchRequest {
-    private String title;
-    private String totalResults;
-    private String searchTerms;
-    private int count;
-    private int startIndex;
-    private String language;
-    private String inputEncoding;
-    private String outputEncoding;
-    private String safe;
-    private String cx;
-    private String cr;
+    private final String title;
+    private final String totalResults;
+    private final String searchTerms;
+    private final int count;
+    private final int startIndex;
+    private final String language;
+    private final String inputEncoding;
+    private final String outputEncoding;
+    private final String safe;
+    private final String cx;
+    private final String cr;
 }

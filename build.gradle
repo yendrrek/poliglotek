@@ -5,7 +5,7 @@ plugins {
     id "io.micronaut.aot" version "4.4.2"
 }
 
-version = "0.10"
+version = "0.11"
 group = "com.transtopolish"
 
 repositories {
@@ -18,10 +18,10 @@ dependencies {
     annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
     annotationProcessor "org.projectlombok:lombok:1.18.34"
 
-    implementation "io.micronaut:micronaut-jackson-databind"
     implementation "org.jsoup:jsoup:1.18.1"
     implementation "com.google.cloud:google-cloud-translate:2.51.0"
     implementation "org.yaml:snakeyaml:1.8"
+    implementation "io.micronaut.serde:micronaut-serde-jackson"
 
     compileOnly "io.micronaut:micronaut-http-client"
     compileOnly "org.projectlombok:lombok:1.18.34"

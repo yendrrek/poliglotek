@@ -1,8 +1,14 @@
 package com.transtopolish.models;
 
-import lombok.Getter;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
+@Introspected
+@Serdeable
+@Data
+@AllArgsConstructor
 public class SearchContext {
-    private String title;
+    private final String title;
 }

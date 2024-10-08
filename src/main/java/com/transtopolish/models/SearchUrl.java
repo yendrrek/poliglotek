@@ -1,9 +1,15 @@
 package com.transtopolish.models;
 
-import lombok.Getter;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
+@Introspected
+@Serdeable
+@Data
+@AllArgsConstructor
 public class SearchUrl {
-    private String type;
-    private String template;
+    private final String type;
+    private final String template;
 }

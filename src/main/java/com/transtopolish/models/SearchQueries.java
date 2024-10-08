@@ -1,11 +1,17 @@
 package com.transtopolish.models;
 
-import lombok.Getter;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
+@Introspected
+@Serdeable
+@Data
+@AllArgsConstructor
 public class SearchQueries {
-    private List<SearchRequest> request;
-    private List<SearchRequest> nextPage;
+    private final List<SearchRequest> request;
+    private final List<SearchRequest> nextPage;
 }

@@ -1,17 +1,23 @@
 package com.transtopolish.models;
 
-import lombok.Getter;
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
+@Introspected
+@Serdeable
+@Data
+@AllArgsConstructor
 public class SearchItem {
-    private String kind;
-    private String title;
-    private String htmlTitle;
-    private String link;
-    private String displayLink;
-    private String snippet;
-    private String htmlSnippet;
-    private String formattedUrl;
-    private String htmlFormattedUrl;
-    private Pagemap pagemap;
+    private final String kind;
+    private final String title;
+    private final String htmlTitle;
+    private final String link;
+    private final String displayLink;
+    private final String snippet;
+    private final String htmlSnippet;
+    private final String formattedUrl;
+    private final String htmlFormattedUrl;
+    private final Pagemap pagemap;
 }
