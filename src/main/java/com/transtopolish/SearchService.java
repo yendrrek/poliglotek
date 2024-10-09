@@ -22,7 +22,7 @@ public class SearchService {
         this.googleCloudConfig = googleCloudConfig;
     }
 
-    public String fetchResult(String query) {
+    public String fetchPageBody(String query) {
         String customSearchApiKey = googleCloudConfig.getCustomSearchApiKey();
         String searchEngineId = googleCloudConfig.getCustomSearchEngineId();
         SearchResponseWrapper results = httpClient.fetchSearchResults(customSearchApiKey, searchEngineId, query);
