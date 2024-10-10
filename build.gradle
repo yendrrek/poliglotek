@@ -1,8 +1,11 @@
+import org.yaml.snakeyaml.Yaml
+
 plugins {
     id "groovy"
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "io.micronaut.application" version "4.4.2"
     id "io.micronaut.aot" version "4.4.2"
+    id "org.owasp.dependencycheck" version "10.0.4"
 }
 
 version = "0.12"
@@ -19,7 +22,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:1.18.34"
 
     implementation "org.jsoup:jsoup:1.18.1"
-    implementation "com.google.cloud:google-cloud-translate:2.51.0"
+    implementation "com.google.cloud:google-cloud-translate:2.52.0"
     implementation "org.yaml:snakeyaml:1.8"
     implementation "io.micronaut.serde:micronaut-serde-jackson"
 
@@ -68,6 +71,22 @@ micronaut {
 
 tasks.named("dockerfileNative") {
     jdkVersion = "21"
+}
+
+static def loadYaml(String path) {
+    def yaml = new Yaml()
+    def file = new File(path)
+    def config = yaml.load(new FileInputStream(file))
+    return config
+}
+
+def envConfig = loadYaml("src/main/resources/application.yml")
+def nvdApiKey = envConfig["nvdApiKey"]
+
+dependencyCheck {
+    nvd {
+        apiKey = "${nvdApiKey}"
+    }
 }
 
 
