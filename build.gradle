@@ -73,7 +73,7 @@ tasks.named("dockerfileNative") {
 
 dependencyCheck {
     nvd {
-        apiKey = "${System.getenv("nvdApiKey")}"
+        apiKey = System.getenv("nvdApiKey")
     }
 }
 
