@@ -24,10 +24,10 @@ public class SearchService {
         this.googleCloudConfig = googleCloudConfig;
     }
 
-    public String fetchPageBody(String query) {
+    public String fetchPageBody(String translatedQuery) {
         String customSearchApiKey = googleCloudConfig.getCustomSearchApiKey();
         String searchEngineId = googleCloudConfig.getCustomSearchEngineId();
-        SearchResponseWrapper results = httpClient.fetchSearchResults(customSearchApiKey, searchEngineId, query);
+        SearchResponseWrapper results = httpClient.fetchSearchResults(customSearchApiKey, searchEngineId, translatedQuery);
         String url = results.getItems().getFirst().getLink();
         return scrapService.scrapWebPage(url);
     }
