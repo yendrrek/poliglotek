@@ -1,4 +1,4 @@
-package com.transtopolish.models;
+package com.transtopolish.googlesearch.model;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
@@ -9,7 +9,8 @@ import lombok.Data;
 @Serdeable
 @Data
 @AllArgsConstructor
-public class SearchUrl {
-    private final String type;
-    private final String template;
+public class CseThumbnail {
+    private final String src;
+    private final String width;
+    private final String height;
 }

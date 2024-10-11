@@ -1,4 +1,4 @@
-package com.transtopolish.models;
+package com.transtopolish.googlesearch.model;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
@@ -9,6 +9,6 @@ import lombok.Data;
 @Serdeable
 @Data
 @AllArgsConstructor
-public class CseImage {
-    String src;
+public class SearchContext {
+    private final String title;
 }

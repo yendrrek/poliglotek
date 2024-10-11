@@ -1,5 +1,6 @@
-package com.transtopolish;
+package com.transtopolish.googlesearch.controller;
 
+import com.transtopolish.googlesearch.service.SearchService;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;

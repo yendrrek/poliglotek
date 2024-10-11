@@ -1,7 +1,9 @@
-package com.transtopolish;
+package com.transtopolish.googlesearch.service;
 
-import com.transtopolish.config.GoogleCloudConfig;
-import com.transtopolish.models.SearchResponseWrapper;
+import com.transtopolish.HttpClient;
+import com.transtopolish.googlesearch.config.GoogleCloudConfig;
+import com.transtopolish.googlesearch.model.SearchResponseWrapper;
+import com.transtopolish.scrap.service.ScrapService;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

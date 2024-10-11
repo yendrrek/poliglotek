@@ -1,4 +1,4 @@
-package com.transtopolish.config;
+package com.transtopolish.googlesearch.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import lombok.Getter;

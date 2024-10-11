@@ -1,4 +1,4 @@
-package com.transtopolish.models;
+package com.transtopolish.googlesearch.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;

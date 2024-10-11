@@ -1,6 +1,6 @@
-package com.transtopolish;
+package com.transtopolish.scrap.service;
 
-import com.transtopolish.config.JsoupConfig;
+import com.transtopolish.scrap.config.JsoupConfig;
 import jakarta.inject.Singleton;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

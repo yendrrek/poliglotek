@@ -1,4 +1,4 @@
-package com.transtopolish.config;
+package com.transtopolish.scrap.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 import lombok.Getter;

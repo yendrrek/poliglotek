@@ -1,4 +1,4 @@
-package com.transtopolish.models;
+package com.transtopolish.googlesearch.model;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
