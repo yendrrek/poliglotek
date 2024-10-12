@@ -34,6 +34,7 @@ public class SearchService {
                 searchEngineId,
                 translatedQuery,
                 documentLanguage,
+                null,
                 countryCode);
         String url = results.getItems().getFirst().getLink();
         return scrapService.scrapWebPage(url);
