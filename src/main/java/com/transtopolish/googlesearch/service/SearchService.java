@@ -15,6 +15,7 @@ public class SearchService {
     private final HttpClient httpClient;
     private final ScrapService scrapService;
     private final GoogleCloudConfig googleCloudConfig;
+    private static final String LANG_PREFIX = "lang_";
 
     public SearchService(HttpClient httpClient,
                          ScrapService scrapService,
@@ -24,10 +25,16 @@ public class SearchService {
         this.googleCloudConfig = googleCloudConfig;
     }
 
-    public String fetchPageBody(String translatedQuery) {
+    public String fetchPageBody(String translatedQuery, String langCode, String countryCode) {
         String customSearchApiKey = googleCloudConfig.getCustomSearchApiKey();
         String searchEngineId = googleCloudConfig.getCustomSearchEngineId();
-        SearchResponseWrapper results = httpClient.fetchSearchResults(customSearchApiKey, searchEngineId, translatedQuery);
+        String documentLanguage = LANG_PREFIX + langCode;
+        SearchResponseWrapper results = httpClient.fetchSearchResults(
+                customSearchApiKey,
+                searchEngineId,
+                translatedQuery,
+                documentLanguage,
+                countryCode);
         String url = results.getItems().getFirst().getLink();
         return scrapService.scrapWebPage(url);
     }

@@ -21,8 +21,8 @@ public class SearchController {
     }
 
     @Get()
-    public String searchInGoogle(@QueryValue String query, @QueryValue String targetLanguage) {
-        String translatedQuery = searchQueryTranslation.translateSearchQuery(query, targetLanguage);
-        return searchService.fetchPageBody(translatedQuery);
+    public String searchInGoogle(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
+        String translatedQuery = searchQueryTranslation.translateSearchQuery(query, langCode);
+        return searchService.fetchPageBody(translatedQuery, langCode, countryCode);
     }
 }

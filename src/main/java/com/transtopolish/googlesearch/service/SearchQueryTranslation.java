@@ -7,9 +7,9 @@ import jakarta.inject.Singleton;
 
 @Singleton
 public class SearchQueryTranslation {
-    public String translateSearchQuery(String searchTerm, String targetLanguage) {
+    public String translateSearchQuery(String query, String targetLang) {
         Translate translateWithBasicEdition = TranslateOptions.getDefaultInstance().getService();
-        Translation translation = translateWithBasicEdition.translate(searchTerm, Translate.TranslateOption.targetLanguage(targetLanguage));
+        Translation translation = translateWithBasicEdition.translate(query, Translate.TranslateOption.targetLanguage(targetLang));
         return translation.getTranslatedText();
     }
 }
