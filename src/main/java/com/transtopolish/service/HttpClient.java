@@ -1,6 +1,6 @@
-package com.transtopolish;
+package com.transtopolish.service;
 
-import com.transtopolish.googlesearch.model.SearchResponseWrapper;
+import com.transtopolish.model.googlesearch.SearchResponseWrapper;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;
