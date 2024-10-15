@@ -23,7 +23,7 @@ public class ScrapService {
         this.jsoupConfig = jsoupConfig;
     }
 
-    public String scrapWebPage(String url) {
+    public String scrapWebPage(String url) { // todo: how to remove <p> element and other with inernal links
         String userAgent = jsoupConfig.getUserAgent();
         try {
             Document document = Jsoup

@@ -29,7 +29,8 @@ public class GoogleSearchService {
                 translatedQuery,
                 documentLanguage,
                 null,
-                countryCode);
+                countryCode,
+                null);
         return results.getItems().getFirst().getLink();
     }
 }
