@@ -1,8 +1,5 @@
 package com.transtopolish.service;
 
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.TranslateOptions;
-import com.google.cloud.translate.Translation;
 import com.google.cloud.translate.v3.LocationName;
 import com.google.cloud.translate.v3.TranslateTextRequest;
 import com.google.cloud.translate.v3.TranslateTextResponse;
@@ -19,21 +16,25 @@ public class TranslationService {
 
     private final Logger log = LoggerFactory.getLogger(TranslationService.class);
     private final GoogleCloudConfig googleCloudConfig;
+    private final GoogleSearchService googlesearchService;
+    private final ScrapService scrapService;
+    private final QueryTranslationService queryTranslationService;
     private static final String POLISH = "pl";
     private static final String GLOBAL_LOCATION = "global";
     private static final String TEXT_HTML = "text/html";
 
-    public TranslationService(GoogleCloudConfig googleCloudConfig) {
+    public TranslationService(GoogleSearchService googleSearchService,
+                              GoogleCloudConfig googleCloudConfig, ScrapService scrapService, QueryTranslationService queryTranslationService) {
         this.googleCloudConfig = googleCloudConfig;
+        this.googlesearchService = googleSearchService;
+        this.scrapService = scrapService;
+        this.queryTranslationService = queryTranslationService;
     }
 
-    public String translateQuery(String query, String targetLang) {
-        Translate translateWithBasicEdition = TranslateOptions.getDefaultInstance().getService();
-        Translation translation = translateWithBasicEdition.translate(query, Translate.TranslateOption.targetLanguage(targetLang));
-        return translation.getTranslatedText();
-    }
-
-    public String translatePage(String html) {
+    public String translatePage(String query, String targetLang, String countryCode) {
+        String translatedQuery = queryTranslationService.translateQuery(query, targetLang);
+        String url = googlesearchService.fetchPageUrl(translatedQuery, targetLang, countryCode);
+        String pageBody = scrapService.scrapWebPage(url);
         String projectId = googleCloudConfig.getProjectId();
         try (TranslationServiceClient client = TranslationServiceClient.create()) {
             LocationName parent = LocationName.of(projectId, GLOBAL_LOCATION);
@@ -41,7 +42,7 @@ public class TranslationService {
                     .setParent(parent.toString())
                     .setMimeType(TEXT_HTML)
                     .setTargetLanguageCode(TranslationService.POLISH)
-                    .addContents(html)
+                    .addContents(pageBody)
                     .build();
             TranslateTextResponse response = client.translateText(request);
             StringBuilder translatedHTML = new StringBuilder();
@@ -54,4 +55,6 @@ public class TranslationService {
             return null;
         }
     }
+
+
 }

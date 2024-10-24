@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 public class GoogleSearchService {
 
     private final Logger log = LoggerFactory.getLogger(GoogleSearchService.class);
-    private final HttpClient httpClient;
+    private final GoogleCustomSearchClient httpClient;
     private final GoogleCloudConfig googleCloudConfig;
     private static final String LANG_PREFIX = "lang_";
 
-    public GoogleSearchService(HttpClient httpClient, GoogleCloudConfig googleCloudConfig) {
+    public GoogleSearchService(GoogleCustomSearchClient httpClient, GoogleCloudConfig googleCloudConfig) {
         this.httpClient = httpClient;
         this.googleCloudConfig = googleCloudConfig;
     }

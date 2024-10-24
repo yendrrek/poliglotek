@@ -15,23 +15,30 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-http-validation"
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
-    annotationProcessor "org.projectlombok:lombok:1.18.34"
+    // micronaut
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    compileOnly("io.micronaut:micronaut-http-client")
+    testImplementation("io.micronaut:micronaut-http-client")
 
-    implementation "org.jsoup:jsoup:1.18.1"
-    implementation "com.google.cloud:google-cloud-translate:2.52.0"
-    implementation "org.yaml:snakeyaml:1.8"
-    implementation "io.micronaut.serde:micronaut-serde-jackson"
+    // lombok
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
+    testCompileOnly("org.projectlombok:lombok:1.18.34")
+    compileOnly("org.projectlombok:lombok:1.18.34")
 
-    compileOnly "io.micronaut:micronaut-http-client"
-    compileOnly "org.projectlombok:lombok:1.18.34"
+    // jsoup
+    implementation("org.jsoup:jsoup:1.18.1")
 
-    runtimeOnly "ch.qos.logback:logback-classic"
+    // google cloud
+    implementation("com.google.cloud:google-cloud-translate:2.52.0")
 
-    testImplementation "io.micronaut:micronaut-http-client"
-    testCompileOnly "org.projectlombok:lombok:1.18.34"
-    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
+    // snakeyaml
+    implementation("org.yaml:snakeyaml:1.8")
+
+    // logback
+    runtimeOnly("ch.qos.logback:logback-classic")
 }
 
 

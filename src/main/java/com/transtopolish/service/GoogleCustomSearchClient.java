@@ -11,7 +11,7 @@ import static io.micronaut.http.HttpHeaders.USER_AGENT;
 
 @Client("https://www.googleapis.com/customsearch/v1")
 @Header(name = USER_AGENT, value = "Micronaut HTTP Client")
-public interface HttpClient {
+public interface GoogleCustomSearchClient {
     @Get(produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
     SearchResponseWrapper fetchSearchResults(@QueryValue String key,
                                              @QueryValue String cx,
