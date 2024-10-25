@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 @Singleton
 public class TranslationService {
@@ -31,11 +32,17 @@ public class TranslationService {
         this.queryTranslationService = queryTranslationService;
     }
 
-    public String translatePage(String query, String targetLang, String countryCode) {
+    public List<String> translatePages(String query, String targetLang, String countryCode) {
         String translatedQuery = queryTranslationService.translateQuery(query, targetLang);
-        String url = googlesearchService.fetchPageUrl(translatedQuery, targetLang, countryCode);
-        String pageBody = scrapService.scrapWebPage(url);
+        List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
+        List<String> pageBodies = scrapService.scrapWebPages(urls);
         String projectId = googleCloudConfig.getProjectId();
+        return pageBodies.stream()
+                .map(pageBody -> translatePage(pageBody, projectId))
+                .toList();
+    }
+
+    private String translatePage(String pageBody, String projectId) {
         try (TranslationServiceClient client = TranslationServiceClient.create()) {
             LocationName parent = LocationName.of(projectId, GLOBAL_LOCATION);
             TranslateTextRequest request = TranslateTextRequest.newBuilder()
@@ -55,6 +62,4 @@ public class TranslationService {
             return null;
         }
     }
-
-
 }

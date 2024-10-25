@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 @Singleton
 public class ScrapService {
@@ -23,8 +24,15 @@ public class ScrapService {
         this.jsoupConfig = jsoupConfig;
     }
 
-    public String scrapWebPage(String url) {
+    public List<String> scrapWebPages(List<String> urls) {
         String userAgent = jsoupConfig.getUserAgent();
+        return urls.stream()
+                .map(url -> scrapWebPage(url, userAgent))
+                .toList();
+
+    }
+
+    private String scrapWebPage(String url, String userAgent) {
         try {
             Document document = Jsoup
                     .connect(url)

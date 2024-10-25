@@ -1,10 +1,13 @@
 package com.transtopolish.service;
 
 import com.transtopolish.config.GoogleCloudConfig;
+import com.transtopolish.model.googlesearch.SearchItem;
 import com.transtopolish.model.googlesearch.SearchResponseWrapper;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 @Singleton
 public class GoogleSearchService {
@@ -19,7 +22,7 @@ public class GoogleSearchService {
         this.googleCloudConfig = googleCloudConfig;
     }
 
-    public String fetchPageUrl(String translatedQuery, String langCode, String countryCode) {
+    public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
         String customSearchApiKey = googleCloudConfig.getCustomSearchApiKey();
         String searchEngineId = googleCloudConfig.getCustomSearchEngineId();
         String documentLanguage = LANG_PREFIX + langCode;
@@ -31,6 +34,8 @@ public class GoogleSearchService {
                 null,
                 countryCode,
                 null);
-        return results.getItems().getFirst().getLink();
+        return results.getItems().stream()
+                .map(SearchItem::getLink)
+                .toList();
     }
 }
