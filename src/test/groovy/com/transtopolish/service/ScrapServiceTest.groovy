@@ -1,12 +1,7 @@
 package com.transtopolish.service
 
-import com.transtopolish.config.JsoupConfig
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Unroll
@@ -18,31 +13,24 @@ class ScrapServiceTest extends Specification {
     @Subject
     ScrapService scrapService
 
-    @Inject
-    JsoupConfig mockJsoupConfig = Mock()
-
     @Unroll
     def "scrapWebPages should return cleaned HTML for URLs"() {
         given:
-        String userAgent = "Mozilla"
-        String url = "http://example.com"
-        mockJsoupConfig.getUserAgent() >> userAgent
-        Document mockDocument = Mock()
-        Element mockBody = Mock()
-        Elements mockElements = Mock()
-        mockDocument.body() >> mockBody
-        mockBody.outerHtml() >> "<html><body>Test</body></html>"
-        mockDocument.getAllElements() >> mockElements
-        Jsoup.connect(url).userAgent(userAgent).get() >> mockDocument
+        String testUrl1 = "https://yendrrek.github.io/transtopol-testpage/index.html"
 
         when:
-        List<String> result = scrapService.scrapWebPages([url])
+        List<String> result = scrapService.scrapWebPages([testUrl1])
 
         then:
         result.size() == 1
-        result[0] == "<html><body>Test</body></html>"
+        List<String> jsAttributesWhichShoulBeRemoved = [
+                "onclick", "ondblclick", "onmousedown", "onmouseup",
+                "onmouseover", "onmousemove", "onmouseout", "onkeydown",
+                "onkeypress", "onkeyup", "onload", "onunload", "onabort",
+                "onerror", "onresize", "onscroll", "onselect", "onchange",
+                "onsubmit", "onreset", "onfocus", "onblur"
+        ]
 
-//        cleanup:
-        // Perform any necessary cleanup here
+        jsAttributesWhichShoulBeRemoved.each { jsAttribute -> assert !result[0].contains(jsAttribute) }
     }
 }
