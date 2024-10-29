@@ -48,7 +48,7 @@ public class TranslationService {
             TranslateTextRequest request = TranslateTextRequest.newBuilder()
                     .setParent(parent.toString())
                     .setMimeType(TEXT_HTML)
-                    .setTargetLanguageCode(TranslationService.POLISH)
+                    .setTargetLanguageCode(POLISH)
                     .addContents(pageBody)
                     .build();
             TranslateTextResponse response = client.translateText(request);

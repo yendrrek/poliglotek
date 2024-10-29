@@ -11,15 +11,19 @@
 
   <mat-form-field>
     <mat-label>Język docelowy</mat-label>
-    <mat-select>
-      <mat-option></mat-option>
+    <mat-select [(ngModel)]="selectedLanguage" name="language">
+      @for (language of languages; track language) {
+        <mat-option [value]="language.languageValue">{{ language.languageViewValue }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>Kraj</mat-label> <!--todo: this must not be mandatory-->
-    <mat-select>
-      <mat-option></mat-option>
+    <mat-select [(ngModel)]="selectedCountry" name="country">
+      @for (country of countries; track country) {
+        <mat-option [value]="country.countryValue">{{ country.countryViewValue }}</mat-option>
+      }
     </mat-select>
   </mat-form-field>
 </form>
