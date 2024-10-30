@@ -1,5 +1,5 @@
 <form #form="ngForm">
-  <mat-form-field class="input-width">
+  <mat-form-field class="search-term-input-width">
     <mat-label>Wyszukiwana fraza po polsku</mat-label>
     <input matInput type="text" name="searchTerm" [(ngModel)]="searchTerm">
     @if (searchTerm) {
@@ -9,7 +9,7 @@
     }
   </mat-form-field>
 
-  <mat-form-field class="distance select-width">
+  <mat-form-field class="select-distance select-width">
     <mat-label>Przetłumacz wyszukiwaną frazę na</mat-label>
     <mat-select name="language" [(ngModel)]="selectedLanguage">
       @for (language of languages; track language.languageValue) {
@@ -18,19 +18,21 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="distance select-width">
-    <mat-label>Lokalizacja wyników szukania</mat-label> <!--todo: this must not be mandatory-->
+  <mat-form-field class="select-distance select-width">
+    <mat-label>Lokalizacja stron z wyników szukania</mat-label> <!--todo: this must not be mandatory-->
     <mat-select name="country" [(ngModel)]="selectedCountry">
       @for (country of countries; track country.countryValue) {
         <mat-option [value]="country.countryValue">{{ country.countryViewValue }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
+
+  <button mat-raised-button class="btn">Szukaj</button>
 </form>
 
-<div>Tłumacznie znalezionych stron na polski:</div> <!--todo: after submitting the form add from which lanugage -->
+<div class="header">Tłumacznie znalezionych stron na polski:</div> <!--todo: after submitting the form add from which lanugage -->
 
-<mat-tab-group>
+<mat-tab-group class="tabs-container">
   <mat-tab label="Strona 1">Tłumacznie strony 1</mat-tab>
   <mat-tab label="Strona 2">Tłumaczenie strony 2</mat-tab>
   <mat-tab label="Strona 3">Tłumaczenie strony 3</mat-tab>

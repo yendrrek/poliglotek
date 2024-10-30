@@ -1,0 +1,40 @@
+// default angular material settings
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+//
+
+// custom styles
+.search-term-input-width {
+  width: 24%;
+}
+
+.select {
+  &-distance {
+    margin-left: 0.375em; /* 6px */
+  }
+  &-width {
+    width: 18%;
+  }
+}
+
+.header {
+  margin-top: 1.25em;
+  padding-left: 1em;
+  text-decoration: underline;
+  text-decoration-color: #e0e2ec;
+  text-decoration-thickness: 0.25em;
+}
+
+.tabs-container {
+  margin-top: 1.25em;
+}
+
+.btn {
+  margin-left: 0.750em; /* 12px */
+}

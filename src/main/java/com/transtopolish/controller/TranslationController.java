@@ -20,7 +20,7 @@ public class TranslationController {
     }
 
     @Get()
-    public List<String> fetchTranslatedPages(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
+    public List<String> getTranslatedPages(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
         return translationService.translatePages(query, langCode, countryCode);
     }
 }

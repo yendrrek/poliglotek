@@ -36,6 +36,6 @@ public class GoogleSearchService {
                 null);
         return results.getItems().stream()
                 .map(SearchItem::getLink)
-                .toList();
+                .toList().subList(0, 2); // todo: get only two urls for testing to not abuse google search api
     }
 }
