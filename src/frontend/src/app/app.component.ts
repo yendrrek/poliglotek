@@ -24,6 +24,7 @@ export class AppComponent {
   title: string = 'frontend';
   selectedLanguage?: string;
   selectedCountry?: string;
+  searchTerm: string = '';
   languages: Language[] = LANGUAGES;
   countries: Country[] = COUNTRIES;
 }

@@ -2,3 +2,15 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.distance {
+  margin-left: 0.375em; /* 6px */
+}
+
+.input-width {
+  width: 24%;
+}
+
+.select-width {
+  width: 17%;
+}

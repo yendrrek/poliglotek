@@ -1,32 +1,34 @@
 <form #form="ngForm">
-  <mat-form-field>
-    <mat-label>Wyszukiwana fraza</mat-label>
-    <input matInput type="text">
-<!--    @if (value) {-->
-<!--      <button matSuffix mat-icon-button aria-label="Clear" (click)="value=''">-->
-<!--        <mat-icon>close</mat-icon>-->
-<!--      </button>-->
-<!--    }-->
+  <mat-form-field class="input-width">
+    <mat-label>Wyszukiwana fraza po polsku</mat-label>
+    <input matInput type="text" name="searchTerm" [(ngModel)]="searchTerm">
+    @if (searchTerm) {
+      <button matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Język docelowy</mat-label>
-    <mat-select [(ngModel)]="selectedLanguage" name="language">
-      @for (language of languages; track language) {
+  <mat-form-field class="distance select-width">
+    <mat-label>Przetłumacz wyszukiwaną frazę na</mat-label>
+    <mat-select name="language" [(ngModel)]="selectedLanguage">
+      @for (language of languages; track language.languageValue) {
         <mat-option [value]="language.languageValue">{{ language.languageViewValue }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Kraj</mat-label> <!--todo: this must not be mandatory-->
-    <mat-select [(ngModel)]="selectedCountry" name="country">
-      @for (country of countries; track country) {
+  <mat-form-field class="distance select-width">
+    <mat-label>Lokalizacja wyników szukania</mat-label> <!--todo: this must not be mandatory-->
+    <mat-select name="country" [(ngModel)]="selectedCountry">
+      @for (country of countries; track country.countryValue) {
         <mat-option [value]="country.countryValue">{{ country.countryViewValue }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
 </form>
+
+<div>Tłumacznie znalezionych stron na polski:</div> <!--todo: after submitting the form add from which lanugage -->
 
 <mat-tab-group>
   <mat-tab label="Strona 1">Tłumacznie strony 1</mat-tab>
