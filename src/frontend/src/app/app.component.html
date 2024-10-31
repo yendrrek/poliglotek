@@ -1,9 +1,18 @@
 <form #form="ngForm">
   <mat-form-field class="search-term-input-width">
     <mat-label>Wyszukiwana fraza po polsku</mat-label>
-    <input matInput type="text" name="searchTerm" [(ngModel)]="searchTerm">
-    @if (searchTerm) {
-      <button matSuffix mat-icon-button aria-label="Clear" (click)="searchTerm=''">
+    <input
+      required
+      matInput
+      type="text"
+      name="query"
+      [(ngModel)]="query">
+    @if (query) {
+      <button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="query=''">
         <mat-icon>close</mat-icon>
       </button>
     }
@@ -11,7 +20,10 @@
 
   <mat-form-field class="select-distance select-width">
     <mat-label>Przetłumacz wyszukiwaną frazę na</mat-label>
-    <mat-select name="language" [(ngModel)]="selectedLanguage">
+    <mat-select
+      required
+      name="language"
+      [ngModel]="">
       @for (language of languages; track language.languageValue) {
         <mat-option [value]="language.languageValue">{{ language.languageViewValue }}</mat-option>
       }
@@ -19,8 +31,11 @@
   </mat-form-field>
 
   <mat-form-field class="select-distance select-width">
-    <mat-label>Lokalizacja stron z wyników szukania</mat-label> <!--todo: this must not be mandatory-->
-    <mat-select name="country" [(ngModel)]="selectedCountry">
+    <mat-label>Lokalizacja stron z wyników szukania</mat-label> <!--todo: mandatory?-->
+    <mat-select
+      required
+      name="country"
+      [ngModel]="">
       @for (country of countries; track country.countryValue) {
         <mat-option [value]="country.countryValue">{{ country.countryViewValue }}</mat-option>
       }

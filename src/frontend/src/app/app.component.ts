@@ -6,7 +6,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Language } from '../models/language';
 import { LANGUAGES } from '../constants/languages';
 import { Country } from '../models/country';
@@ -26,9 +26,7 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
   title: string = 'frontend';
-  selectedLanguage?: string;
-  selectedCountry?: string;
-  searchTerm: string = '';
+  query: string = '';
   languages: Language[] = LANGUAGES;
   countries: Country[] = COUNTRIES;
 
