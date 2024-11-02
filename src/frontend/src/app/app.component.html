@@ -22,7 +22,7 @@
     <mat-label>Przetłumacz wyszukiwaną frazę na</mat-label>
     <mat-select
       required
-      name="language"
+      name="langCode"
       [ngModel]="">
       @for (language of languages; track language.languageValue) {
         <mat-option [value]="language.languageValue">{{ language.languageViewValue }}</mat-option>
@@ -34,7 +34,7 @@
     <mat-label>Lokalizacja stron z wyników szukania</mat-label> <!--todo: mandatory?-->
     <mat-select
       required
-      name="country"
+      name="countryCode"
       [ngModel]="">
       @for (country of countries; track country.countryValue) {
         <mat-option [value]="country.countryValue">{{ country.countryViewValue }}</mat-option>
@@ -42,20 +42,15 @@
     </mat-select>
   </mat-form-field>
 
-  <button mat-raised-button class="btn">Szukaj</button>
+  <button mat-raised-button class="btn" (click)="handleSubmitSearchData(form)">Szukaj</button>
 </form>
 
 <div class="header">Tłumacznie znalezionych stron na polski:</div> <!--todo: after submitting the form add from which lanugage -->
 
 <mat-tab-group class="tabs-container">
-  <mat-tab label="Strona 1">Tłumacznie strony 1</mat-tab>
-  <mat-tab label="Strona 2">Tłumaczenie strony 2</mat-tab>
-  <mat-tab label="Strona 3">Tłumaczenie strony 3</mat-tab>
-  <mat-tab label="Strona 4">Tłumaczenie strony 4</mat-tab>
-  <mat-tab label="Strona 5">Tłumaczenie strony 5</mat-tab>
-  <mat-tab label="Strona 6">Tłumaczenie strony 6</mat-tab>
-  <mat-tab label="Strona 7">Tłumaczenie strony 7</mat-tab>
-  <mat-tab label="Strona 8">Tłumaczenie strony 8</mat-tab>
-  <mat-tab label="Strona 9">Tłumaczenie strony 9</mat-tab>
-  <mat-tab label="Strona 10">Tłumaczenie strony 10</mat-tab>
+  @for (page of translatedPages; track page) {
+    <mat-tab label="Strona">
+      <div [innerHTML]="page"></div>
+    </mat-tab>
+  }
 </mat-tab-group>

@@ -11,9 +11,7 @@ import { Language } from '../models/language';
 import { LANGUAGES } from '../constants/languages';
 import { Country } from '../models/country';
 import { COUNTRIES } from '../constants/countries';
-import { TranslatedPage } from '../models/translated-page';
 import { TranslationService } from '../services/translation.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -29,10 +27,14 @@ export class AppComponent {
   query: string = '';
   languages: Language[] = LANGUAGES;
   countries: Country[] = COUNTRIES;
+  translatedPages: string[] = [];
 
   constructor(private translationService: TranslationService) {}
 
-  displayTranslatedPages(query: string, langCode: string, countryCode: string): Observable<TranslatedPage[]> {
-    return this.translationService.getTranslatedPages(query, langCode, countryCode);
+  handleSubmitSearchData(form: NgForm) {
+    if (form.valid) {
+      this.translationService.getTranslatedPages(form)
+      .subscribe((translatedPages: string[]): string[] => this.translatedPages = translatedPages);
+    }
   }
 }

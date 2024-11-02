@@ -1,6 +1,12 @@
 micronaut:
   application:
     name: toPolish
+  server:
+    cors:
+      enabled: true
+      configurations:
+        default:
+          allowedOrigins: ["http://localhost:4200"]
 
 http:
   client:
