@@ -50,7 +50,7 @@
 <mat-tab-group class="tabs-container">
   @for (page of translatedPages; let i = $index;track page) {
     <mat-tab [label]="'Strona ' + (i + 1)">
-      <div [innerHTML]="page"></div>
+      <div class="transaltedPageContainer" [innerHTML]="page"></div>
     </mat-tab>
   }
 </mat-tab-group>
