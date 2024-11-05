@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { NgForm } from '@angular/forms';
+import { TranslatedPage } from '../models/translated-page';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getTranslatedPages(form: NgForm): Observable<string[]> {
-    return this.http.get<string[]>(this.buildUrl(form));
+  getTranslatedPages(form: NgForm): Observable<TranslatedPage[]> {
+    return this.http.get<TranslatedPage[]>(this.buildUrl(form));
   }
 
   private buildUrl(form: NgForm): string {
@@ -20,14 +21,5 @@ export class TranslationService {
     const langCode: string = `langCode=${form.value.langCode}`;
     const countryCode: string = `countryCode=${form.value.countryCode}`;
     return `${environment.baseUrl}/translate?${query}&${langCode}&${countryCode}`;
-}
-
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      console.warn('Client-side error', error.message);
-    } else {
-      console.warn('Server-side error', error.status);
-    }
-    return throwError(() => new Error(error.message));
   }
 }

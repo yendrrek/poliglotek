@@ -27,7 +27,9 @@ export class AppComponent {
   query: string = '';
   languages: Language[] = LANGUAGES;
   countries: Country[] = COUNTRIES;
-  translatedPages: string[] = [];
+  translatedPages: TranslatedPage[] = [];
+  loading: boolean = false;
+  progress: Observable<number>;
 
   constructor(private translationService: TranslationService) {}
 

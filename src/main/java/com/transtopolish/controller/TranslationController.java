@@ -1,5 +1,6 @@
 package com.transtopolish.controller;
 
+import com.transtopolish.model.TranslatedPage;
 import com.transtopolish.service.TranslationService;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -20,7 +21,7 @@ public class TranslationController {
     }
 
     @Get()
-    public List<String> getTranslatedPages(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
-        return translationService.translatePages(query, langCode, countryCode);
+    public List<TranslatedPage> getTranslatedPages(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
+        return translationService.getTranslatedPages(query, langCode, countryCode);
     }
 }

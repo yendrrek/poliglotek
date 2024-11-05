@@ -48,9 +48,9 @@
 <div class="header">Tłumacznie znalezionych stron na polski:</div> <!--todo: after submitting the form add from which lanugage -->
 
 <mat-tab-group class="tabs-container">
-  @for (page of translatedPages; let i = $index;track page) {
+  @for (page of translatedPages; let i = $index; track page.id) {
     <mat-tab [label]="'Strona ' + (i + 1)">
-      <div class="transaltedPageContainer" [innerHTML]="page"></div>
+      <div class="transaltedPageContainer" [innerHTML]="page.body"></div>
     </mat-tab>
   }
 </mat-tab-group>

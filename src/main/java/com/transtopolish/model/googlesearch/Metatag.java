@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Introspected
-@Serdeable
+@Serdeable.Deserializable
 @Data
 @AllArgsConstructor
 public class Metatag {

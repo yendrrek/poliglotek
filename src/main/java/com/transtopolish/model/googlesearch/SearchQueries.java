@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Introspected
-@Serdeable
+@Serdeable.Deserializable
 @Data
 @AllArgsConstructor
 public class SearchQueries {
