@@ -34,30 +34,31 @@ public class TranslationService {
     }
 
     public List<TranslatedPage> getTranslatedPages(String query, String targetLang, String countryCode) {
-        String translatedQuery = queryTranslationService.translateQuery(query, targetLang);
+        String translatedQuery = getTranslation(query, targetLang, projectId);
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         List<String> pageBodies = scrapService.scrapWebPages(urls);
         return pageBodies.stream()
-                .map(body -> new TranslatedPage(createTranslatedPageId(), getTranslatedPage(body, projectId)))
+                .map(body -> new TranslatedPage(createTranslatedPageId(), getTranslation(body, POLISH, projectId)))
                 .toList();
     }
 
-    private String getTranslatedPage(String pageBody, String projectId) {
-        TranslateTextResponse response = translatePage(pageBody, projectId);
+    private String getTranslation(String text, String targetLang, String projectId) {
+        TranslateTextResponse response = translatePage(text, targetLang, projectId);
         if (response != null) {
             return buildTranslation(response);
         }
         throw new IllegalStateException("Response from Google Custom Search must not be null");
     }
 
-    private TranslateTextResponse translatePage(String pageBody, String projectId) {
+    private TranslateTextResponse translatePage(String text, String targetLang, String projectId) {
+        log.info("Number of characters to translate: {}", text.length());
         try (TranslationServiceClient client = TranslationServiceClient.create()) {
             LocationName parent = LocationName.of(projectId, GLOBAL_LOCATION);
             TranslateTextRequest request = TranslateTextRequest.newBuilder()
                     .setParent(parent.toString())
                     .setMimeType(TEXT_HTML)
-                    .setTargetLanguageCode(POLISH)
-                    .addContents(pageBody)
+                    .setTargetLanguageCode(targetLang)
+                    .addContents(text)
                     .build();
             return client.translateText(request);
         } catch (IOException e) {
