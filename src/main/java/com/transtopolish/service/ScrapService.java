@@ -1,6 +1,6 @@
 package com.transtopolish.service;
 
-import com.transtopolish.config.JsoupConfig;
+import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,15 +17,14 @@ import java.util.List;
 public class ScrapService {
 
     private final Logger log = LoggerFactory.getLogger(ScrapService.class);
-    private final JsoupConfig jsoupConfig;
+    private final String userAgent;
     private static final String ON_PREFIX = "on";
 
-    public ScrapService(JsoupConfig jsoupConfig) {
-        this.jsoupConfig = jsoupConfig;
+    public ScrapService(@Value("${jsoup.userAgent}") String userAgent) {
+        this.userAgent = userAgent;
     }
 
     public List<String> scrapWebPages(List<String> urls) {
-        String userAgent = jsoupConfig.getUserAgent();
         return urls.stream()
                 .map(url -> scrapWebPage(url, userAgent))
                 .toList();

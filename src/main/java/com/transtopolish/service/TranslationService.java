@@ -4,8 +4,8 @@ import com.google.cloud.translate.v3.LocationName;
 import com.google.cloud.translate.v3.TranslateTextRequest;
 import com.google.cloud.translate.v3.TranslateTextResponse;
 import com.google.cloud.translate.v3.TranslationServiceClient;
-import com.transtopolish.config.GoogleCloudConfig;
 import com.transtopolish.model.TranslatedPage;
+import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,27 +18,25 @@ import java.util.List;
 public class TranslationService {
 
     private final Logger log = LoggerFactory.getLogger(TranslationService.class);
-    private final GoogleCloudConfig googleCloudConfig;
     private final GoogleSearchService googlesearchService;
     private final ScrapService scrapService;
-    private final QueryTranslationService queryTranslationService;
+    private final String projectId;
     private static final String POLISH = "pl";
     private static final String GLOBAL_LOCATION = "global";
     private static final String TEXT_HTML = "text/html";
 
     public TranslationService(GoogleSearchService googleSearchService,
-                              GoogleCloudConfig googleCloudConfig, ScrapService scrapService, QueryTranslationService queryTranslationService) {
-        this.googleCloudConfig = googleCloudConfig;
+                              ScrapService scrapService,
+                              @Value("${googleCloud.projectId}") String projectId) {
         this.googlesearchService = googleSearchService;
         this.scrapService = scrapService;
-        this.queryTranslationService = queryTranslationService;
+        this.projectId = projectId;
     }
 
     public List<TranslatedPage> getTranslatedPages(String query, String targetLang, String countryCode) {
         String translatedQuery = queryTranslationService.translateQuery(query, targetLang);
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         List<String> pageBodies = scrapService.scrapWebPages(urls);
-        String projectId = googleCloudConfig.getProjectId();
         return pageBodies.stream()
                 .map(body -> new TranslatedPage(createTranslatedPageId(), getTranslatedPage(body, projectId)))
                 .toList();

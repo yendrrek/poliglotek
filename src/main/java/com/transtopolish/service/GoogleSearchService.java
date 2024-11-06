@@ -1,8 +1,8 @@
 package com.transtopolish.service;
 
-import com.transtopolish.config.GoogleCloudConfig;
 import com.transtopolish.model.googlesearch.SearchItem;
 import com.transtopolish.model.googlesearch.SearchResponseWrapper;
+import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +14,16 @@ public class GoogleSearchService {
 
     private final Logger log = LoggerFactory.getLogger(GoogleSearchService.class);
     private final GoogleCustomSearchClient httpClient;
-    private final GoogleCloudConfig googleCloudConfig;
+    private final String customSearchApiKey;
+    private final String customSearchEngineId;
     private static final String LANG_PREFIX = "lang_";
 
-    public GoogleSearchService(GoogleCustomSearchClient httpClient, GoogleCloudConfig googleCloudConfig) {
+    public GoogleSearchService(GoogleCustomSearchClient httpClient,
+                               @Value("${googleCloud.customSearchApiKey}") String customSearchApiKey,
+                               @Value("${googleCloud.customSearchEngineId}")  String customSearchEngineId) {
         this.httpClient = httpClient;
-        this.googleCloudConfig = googleCloudConfig;
+        this.customSearchApiKey = customSearchApiKey;
+        this.customSearchEngineId = customSearchEngineId;
     }
 
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
@@ -28,7 +32,7 @@ public class GoogleSearchService {
         String documentLanguage = LANG_PREFIX + langCode;
         SearchResponseWrapper results = httpClient.fetchSearchResults(
                 customSearchApiKey,
-                searchEngineId,
+                customSearchEngineId,
                 translatedQuery,
                 documentLanguage,
                 null,
