@@ -24,6 +24,8 @@ public class TranslationService {
     private static final String POLISH = "pl";
     private static final String GLOBAL_LOCATION = "global";
     private static final String TEXT_HTML = "text/html";
+    private static final String BASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final int ID_LENGTH = 10;
 
     public TranslationService(GoogleSearchService googleSearchService,
                               ScrapService scrapService,
@@ -76,13 +78,11 @@ public class TranslationService {
     }
 
     private String createTranslatedPageId() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        int idLength = 10;
         SecureRandom secureRandom = new SecureRandom();
-        StringBuilder id = new StringBuilder(idLength);
-        for (int i = 0; i < idLength; i++) {
-            int index = secureRandom.nextInt(characters.length());
-            id.append(characters.charAt(index));
+        StringBuilder id = new StringBuilder(ID_LENGTH);
+        for (int i = 0; i < ID_LENGTH; i++) {
+            int index = secureRandom.nextInt(BASE_CHARACTERS.length());
+            id.append(BASE_CHARACTERS.charAt(index));
         }
         return id.toString();
     }

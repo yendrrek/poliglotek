@@ -19,6 +19,7 @@ public class ScrapService {
     private final Logger log = LoggerFactory.getLogger(ScrapService.class);
     private final String userAgent;
     private static final String ON_PREFIX = "on";
+    private static final String[] TAGS_REMOVED = { "a", "img", "map", "area", "ul", "ol", "li", "dl", "dt", "dd", "menu" };
 
     public ScrapService(@Value("${jsoup.userAgent}") String userAgent) {
         this.userAgent = userAgent;
@@ -40,7 +41,7 @@ public class ScrapService {
             Elements bodyElements = bodyDoc.getAllElements();
             bodyElements.forEach(this::removeJsAttributes);
             Safelist safelist = Safelist.relaxed()
-                    .removeTags("a", "img", "map", "area")
+                    .removeTags(TAGS_REMOVED)
                     .removeAttributes(":all", "style");
             return Jsoup.clean(bodyDoc.outerHtml(), safelist);
         } catch (IOException e) {
