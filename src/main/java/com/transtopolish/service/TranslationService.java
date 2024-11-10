@@ -4,7 +4,8 @@ import com.google.cloud.translate.v3.LocationName;
 import com.google.cloud.translate.v3.TranslateTextRequest;
 import com.google.cloud.translate.v3.TranslateTextResponse;
 import com.google.cloud.translate.v3.TranslationServiceClient;
-import com.transtopolish.model.TranslatedPage;
+import com.transtopolish.model.googletranslate.TranslatedPage;
+import com.transtopolish.model.jsoup.ScrapedPage;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -38,9 +39,13 @@ public class TranslationService {
     public List<TranslatedPage> getTranslatedPages(String query, String targetLang, String countryCode) {
         String translatedQuery = getTranslation(query, targetLang, projectId);
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
-        List<String> pageBodies = scrapService.scrapWebPages(urls);
-        return pageBodies.stream()
-                .map(body -> new TranslatedPage(createTranslatedPageId(), getTranslation(body, POLISH, projectId)))
+        List<ScrapedPage> scrapedPages = scrapService.scrapWebPages(urls);
+        return scrapedPages.stream()
+                .map(page -> new TranslatedPage(
+                        createTranslatedPageId(),
+                        getTranslation(page.body(), POLISH, projectId),
+                        page.url())
+                )
                 .toList();
     }
 
@@ -49,7 +54,8 @@ public class TranslationService {
         if (response != null) {
             return buildTranslation(response);
         }
-        throw new IllegalStateException("Response from Google Custom Search must not be null");
+        log.error("Response from Google Custom Search must not be null");
+        return null;
     }
 
     private TranslateTextResponse translatePage(String text, String targetLang, String projectId) {

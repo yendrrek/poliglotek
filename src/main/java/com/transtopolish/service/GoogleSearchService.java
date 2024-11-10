@@ -27,8 +27,7 @@ public class GoogleSearchService {
     }
 
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
-        String customSearchApiKey = googleCloudConfig.getCustomSearchApiKey();
-        String searchEngineId = googleCloudConfig.getCustomSearchEngineId();
+        log.info("Fetching URLs for query '{}'. Target language is {}. Page location: {}", translatedQuery, langCode, countryCode);
         String documentLanguage = LANG_PREFIX + langCode;
         SearchResponseWrapper results = httpClient.fetchSearchResults(
                 customSearchApiKey,

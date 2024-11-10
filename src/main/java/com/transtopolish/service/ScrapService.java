@@ -1,5 +1,6 @@
 package com.transtopolish.service;
 
+import com.transtopolish.model.jsoup.ScrapedPage;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.jsoup.Jsoup;
@@ -24,13 +25,14 @@ public class ScrapService {
         this.userAgent = userAgent;
     }
 
-    public List<String> scrapWebPages(List<String> urls) {
+    public List<ScrapedPage> scrapWebPages(List<String> urls) {
         return urls.stream()
-                .map(url -> scrapWebPage(url, userAgent))
+                .map(url -> new ScrapedPage(scrapWebPage(url, userAgent), url))
                 .toList();
     }
 
     private String scrapWebPage(String url, String userAgent) {
+        log.info("Scrapping {}", url);
         try {
             Document doc = Jsoup
                     .connect(url)
@@ -42,7 +44,7 @@ public class ScrapService {
             String safeBody = Jsoup.clean(doc.body().html(), safelist);
             return filterElemenstWithContent(Jsoup.parse(safeBody));
         } catch (IOException e) {
-            log.error("Error scrapping URL {}", url, e);
+            log.error("Error scrapping {}", url, e);
             return null;
         }
     }

@@ -51,6 +51,7 @@
   @for (page of translatedPages; let i = $index; track page.id) {
     <mat-tab [label]="'Strona ' + (i + 1)">
       <div class="transaltedPageContainer" [innerHTML]="page.body"></div>
+      <a [href]="page.url" target="_blank" class="source-url">Źródło</a>
     </mat-tab>
   }
 </mat-tab-group>

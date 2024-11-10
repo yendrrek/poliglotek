@@ -12,6 +12,13 @@ import { LANGUAGES } from '../constants/languages';
 import { Country } from '../models/country';
 import { COUNTRIES } from '../constants/countries';
 import { TranslationService } from '../services/translation.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
+import { spinnerInterceptor } from '../interceptors/spinner.interceptor';
+import { LoadingService } from '../services/loading.service';
+import { Observable, throwError } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { TranslatedPage } from '../models/translated-page';
 
 @Component({
   selector: 'app-root',
@@ -33,10 +40,22 @@ export class AppComponent {
 
   constructor(private translationService: TranslationService) {}
 
-  handleSubmitSearchData(form: NgForm) {
+  handleSubmitSearchData(form: NgForm): void {
     if (form.valid) {
-      this.translationService.getTranslatedPages(form)
-      .subscribe((translatedPages: string[]): string[] => this.translatedPages = translatedPages);
+      this.translationService.getTranslatedPages(form).subscribe({
+        next: (translatedPages: TranslatedPage[]): void => {
+          this.translatedPages = translatedPages;
+          console.log(this.translatedPages);
+        },
+        error: (error: HttpErrorResponse): Observable<never> => {
+          if (error.error instanceof  ErrorEvent) {
+            console.warn('Client-side error', error.message);
+          } else {
+            console.warn('Server-side error', error.status);
+          }
+          return throwError((): Error => new Error(error.message));
+        }
+      });
     }
   }
 }

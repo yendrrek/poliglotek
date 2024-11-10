@@ -1,8 +1,8 @@
-package com.transtopolish.model;
+package com.transtopolish.model.jsoup;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Introspected
 @Serdeable.Serializable
-public record TranslatedPage(String id, String body) { }
+public record ScrapedPage(String body, String url) { }

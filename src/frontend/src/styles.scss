@@ -1,3 +1,9 @@
+:root {
+  --transaltionPadding: 1em;
+  --translationMarginTop: 1.25em;
+  --angularMainColour: #005cbb;
+}
+
 // default angular material settings
 html, body {
   height: 100%;
@@ -8,7 +14,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-// angular-material main theme colour used: #005cbb
 // custom styles
 .search-term-input-width {
   width: 24%;
@@ -24,15 +29,15 @@ body {
 }
 
 .header {
-  margin-top: 1.25em;
-  padding-left: 1em;
+  margin-top: var(--translationMarginTop);
+  padding-left: var(--transaltionPadding);
   text-decoration: underline;
   text-decoration-color: #e0e2ec;
   text-decoration-thickness: 0.25em;
 }
 
 .tabs-container {
-  margin-top: 1.25em;
+  margin-top: var(--translationMarginTop);
 }
 
 .btn {
@@ -40,5 +45,9 @@ body {
 }
 
 .transaltedPageContainer {
-  padding: 1em;
+  padding: var(--transaltionPadding);
+}
+
+.source-url {
+  padding-left: $transaltion-padding;
 }
