@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Safelist;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,21 +28,19 @@ public class ScrapService {
         return urls.stream()
                 .map(url -> scrapWebPage(url, userAgent))
                 .toList();
-
     }
 
     private String scrapWebPage(String url, String userAgent) {
         try {
-            Document document = Jsoup
+            Document doc = Jsoup
                     .connect(url)
                     .userAgent(userAgent).get();
-            Document bodyDoc = Jsoup.parse(document.body().outerHtml());
-            Elements bodyElements = bodyDoc.getAllElements();
-            bodyElements.forEach(this::removeJsAttributes);
+            doc.body().getAllElements().forEach(this::removeJsAttributes);
             Safelist safelist = Safelist.relaxed()
                     .removeTags(TAGS_REMOVED)
                     .removeAttributes(":all", "style");
-            return Jsoup.clean(bodyDoc.outerHtml(), safelist);
+            String safeBody = Jsoup.clean(doc.body().html(), safelist);
+            return filterElemenstWithContent(Jsoup.parse(safeBody));
         } catch (IOException e) {
             log.error("Error scrapping URL {}", url, e);
             return null;
@@ -56,5 +53,27 @@ public class ScrapService {
                 bodyElement.removeAttr(attribute.getKey());
             }
         });
+    }
+
+    private static String filterElemenstWithContent(Document doc) {
+        Element combinedElement = new Element("div");
+        for (Element element : doc.getAllElements()) {
+            if (!element.ownText().trim().isEmpty()) {
+                Element clonedElement = element.clone();
+                clonedElement.empty();
+                clonedElement.appendText(element.ownText());
+                combinedElement.appendChild(clonedElement);
+            }
+        }
+        return removeObsoleteCharacters(combinedElement.html());
+    }
+
+    private static String removeObsoleteCharacters(String combinedElement) {
+        return combinedElement
+                .replace("\n", "")
+                .replaceAll("\\s+", " ")
+                .replaceAll("(?s)<body>.*?</body>", "")
+                .replaceAll("</span><span>", " ")
+                .replaceAll("<span>", "");
     }
 }
