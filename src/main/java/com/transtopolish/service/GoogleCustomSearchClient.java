@@ -19,7 +19,6 @@ public interface GoogleCustomSearchClient {
                                              @QueryValue String lr,
                                              @QueryValue(defaultValue = "active") String safe,
                                              @QueryValue String cr,
-                                             @QueryValue(defaultValue = "buy, purchase, shop, store, " +
-                                                     "deal, last chance, sale, discount, promo, offer, " +
-                                                     "shipping, returns, cart, basket, payment") String excludeTerms);
+                                             @QueryValue String excludeTerms);
+    // todo: remove elements with cookie notification. test: "literatura baskijska"
 }
