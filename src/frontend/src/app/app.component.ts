@@ -32,8 +32,8 @@ import { TranslatedPage } from '../models/translated-page';
 export class AppComponent {
   title: string = 'frontend';
   query: string = '';
-  languages: Language[] = LANGUAGES;
-  countries: Country[] = COUNTRIES;
+  languages: Language[] = LANGUAGES.sort((a: Language, b: Language) => a.languageViewValue.localeCompare(b.languageViewValue));
+  countries: Country[] = COUNTRIES.sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
   translatedPages: TranslatedPage[] = [];
   loading: boolean = false;
   progress: Observable<number>;
