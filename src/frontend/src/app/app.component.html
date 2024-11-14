@@ -1,18 +1,18 @@
 <form #form="ngForm">
+<form [formGroup]="form">
   <mat-form-field class="search-term-input-width">
     <mat-label>Wyszukiwana fraza po polsku</mat-label>
     <input
       required
       matInput
       type="text"
-      name="query"
-      [(ngModel)]="query">
-    @if (query) {
+      formControlName="query">
+    @if (form.get('query')?.value) {
       <button
         matSuffix
         mat-icon-button
         aria-label="Clear"
-        (click)="query=''">
+        (click)="form.get('query')?.setValue('')">
         <mat-icon>close</mat-icon>
       </button>
     }
@@ -22,8 +22,7 @@
     <mat-label>Przetłumacz wyszukiwaną frazę na</mat-label>
     <mat-select
       required
-      name="langCode"
-      [ngModel]="">
+      formControlName="langCode">
       @for (language of languages; track language.languageValue) {
         <mat-option [value]="language.languageValue">{{ language.languageViewValue }}</mat-option>
       }
@@ -34,15 +33,21 @@
     <mat-label>Lokalizacja stron z wyników szukania</mat-label> <!--todo: mandatory?-->
     <mat-select
       required
-      name="countryCode"
-      [ngModel]="">
+      formControlName="countryCode"
+      [formControl]="backgroundColour"
+      panelClass="{{ backgroundColour.value }}">
+      @if (dynamicCountries) {
+        @for (dynamicCountry of dynamicCountries; let isLastCountryItem = $last ;track dynamicCountry.countryViewValue) {
+          <mat-option [value]="dynamicCountry.countryValue" [class.lastCountryItem]="isLastCountryItem">{{ dynamicCountry.countryViewValue }}</mat-option>
+        }
+      }
       @for (country of countries; track country.countryValue) {
         <mat-option [value]="country.countryValue">{{ country.countryViewValue }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
 
-  <button mat-raised-button class="btn" (click)="handleSubmitSearchData(form)">Szukaj</button>
+  <button mat-raised-button class="btn" (click)="handleSubmitSearchData()">Szukaj</button>
 </form>
 
 <div class="header">Tłumacznie znalezionych stron na polski:</div> <!--todo: after submitting the form add from which lanugage -->

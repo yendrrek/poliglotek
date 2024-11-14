@@ -55,7 +55,7 @@ export const LANGUAGES: Language[] = [
   { languageValue: 'it', languageViewValue: 'Włoski' },
   { languageValue: 'ja', languageViewValue: 'Japoński' },
   { languageValue: 'jv', languageViewValue: 'Jawajski' },
-  { languageValue: 'kn', languageViewValue: 'Kanada' },
+  { languageValue: 'kn', languageViewValue: 'Kannada' },
   { languageValue: 'kk', languageViewValue: 'Kazachski' },
   { languageValue: 'km', languageViewValue: 'Khmerski' },
   { languageValue: 'rw', languageViewValue: 'Ruanda-rundi' },
@@ -91,7 +91,6 @@ export const LANGUAGES: Language[] = [
   { languageValue: 'om', languageViewValue: 'Oromo' },
   { languageValue: 'ps', languageViewValue: 'Paszto' },
   { languageValue: 'fa', languageViewValue: 'Perski' },
-  { languageValue: 'pl', languageViewValue: 'Polski' },
   { languageValue: 'pt', languageViewValue: 'Portugalski' },
   { languageValue: 'pa', languageViewValue: 'Pendżabski' },
   { languageValue: 'qu', languageViewValue: 'Keczua' },
@@ -99,8 +98,8 @@ export const LANGUAGES: Language[] = [
   { languageValue: 'ru', languageViewValue: 'Rosyjski' },
   { languageValue: 'sm', languageViewValue: 'Samoański' },
   { languageValue: 'sa', languageViewValue: 'Sanskryt' },
-  { languageValue: 'gd', languageViewValue: 'Szkocki gaelicki' },
-  { languageValue: 'nso', languageViewValue: 'Północny sotho' },
+  { languageValue: 'gd', languageViewValue: 'Szkocki Gaelicki' },
+  { languageValue: 'nso', languageViewValue: 'Północny Sotho' },
   { languageValue: 'sr', languageViewValue: 'Serbski' },
   { languageValue: 'st', languageViewValue: 'Sotho' },
   { languageValue: 'sn', languageViewValue: 'Szona' },
@@ -126,12 +125,12 @@ export const LANGUAGES: Language[] = [
   { languageValue: 'ak', languageViewValue: 'Twi' },
   { languageValue: 'uk', languageViewValue: 'Ukraiński' },
   { languageValue: 'ur', languageViewValue: 'Urdu' },
-  { languageValue: 'ug', languageViewValue: 'Ujgurski' },
+  { languageValue: 'ug', languageViewValue: 'Ujgurski' },// MULTIPLE COUNTRIES (Chiny, Kazachstan)
   { languageValue: 'uz', languageViewValue: 'Uzbecki' },
   { languageValue: 'vi', languageViewValue: 'Wietnamski' },
   { languageValue: 'cy', languageViewValue: 'Walijski' },
   { languageValue: 'xh', languageViewValue: 'Xhosa' },
-  { languageValue: 'yi', languageViewValue: 'Jidysz' },
-  { languageValue: 'yo', languageViewValue: 'Joruba' },
+  { languageValue: 'yi', languageViewValue: 'Jidysz' },// MULTIPLE COUNTRIES (check where most pages hosted?) (Stany Zjednoczone, Rosja, Litwa, Francja, Izrael, Polska, Ukraina, Niemcy, Bialorus, Kanda, Brazylia, Argentyna, Australia)
+  { languageValue: 'yo', languageViewValue: 'Joruba' },// MULTIPLE COUNTRIES (Nigeria, Benin, Togo)
   { languageValue: 'zu', languageViewValue: 'Zulu' },
 ];
