@@ -1,7 +1,7 @@
 :root {
   --transaltionPadding: 1em;
   --translationMarginTop: 1.25em;
-  --angularMainColour: #005cbb;
+  --angularMainColour: rgba(0, 92,187, 100%);
 }
 
 // default angular material settings
@@ -49,5 +49,10 @@ body {
 }
 
 .source-url {
-  padding-left: $transaltion-padding;
+  padding-left: var(--transaltionPadding);
+}
+
+.mat-mdc-option.mdc-list-item.last-country-item {
+  border-bottom: 0.250em solid var(--angularMainColour);
+}
 }

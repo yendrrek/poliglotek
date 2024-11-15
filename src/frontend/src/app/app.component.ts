@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Language } from '../models/language';
 import { LANGUAGES } from '../constants/languages';
 import { Country } from '../models/country';
@@ -24,7 +24,7 @@ import { LanguageValue } from '../types/language-value';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatTab, MatTabGroup, MatFormField, MatLabel,
+  imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
     FormsModule, MatButton, MatProgressSpinnerModule, AsyncPipe,
     ReactiveFormsModule],
@@ -43,7 +43,6 @@ export class AppComponent implements OnInit {
   loading: boolean = false;
   progress: Observable<number>;
   form: FormGroup;
-  backgroundColour = new FormControl('#005cbb');
 
   constructor(
     private translationService: TranslationService,

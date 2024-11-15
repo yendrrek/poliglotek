@@ -33,12 +33,10 @@
     <mat-label>Lokalizacja stron z wyników szukania</mat-label> <!--todo: mandatory?-->
     <mat-select
       required
-      formControlName="countryCode"
-      [formControl]="backgroundColour"
-      panelClass="{{ backgroundColour.value }}">
+      formControlName="countryCode">
       @if (dynamicCountries) {
         @for (dynamicCountry of dynamicCountries; let isLastCountryItem = $last ;track dynamicCountry.countryViewValue) {
-          <mat-option [value]="dynamicCountry.countryValue" [class.lastCountryItem]="isLastCountryItem">{{ dynamicCountry.countryViewValue }}</mat-option>
+          <mat-option [class.last-country-item]="isLastCountryItem" [value]="dynamicCountry.countryValue">{{ dynamicCountry.countryViewValue }}</mat-option>
         }
       }
       @for (country of countries; track country.countryValue) {
