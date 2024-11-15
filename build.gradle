@@ -6,7 +6,7 @@ plugins {
     id "org.owasp.dependencycheck" version "10.0.4"
 }
 
-version = "0.41"
+version = "0.42"
 group = "com.transtopolish"
 
 repositories {

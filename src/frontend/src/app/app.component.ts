@@ -93,6 +93,9 @@ export class AppComponent implements OnInit {
         return;
       }
       this.dynamicCountries = oneOrMoreMatchingCountries.sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
+      this.dynamicCountries.forEach((dynamicCountry: Country) => {
+        this.countries = this.countries.filter((country: Country) => country.countryValue !== dynamicCountry.countryValue);
+      });
     });
   }
 }
