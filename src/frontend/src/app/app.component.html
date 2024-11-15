@@ -35,8 +35,16 @@
       required
       formControlName="countryCode">
       @if (dynamicCountries) {
-        @for (dynamicCountry of dynamicCountries; let isLastCountryItem = $last ;track dynamicCountry.countryViewValue) {
-          <mat-option [class.last-country-item]="isLastCountryItem" [value]="dynamicCountry.countryValue">{{ dynamicCountry.countryViewValue }}</mat-option>
+        @for (dynamicCountry of dynamicCountries;
+          let isLastDynamicCountry = $last ;
+          let isFirstDynamicCountry = $first;
+          track dynamicCountry.countryViewValue) {
+          <mat-option
+            class="dynamic-countries-border"
+            [class.first-country-item]="isFirstDynamicCountry"
+            [class.last-country-item]="isLastDynamicCountry"
+            [value]="dynamicCountry.countryValue">{{ dynamicCountry.countryViewValue }}
+          </mat-option>
         }
       }
       @for (country of countries; track country.countryValue) {

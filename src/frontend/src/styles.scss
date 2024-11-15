@@ -52,7 +52,16 @@ body {
   padding-left: var(--transaltionPadding);
 }
 
+.mat-mdc-option.mdc-list-item.dynamic-countries-border {
+  border-left: 0.125em solid var(--angularMainColour);
+  border-right: 0.125em solid var(--angularMainColour);
+}
+
+.mat-mdc-option.mdc-list-item.first-country-item {
+  border-top: 0.125em solid var(--angularMainColour);
+}
+
 .mat-mdc-option.mdc-list-item.last-country-item {
-  border-bottom: 0.250em solid var(--angularMainColour);
+  border-bottom: 0.125em solid var(--angularMainColour);
 }
 }
