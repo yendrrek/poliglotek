@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.autoSelectMatchingCountry();
+    this.autoSelectOneOrMoreMatchingCountries();
   }
 
   handleSubmitSearchData(): void {
@@ -81,21 +81,30 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private autoSelectMatchingCountry(): void {
+  private autoSelectOneOrMoreMatchingCountries(): void {
     this.form.get('langCode')?.valueChanges.subscribe((selectedValue: LanguageValue) => {
-      const oneOrMoreMatchingCountries: Country | Country[] = LANG_COUNTRY_MATCH[selectedValue];
-      if (oneOrMoreMatchingCountries === null) {
+      if (LANG_COUNTRY_MATCH[selectedValue] === null) {
         console.error(`Language code '${selectedValue}' must have a matching country for automatic selection.`);
         return;
       }
-      if ('countryValue' in oneOrMoreMatchingCountries) {
-        this.form.get('countryCode')?.setValue(oneOrMoreMatchingCountries.countryValue);
+      if (!Array.isArray(LANG_COUNTRY_MATCH[selectedValue])) {
+        const oneMatchingCountry: Country = LANG_COUNTRY_MATCH[selectedValue];
+        this.autoSelectOneCountry(oneMatchingCountry);
         return;
       }
-      this.dynamicCountries = oneOrMoreMatchingCountries.sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
-      this.dynamicCountries.forEach((dynamicCountry: Country) => {
-        this.countries = this.countries.filter((country: Country) => country.countryValue !== dynamicCountry.countryValue);
-      });
+      const moreMatchingCountries: Country[] = LANG_COUNTRY_MATCH[selectedValue];
+      this.autoSelectMoreMatchingCountries(moreMatchingCountries);
+    });
+  }
+
+  private autoSelectOneCountry(oneMatchingCountry: Country): void {
+    this.form.get('countryCode')?.setValue(oneMatchingCountry.countryValue);
+  }
+
+  private autoSelectMoreMatchingCountries(moreMatchingCountries: Country[]): void {
+    this.dynamicCountries = moreMatchingCountries.sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
+    this.dynamicCountries.forEach((dynamicCountry: Country) => {
+      this.countries = this.countries.filter((country: Country) => country.countryValue !== dynamicCountry.countryValue);
     });
   }
 }
