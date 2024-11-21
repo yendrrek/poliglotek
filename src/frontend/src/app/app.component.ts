@@ -16,23 +16,20 @@ import { HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
 import { spinnerInterceptor } from '../interceptors/spinner.interceptor';
 import { LoadingService } from '../services/loading.service';
 import { Observable, throwError } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { TranslatedPage } from '../models/translated-page';
 import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
 import { LanguageValue } from '../types/language-value';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
+    selector: 'app-root',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, AsyncPipe,
-    ReactiveFormsModule],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useValue: spinnerInterceptor, multi: true },
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useValue: spinnerInterceptor, multi: true },
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
   title: string = 'frontend';
