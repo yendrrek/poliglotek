@@ -19,12 +19,13 @@ import { Observable, throwError } from 'rxjs';
 import { TranslatedPage } from '../models/translated-page';
 import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
 import { LanguageValue } from '../types/language-value';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-root',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule],
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, AsyncPipe],
     providers: [
         { provide: HTTP_INTERCEPTORS, useValue: spinnerInterceptor, multi: true },
     ],
@@ -63,6 +64,11 @@ export class AppComponent implements OnInit {
       console.log(this.form);
       this.translationService.getTranslatedPages(this.form).subscribe({
         next: (translatedPages: TranslatedPage[]): void => {
+          if (this.isNothingToTranslate(translatedPages)) {
+            this.translatedPages = [];
+            alert("Wygląda na to, że ta kombinacja nie daje żadnych rezultatów.");
+            return;
+          }
           this.translatedPages = translatedPages;
           console.log(this.translatedPages);
         },
@@ -76,6 +82,11 @@ export class AppComponent implements OnInit {
         }
       });
     }
+  }
+
+  private isNothingToTranslate(translatedPages: TranslatedPage[]): boolean {
+    return translatedPages.length === 1 &&
+      translatedPages.every((page: TranslatedPage)=> Object.values(page).every((value: string) => !value));
   }
 
   private autoSelectOneOrMoreMatchingCountries(): void {

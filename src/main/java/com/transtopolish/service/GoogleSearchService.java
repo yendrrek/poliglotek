@@ -31,7 +31,6 @@ public class GoogleSearchService {
     }
 
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
-        log.info("Fetching URLs for query '{}'. Target language is {}. Page location: {}", translatedQuery, langCode, countryCode);
         String documentLanguage = LANG_PREFIX + langCode;
         SearchResponseWrapper results = httpClient.fetchSearchResults(
                 customSearchApiKey,
@@ -41,7 +40,12 @@ public class GoogleSearchService {
                 null,
                 countryCode,
                 excludedEcommerceConfig.getLanguage().get(langCode));
-        return results.getItems().stream()
+        List<SearchItem> searchItems = results.getItems();
+        if (searchItems == null || searchItems.isEmpty()) {
+            log.info("No results for current selection");
+            return  null;
+        }
+        return searchItems.stream()
                 .map(SearchItem::getLink)
                 .toList().subList(0, 2); // todo: get only two urls for testing to not abuse google search api
     }

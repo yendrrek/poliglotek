@@ -38,14 +38,21 @@ public class TranslationService {
 
     public List<TranslatedPage> getTranslatedPages(String query, String targetLang, String countryCode) {
         String translatedQuery = getTranslation(query, targetLang, projectId);
+        log.info("Polish query: {}. Translated to {}: {}", query, targetLang, translatedQuery);
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
+        if (urls == null || urls.isEmpty()) {
+            return null;
+        }
         List<ScrapedPage> scrapedPages = scrapService.scrapWebPages(urls);
         return scrapedPages.stream()
-                .map(page -> new TranslatedPage(
-                        createTranslatedPageId(),
-                        getTranslation(page.body(), POLISH, projectId),
-                        page.url())
-                )
+                .map(page -> {
+                    String pageBody = page.body();
+                    log.info("Number of web page characters to transalte: {}", pageBody.length());
+                    return new TranslatedPage(
+                            createTranslatedPageId(),
+                            getTranslation(pageBody, POLISH, projectId),
+                            page.url());
+                        })
                 .toList();
     }
 
@@ -59,7 +66,6 @@ public class TranslationService {
     }
 
     private TranslateTextResponse translatePage(String text, String targetLang, String projectId) {
-        log.info("Number of characters to translate: {}", text.length());
         try (TranslationServiceClient client = TranslationServiceClient.create()) {
             LocationName parent = LocationName.of(projectId, GLOBAL_LOCATION);
             TranslateTextRequest request = TranslateTextRequest.newBuilder()
