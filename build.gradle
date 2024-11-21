@@ -6,7 +6,7 @@ plugins {
     id "org.owasp.dependencycheck" version "10.0.4"
 }
 
-version = "0.45.1"
+version = "0.45.2"
 group = "com.transtopolish"
 
 repositories {
@@ -89,4 +89,55 @@ dependencyCheck {
     }
 }
 
+tasks.register('bumpVersion') {
+    doLast {
+        def gitCommand = ["git", "show", "HEAD:build.gradle"]
+        def process = new ProcessBuilder(gitCommand).redirectErrorStream(true).start()
+        def previousBuildFile = new StringWriter()
+        process.waitForProcessOutput(previousBuildFile, System.err)
+        if (process.exitValue() == 0) {
+            def versionPattern = /version\s*=\s*['"](\d+\.\d+\.\d+)['"]/
+            def currentBuildFile = file('build.gradle').text
+            def currentVersionMatcher = currentBuildFile =~ versionPattern
+            def previousVersionMatcher = previousBuildFile.toString() =~ versionPattern
+            if (previousVersionMatcher && currentVersionMatcher) {
+                def previousVersion = previousVersionMatcher[0][1]
+                def currentVersion = currentVersionMatcher[0][1]
+                if (isMinorOrMajorChanged(previousVersion, currentVersion)) {
+                    println("Manual bump of Major or Minor")
+                    return
+                }
 
+                def newVersion = incrementVersion(currentVersion)
+                println "Bumping version: $currentVersion -> $newVersion"
+                def updatedContent = currentBuildFile.replaceFirst(versionPattern, "version = \"$newVersion\"")
+                buildFile.text = updatedContent
+                return
+            }
+            println("Version must be written according to pattern x.x.x")
+        }
+    }
+}
+
+static def isMinorOrMajorChanged(previousVersion, currentVersion) {
+    def previousVersionParts = previousVersion.tokenize(".")
+    def previousMajor = previousVersionParts[0].toInteger()
+    def previousMinor = previousVersionParts[1].toInteger()
+
+    def currentVersionParts = currentVersion.tokenize(".")
+    def currentMajor = currentVersionParts[0].toInteger()
+    def currentMinor = currentVersionParts[1].toInteger()
+
+    return previousMajor != currentMajor || previousMinor != currentMinor
+}
+
+static def incrementVersion(version) {
+    def parts = version.tokenize('.')
+    def major = parts[0].toInteger()
+    def minor = parts[1].toInteger()
+    def patch = parts[2].toInteger()
+
+    patch += 1
+
+    return "$major.$minor.$patch"
+}
