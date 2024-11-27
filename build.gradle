@@ -1,13 +1,13 @@
 plugins {
     id "groovy"
-    id "java-gradle-plugin"
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "io.micronaut.application" version "4.4.2"
     id "io.micronaut.aot" version "4.4.2"
     id "org.owasp.dependencycheck" version "10.0.4"
+    id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.45.5"
+version = "0.45.6"
 group = "com.transtopolish"
 
 repositories {
@@ -17,35 +17,35 @@ repositories {
 
 dependencies {
     // micronaut
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    annotationProcessor("io.micronaut:micronaut-http-validation")
-    compileOnly("io.micronaut:micronaut-http-client")
-    testImplementation("io.micronaut:micronaut-http-client")
+    implementation "io.micronaut.serde:micronaut-serde-jackson"
+    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
+    annotationProcessor "io.micronaut:micronaut-http-validation"
+    compileOnly "io.micronaut:micronaut-http-client"
+    testImplementation "io.micronaut:micronaut-http-client"
 
     // lombok
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
-    testCompileOnly("org.projectlombok:lombok:1.18.34")
-    compileOnly("org.projectlombok:lombok:1.18.34")
+    annotationProcessor "org.projectlombok:lombok:1.18.34"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
+    testCompileOnly "org.projectlombok:lombok:1.18.34"
+    compileOnly "org.projectlombok:lombok:1.18.34"
 
     // jsoup
-    implementation("org.jsoup:jsoup:1.18.1")
+    implementation "org.jsoup:jsoup:1.18.1"
 
     // google cloud
-    implementation("com.google.cloud:google-cloud-translate:2.52.0")
+    implementation "com.google.cloud:google-cloud-translate:2.52.0"
 
     // snakeyaml
-    implementation('org.yaml:snakeyaml:2.0')
+    implementation "org.yaml:snakeyaml:2.0"
 
     // logback
-    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly "ch.qos.logback:logback-classic"
 
     // byte buddy
-    testImplementation("net.bytebuddy:byte-buddy:1.14.9")
+    testImplementation "net.bytebuddy:byte-buddy:1.14.9"
 
     // objenesis
-    testImplementation("org.objenesis:objenesis:3.4")
+    testImplementation "org.objenesis:objenesis:3.4"
 }
 
 
@@ -61,11 +61,11 @@ java {
 graalvmNative.toolchainDetection = false
 
 micronaut {
-    runtime("netty")
-    testRuntime("spock2")
+    runtime "netty"
+    testRuntime "spock2"
     processing {
-        incremental(true)
-        annotations("com.transtopolish.*")
+        incremental true
+        annotations "com.transtopolish.*"
     }
     aot {
         // https://micronaut-projects.github.io/micronaut-aot/latest/guide/
@@ -100,5 +100,4 @@ tasks.named("compileJava") {
     dependsOn installGitHook
 }
 
-apply from: "gradle/scripts/version-bump.gradle"
-bumpVersion { }
+versionBump{ }
