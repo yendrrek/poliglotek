@@ -9,7 +9,7 @@ if [ -z "$staged_files" ]; then
 fi
 
 echo "Running Gradle version bump"
-./gradlew bumpVersion
+./gradlew versionBump
 
 if [ -f .git/blockCommitVar ]; then
     source .git/blockCommitVar

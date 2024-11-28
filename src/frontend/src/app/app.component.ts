@@ -12,25 +12,20 @@ import { Country } from '../models/country';
 import { COUNTRIES } from '../constants/countries';
 import { TranslationService } from '../services/translation.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
-import { spinnerInterceptor } from '../interceptors/spinner.interceptor';
-import { LoadingService } from '../services/loading.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { TranslatedPage } from '../models/translated-page';
 import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
 import { LanguageValue } from '../types/language-value';
-import { AsyncPipe } from '@angular/common';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
-    selector: 'app-root',
+  selector: 'app-root',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, AsyncPipe],
-    providers: [
-        { provide: HTTP_INTERCEPTORS, useValue: spinnerInterceptor, multi: true },
-    ],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss'
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
   title: string = 'frontend';
@@ -38,16 +33,14 @@ export class AppComponent implements OnInit {
   countries: Country[] = Object.values(COUNTRIES).sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
   dynamicCountries: Country[] = [];
   translatedPages: TranslatedPage[] = [];
-  loading: boolean = false;
-  progress: Observable<number>;
   form: FormGroup;
+  isLoading: boolean =false;
 
   constructor(
     private translationService: TranslationService,
-    private loadingService: LoadingService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private loaderService: LoaderService,
   ) {
-    this.progress = this.loadingService.progress;
     this.form = this.formBuilder.group({
       query: [''],
       langCode: [''],
@@ -57,11 +50,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.autoSelectOneOrMoreMatchingCountries();
+    this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
   }
 
   handleSubmitSearchData(): void {
     if (this.form.valid) {
-      console.log(this.form);
       this.translationService.getTranslatedPages(this.form).subscribe({
         next: (translatedPages: TranslatedPage[]): void => {
           if (this.isNothingToTranslate(translatedPages)) {

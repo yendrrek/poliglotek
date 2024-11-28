@@ -1,4 +1,9 @@
-<form #form="ngForm">
+@if (isLoading) {
+  <div class="spinner-overlay">
+    <mat-spinner mode="indeterminate"></mat-spinner>
+  </div>
+}
+
 <form [formGroup]="form">
   <mat-form-field class="search-term-input-width">
     <mat-label>Wyszukiwana fraza po polsku</mat-label>
