@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
         next: (translatedPages: TranslatedPage[]): void => {
           if (this.isNothingToTranslate(translatedPages)) {
             this.translatedPages = [];
-            alert("Wygląda na to, że ta kombinacja nie daje żadnych rezultatów.");
+            alert("Wygląda na to, że ta kombinacja nie daje żadnych rezultatów."); // todo: dialog box here instead
             return;
           }
           this.translatedPages = translatedPages;
