@@ -18,6 +18,8 @@ import { TranslatedPage } from '../models/translated-page';
 import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
 import { LanguageValue } from '../types/language-value';
 import { LoaderService } from '../services/loader.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../containers/dialog/dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -36,10 +38,11 @@ export class AppComponent implements OnInit {
   form: FormGroup;
   isLoading: boolean =false;
 
-  constructor(
+  constructor( // todo: refactor to use inject() instead?
     private translationService: TranslationService,
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
+    private dialog: MatDialog,
   ) {
     this.form = this.formBuilder.group({
       query: [''],
@@ -53,13 +56,17 @@ export class AppComponent implements OnInit {
     this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
   }
 
+  openDialog() {
+    this.dialog.open(DialogComponent);
+  }
+
   handleSubmitSearchData(): void {
     if (this.form.valid) {
       this.translationService.getTranslatedPages(this.form).subscribe({
         next: (translatedPages: TranslatedPage[]): void => {
           if (this.isNothingToTranslate(translatedPages)) {
             this.translatedPages = [];
-            alert("Wygląda na to, że ta kombinacja nie daje żadnych rezultatów.");
+            this.openDialog();
             return;
           }
           this.translatedPages = translatedPages;
