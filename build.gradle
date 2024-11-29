@@ -7,7 +7,7 @@ plugins {
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.47.0"
+version = "0.47.1"
 group = "com.transtopolish"
 
 repositories {
