@@ -18,20 +18,24 @@ public class GoogleSearchService {
     private final String customSearchApiKey;
     private final String customSearchEngineId;
     private final ExcludedEcommerceConfig excludedEcommerceConfig;
+    private final String excludedSocialMedia;
     private static final String LANG_PREFIX = "lang_";
 
     public GoogleSearchService(GoogleCustomSearchClient httpClient,
                                @Value("${googleCloud.customSearchApiKey}") String customSearchApiKey,
                                @Value("${googleCloud.customSearchEngineId}")  String customSearchEngineId,
+                               @Value("${excludedSocialMedia}") String excludedSocialMedia,
                                ExcludedEcommerceConfig excludedEcommerceConfig) {
         this.httpClient = httpClient;
         this.customSearchApiKey = customSearchApiKey;
         this.customSearchEngineId = customSearchEngineId;
         this.excludedEcommerceConfig = excludedEcommerceConfig;
+        this.excludedSocialMedia = excludedSocialMedia;
     }
 
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
         String documentLanguage = LANG_PREFIX + langCode;
+        String excludeTerms = buildTermsExcludedFromSearch(langCode);
         SearchResponseWrapper results = httpClient.fetchSearchResults(
                 customSearchApiKey,
                 customSearchEngineId,
@@ -39,7 +43,7 @@ public class GoogleSearchService {
                 documentLanguage,
                 null,
                 countryCode,
-                excludedEcommerceConfig.getLanguage().get(langCode));
+                excludeTerms);
         List<SearchItem> searchItems = results.getItems();
         if (searchItems == null || searchItems.isEmpty()) {
             log.info("No results for current selection");
@@ -47,6 +51,12 @@ public class GoogleSearchService {
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .toList().subList(0, 2); // todo: get only two urls for testing to not abuse google search api
+                .toList()
+                .subList(0, 2);
+    }
+
+    private String buildTermsExcludedFromSearch(String langCode) {
+        String eCommerceTerms = excludedEcommerceConfig.getLanguage().get(langCode.toLowerCase());
+        return eCommerceTerms + ", " + excludedSocialMedia;
     }
 }

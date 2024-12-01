@@ -36,9 +36,9 @@ export class AppComponent implements OnInit {
   dynamicCountries: Country[] = [];
   translatedPages: TranslatedPage[] = [];
   form: FormGroup;
-  isLoading: boolean =false;
+  isLoading: boolean = false;
 
-  constructor( // todo: refactor to use inject() instead?
+  constructor(
     private translationService: TranslationService,
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
