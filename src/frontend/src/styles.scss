@@ -52,6 +52,10 @@ body {
   padding-left: var(--transaltionPadding);
 }
 
+.mat-mdc-select-panel {
+  max-height: 40em !important;
+}
+
 .mat-mdc-option.mdc-list-item.dynamic-countries-border {
   border-left: 0.125em solid var(--angularMainColour);
   border-right: 0.125em solid var(--angularMainColour);
