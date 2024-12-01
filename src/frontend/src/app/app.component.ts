@@ -7,19 +7,22 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Language } from '../models/language';
-import { LANGUAGES } from '../constants/languages';
 import { Country } from '../models/country';
-import { COUNTRIES } from '../constants/countries';
 import { TranslationService } from '../services/translation.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { TranslatedPage } from '../models/translated-page';
-import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
 import { LanguageValue } from '../types/language-value';
 import { LoaderService } from '../services/loader.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../containers/dialog/dialog.component';
+
+// constants
+import { LANGUAGES } from '../constants/languages';
+import { COUNTRIES } from '../constants/countries';
+import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
+import { ONE_COUNTRY_FROM_MANY } from '../constants/one-country-from-many';
 
 @Component({
   selector: 'app-root',
@@ -102,11 +105,13 @@ export class AppComponent implements OnInit {
       }
       const moreMatchingCountries: Country[] = LANG_COUNTRY_MATCH[selectedValue];
       this.autoSelectMoreMatchingCountries(moreMatchingCountries);
+      const oneCountryFromMany: Country | undefined = ONE_COUNTRY_FROM_MANY[selectedValue];
+      this.autoSelectOneCountry(oneCountryFromMany);
     });
   }
 
-  private autoSelectOneCountry(oneMatchingCountry: Country): void {
-    this.form.get('countryCode')?.setValue(oneMatchingCountry.countryValue);
+  private autoSelectOneCountry(oneMatchingCountry: Country | undefined): void {
+    this.form.get('countryCode')?.setValue(oneMatchingCountry?.countryValue);
   }
 
   private autoSelectMoreMatchingCountries(moreMatchingCountries: Country[]): void {
