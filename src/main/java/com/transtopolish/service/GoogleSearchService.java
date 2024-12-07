@@ -45,14 +45,13 @@ public class GoogleSearchService {
                 countryCode,
                 excludeTerms);
         List<SearchItem> searchItems = results.getItems();
-        if (searchItems == null || searchItems.isEmpty()) {
-            log.info("No results for current selection");
-            return  null;
+        if (searchItems == null) {
+            return null;
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .toList()
-                .subList(0, 2);
+                .limit(3)
+                .toList();
     }
 
     private String buildTermsExcludedFromSearch(String langCode) {

@@ -1,9 +1,10 @@
 package com.transtopolish.service;
 
-import com.transtopolish.model.jsoup.ScrapedPage;
+import com.transtopolish.model.jsoup.ScrapedWebPage;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.jsoup.Jsoup;
+import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Safelist;
@@ -26,28 +27,33 @@ public class ScrapService {
         this.userAgent = userAgent;
     }
 
-    public List<ScrapedPage> scrapWebPages(List<String> urls) {
+    public List<ScrapedWebPage> scrapWebPages(List<String> urls) {
         return urls.stream()
-                .map(url -> new ScrapedPage(scrapWebPage(url, userAgent), url))
+                .map(url -> {
+                    String page = scrapWebPage(url, userAgent);
+                    return new ScrapedWebPage(page, url);
+                })
                 .toList();
     }
 
     private String scrapWebPage(String url, String userAgent) {
         log.info("Scrapping {}", url);
         try {
-            Document doc = Jsoup
-                    .connect(url)
-                    .userAgent(userAgent).get();
+            Document doc = Jsoup.connect(url).userAgent(userAgent).get();
             doc.select(TAGS_WITH_CONTENT).remove();
-            doc.body().getAllElements().forEach(this::removeJsAttributes);
+            Element documentBody = doc.body();
+            documentBody.getAllElements().forEach(this::removeJsAttributes);
             Safelist safelist = Safelist.relaxed()
                     .removeTags(TAGS_ONLY)
                     .removeAttributes(":all", "style");
-            String safeBody = Jsoup.clean(doc.body().html(), safelist);
+            String safeBody = Jsoup.clean(documentBody.html(), safelist);
             return filterElemenstWithContent(Jsoup.parse(safeBody));
-        } catch (IOException e) {
-            log.error("Error scrapping {}", url, e);
+        } catch (UnsupportedMimeTypeException e) {
+            log.warn("Unsupported content type in {}. Skipping it.", url);
             return null;
+        } catch (IOException e) {
+            log.error("Error scrapping {} due to IO error", url, e);
+            return "IOException";
         }
     }
 

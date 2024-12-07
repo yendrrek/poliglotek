@@ -2,7 +2,6 @@ package com.transtopolish.model.googlesearch;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.List;
 @Introspected
 @Serdeable.Deserializable
 @Data
-@AllArgsConstructor
 public class SearchResponseWrapper {
     private final String kind;
     private final SearchUrl url;

@@ -1,22 +1,32 @@
+// angular
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+
+// angular material
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DialogComponent } from '../containers/dialog/dialog.component';
+
+// rxjs
+import { Observable, throwError } from 'rxjs';
+
+// models
 import { Language } from '../models/language';
 import { Country } from '../models/country';
-import { TranslationService } from '../services/translation.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
 import { TranslatedPage } from '../models/translated-page';
+import { Response } from '../models/response';
 import { LanguageValue } from '../types/language-value';
+
+// services
+import { TranslationService } from '../services/translation.service';
 import { LoaderService } from '../services/loader.service';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../containers/dialog/dialog.component';
 
 // constants
 import { LANGUAGES } from '../constants/languages';
@@ -59,21 +69,19 @@ export class AppComponent implements OnInit {
     this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
   }
 
-  openDialog() {
-    this.dialog.open(DialogComponent);
-  }
-
   handleSubmitSearchData(): void {
     if (this.form.valid) {
       this.translationService.getTranslatedPages(this.form).subscribe({
-        next: (translatedPages: TranslatedPage[]): void => {
-          if (this.isNothingToTranslate(translatedPages)) {
-            this.translatedPages = [];
-            this.openDialog();
+        next: (resp: Response<TranslatedPage[]>): void => {
+          if (resp.success) {
+            this.translatedPages = resp.data.filter(item => item != null);
+          }
+          if (resp.warning) {
+            this.openDialog(resp.warning);
             return;
           }
-          this.translatedPages = translatedPages;
-          console.log(this.translatedPages);
+          this.translatedPages = [];
+          this.openDialog(resp.error);
         },
         error: (error: HttpErrorResponse): Observable<never> => {
           if (error.error instanceof  ErrorEvent) {
@@ -85,11 +93,6 @@ export class AppComponent implements OnInit {
         }
       });
     }
-  }
-
-  private isNothingToTranslate(translatedPages: TranslatedPage[]): boolean {
-    return translatedPages.length === 1 &&
-      translatedPages.every((page: TranslatedPage)=> Object.values(page).every((value: string) => !value));
   }
 
   private autoSelectOneOrMoreMatchingCountries(): void {
@@ -119,5 +122,13 @@ export class AppComponent implements OnInit {
     this.dynamicCountries.forEach((dynamicCountry: Country) => {
       this.countries = this.countries.filter((country: Country) => country.countryValue !== dynamicCountry.countryValue);
     });
+  }
+
+  private openDialog(message: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        error: message }
+    };
+    this.dialog.open(DialogComponent, dialogConfig);
   }
 }

@@ -3,13 +3,11 @@ package com.transtopolish.model.googlesearch;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Introspected
 @Serdeable.Deserializable
 @Data
-@AllArgsConstructor
 public class Metatag {
     @JsonProperty("og:image")
     private String ogImage;

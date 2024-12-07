@@ -1,4 +1,7 @@
+// models
 import { Country } from '../models/country';
+
+// types
 import { CountryValue } from '../types/country-value';
 
 export const COUNTRIES: Record<CountryValue, Country> = {
