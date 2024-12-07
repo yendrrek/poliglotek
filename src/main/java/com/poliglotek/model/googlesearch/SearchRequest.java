@@ -1,0 +1,22 @@
+package com.poliglotek.model.googlesearch;
+
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.Data;
+
+@Introspected
+@Serdeable.Deserializable
+@Data
+public class SearchRequest {
+    private final String title;
+    private final String totalResults;
+    private final String searchTerms;
+    private final int count;
+    private final int startIndex;
+    private final String language;
+    private final String inputEncoding;
+    private final String outputEncoding;
+    private final String safe;
+    private final String cx;
+    private final String cr;
+}

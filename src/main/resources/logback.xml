@@ -11,6 +11,6 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
-    <logger name="com.transtopolish" level="info"></logger>
+    <logger name="com.poliglotek" level="info"></logger>
 <!--    <logger name="io.micronaut.http" level="trace"></logger>-->
 </configuration>
