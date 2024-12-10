@@ -9,7 +9,6 @@ import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
@@ -44,20 +43,19 @@ public class TranslationService {
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         if (urls == null || urls.isEmpty()) {
             log.info("No results for combination >> " + LOG_LINE, query, targetLang, countryCode);
-            return Response.error("Żadne strony nie zostały znalezione");
+            return Response.error("Nie znaleziono żadnych stron");
         }
-        List<ScrapedWebPage> scrapedPages = scrapService.scrapWebPages(urls);
-        if (isUnsupportedWebPage(scrapedPages)) {
-            List<ScrapedWebPage> filteredScrapedPages = removeUnsupportedWebPages(scrapedPages);
-            List<TranslatedPage> translatedPages = translatePages(filteredScrapedPages);
-            String warning = createUnsupportedPageWarning(scrapedPages, filteredScrapedPages);
+        List<ScrapedWebPage> pages = scrapService.scrapWebPages(urls);
+        if (containsFailedPage(pages)) {
+            List<ScrapedWebPage> filteredPages = removeFailedPages(pages);
+            List<TranslatedPage> translatedPages = translatePages(filteredPages);
+            int numberOfFailedPages = pages.size() - filteredPages.size();
+            log.warn("Number of pages which failed to be scraped: {}", numberOfFailedPages);
+            String warning = createFailedPageWarning(numberOfFailedPages);
             return Response.success(translatedPages, warning);
         }
-        if (isIOExceptionWhenScraping(scrapedPages)) {
-            return Response.error("Wystąpił problem podczas odczytywania stron.");
-        }
-        List<TranslatedPage> translatedPages = translatePages(scrapedPages);
-        if (translatedPages == null || translatedPages.isEmpty()) {
+        List<TranslatedPage> translatedPages = translatePages(pages);
+        if (translatedPages.stream().allMatch(Objects::isNull)) {
             return Response.error("Ilość znaków do tłumaczenia na wszystkich wyszukanych stronach przekracza limit 20 tysięcy");
         }
         if (translatedPages.contains(null)) {
@@ -67,8 +65,8 @@ public class TranslationService {
         return Response.success(translatedPages);
     }
 
-    private List<TranslatedPage> translatePages(List<ScrapedWebPage> scrapedPages) {
-        return scrapedPages.stream()
+    private List<TranslatedPage> translatePages(List<ScrapedWebPage> pages) {
+        return pages.stream()
                 .map(this::translatePage)
                 .toList();
     }
@@ -89,10 +87,9 @@ public class TranslationService {
                 "więc nie mogą być przetłumaczone. Ilość tych stron: %s.", numberOfPagesWithTooManyCharacters);
     }
 
-    private String createUnsupportedPageWarning(List<ScrapedWebPage> scrapedPages, List<ScrapedWebPage> filteredScrapedPages) {
-        int numberOfUnsupportedPages = scrapedPages.size() - filteredScrapedPages.size();
-        return String.format("Niektóre strony zostały pominięte, ponieważ albo są dokumentami PDF, " +
-                "albo posiadają inne nieobsługiwane rozszerzenie. Ilość tych stron: %s.", numberOfUnsupportedPages);
+    private String createFailedPageWarning(int numberOfUnsupportedPages) {
+        return String.format("Niektóre wyszukane strony nie zostały przetłumaczone, ponieważ posiadają nieobsługiwany format, " +
+                "bądź są niedostępne. Ilość tych stron: %s", numberOfUnsupportedPages);
     }
 
     private boolean hasPageTooManyCharacters(String pageBody) {
@@ -124,8 +121,8 @@ public class TranslationService {
                     .addContents(text)
                     .build();
             return client.translateText(request);
-        } catch (IOException e) {
-            log.error("Error translating html page", e);
+        } catch (Exception e) {
+            log.error("Error translating web page", e);
             return null;
         }
     }
@@ -149,15 +146,11 @@ public class TranslationService {
         return id.toString();
     }
 
-    private boolean isUnsupportedWebPage(List<ScrapedWebPage> scrapedPages) {
+    private boolean containsFailedPage(List<ScrapedWebPage> scrapedPages) {
         return scrapedPages.stream().anyMatch(page -> page.body() == null);
     }
 
-    private boolean isIOExceptionWhenScraping(List<ScrapedWebPage> scrapedPages) {
-        return scrapedPages.stream().anyMatch(page -> page.body().equals("IOException"));
-    }
-
-    private List<ScrapedWebPage> removeUnsupportedWebPages(List<ScrapedWebPage> scrapedPages) {
+    private List<ScrapedWebPage> removeFailedPages(List<ScrapedWebPage> scrapedPages) {
         return scrapedPages.stream()
                 .filter(page -> page.body() != null)
                 .toList();
