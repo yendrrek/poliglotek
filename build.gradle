@@ -7,7 +7,7 @@ plugins {
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.48.1"
+version = "0.48.2"
 group = "com.poliglotek"
 
 repositories {
@@ -31,6 +31,9 @@ dependencies {
 
     // jsoup
     implementation "org.jsoup:jsoup:1.18.1"
+
+    // selenium
+    implementation "org.seleniumhq.selenium:selenium-java:4.27.0"
 
     // google cloud
     implementation "com.google.cloud:google-cloud-translate:2.52.0"

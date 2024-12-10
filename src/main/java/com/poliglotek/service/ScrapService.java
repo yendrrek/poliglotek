@@ -1,45 +1,54 @@
 package com.poliglotek.service;
 
 import com.poliglotek.model.jsoup.ScrapedWebPage;
-import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.jsoup.Jsoup;
-import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.safety.Safelist;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 @Singleton
 public class ScrapService {
 
     private final Logger log = LoggerFactory.getLogger(ScrapService.class);
-    private final String userAgent;
     private static final String ON_PREFIX = "on";
     private static final String[] TAGS_ONLY = { "a", "img", "map", "area" };
     private static final String TAGS_WITH_CONTENT = "ul, ol, li, dl, dt, dd, menu, nav";
-
-    public ScrapService(@Value("${jsoup.userAgent}") String userAgent) {
-        this.userAgent = userAgent;
-    }
+    private static final String CHROME_DRIVER_PATH = "/usr/bin/chromedriver-linux64/chromedriver";
 
     public List<ScrapedWebPage> scrapWebPages(List<String> urls) {
         return urls.stream()
                 .map(url -> {
-                    String page = scrapWebPage(url, userAgent);
+                    String page = scrapWebPage(url);
                     return new ScrapedWebPage(page, url);
                 })
                 .toList();
     }
 
-    private String scrapWebPage(String url, String userAgent) {
-        log.info("Scrapping {}", url);
+    // Compatibility between Chrome installed on your machine and Chrome Driver: https://googlechromelabs.github.io/chrome-for-testing/
+    // Also useful is the article in your Medium in the folder "Chrome Driver"
+    private String scrapWebPage(String url) {
+        log.info("Scraping {}", url);
         try {
-            Document doc = Jsoup.connect(url).userAgent(userAgent).get();
+            System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless", "--window-size-1920, 1200", "--ignore-certificate-errors");
+            WebDriver driver = new ChromeDriver(options);
+            driver.get(url);
+            String page = driver.getPageSource();
+            if (page == null) {
+                log.error("Page scraped with Selenium is null");
+                return null;
+            }
+
+            Document doc = Jsoup.parse(page);
             doc.select(TAGS_WITH_CONTENT).remove();
             Element documentBody = doc.body();
             documentBody.getAllElements().forEach(this::removeJsAttributes);
@@ -47,13 +56,11 @@ public class ScrapService {
                     .removeTags(TAGS_ONLY)
                     .removeAttributes(":all", "style");
             String safeBody = Jsoup.clean(documentBody.html(), safelist);
+            driver.quit();
             return filterElemenstWithContent(Jsoup.parse(safeBody));
-        } catch (UnsupportedMimeTypeException e) {
-            log.warn("Unsupported content type in {}. Skipping it.", url);
+        } catch (Exception e) {
+            log.error("Error scrapping {}", url, e);
             return null;
-        } catch (IOException e) {
-            log.error("Error scrapping {} due to IO error", url, e);
-            return "IOException";
         }
     }
 
