@@ -33,12 +33,13 @@ import { LANGUAGES } from '../constants/languages';
 import { COUNTRIES } from '../constants/countries';
 import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
 import { ONE_COUNTRY_FROM_MANY } from '../constants/one-country-from-many';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule],
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -73,15 +74,14 @@ export class AppComponent implements OnInit {
     if (this.form.valid) {
       this.translationService.getTranslatedPages(this.form).subscribe({
         next: (resp: Response<TranslatedPage[]>): void => {
-          if (resp.success) {
-            this.translatedPages = resp.data.filter(item => item != null);
-          }
-          if (resp.warning) {
-            this.openDialog(resp.warning);
+          if (!resp.success) {
+            this.openDialog(resp.error);
             return;
           }
-          this.translatedPages = [];
-          this.openDialog(resp.error);
+          this.translatedPages = resp.data.filter(item => item != null);
+          if (resp.warning) {
+            this.openDialog(resp.warning);
+          }
         },
         error: (error: HttpErrorResponse): Observable<never> => {
           if (error.error instanceof  ErrorEvent) {
