@@ -5,14 +5,8 @@
 }
 
 // default angular material settings
-html, body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 // custom styles
 .search-term-input-width {
@@ -82,5 +76,8 @@ body {
   z-index: 99;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.attribution-logo {
+  display: block;
+  margin-top: var(--translationMarginTop);
+  padding-left: var(--transaltionPadding);
+}

@@ -7,7 +7,7 @@ plugins {
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.48.5"
+version = "0.48.6"
 group = "com.poliglotek"
 
 repositories {
@@ -50,7 +50,6 @@ dependencies {
     // objenesis
     testImplementation "org.objenesis:objenesis:3.4"
 }
-
 
 application {
     mainClass = "com.transtopolish.Application"
