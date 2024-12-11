@@ -36,7 +36,7 @@ import { ONE_COUNTRY_FROM_MANY } from '../constants/one-country-from-many';
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
-  selector: 'app-root',
+  selector: 'root',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
     FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage],

@@ -58,10 +58,10 @@
     </mat-select>
   </mat-form-field>
 
-  <button mat-raised-button class="btn" (click)="handleSubmitSearchData()">Szukaj</button>
+  <button mat-raised-button class="button" (click)="handleSubmitSearchData()">Szukaj</button>
 </form>
 
-<div class="header">Tłumacznie znalezionych stron na polski:</div> <!--todo: after submitting the form add from which lanugage -->
+<div class="header">Tłumacznie znalezionych stron na polski:</div>
 
 <mat-tab-group class="tabs-container">
   @for (page of translatedPages; let i = $index; track page.id) {
