@@ -1,16 +1,16 @@
 :host {
-  --transaltionPadding: 1em;
-  --translationMarginTop: 1.25em;
+  --transaltionMargin2rem: 2rem;
+  --translationMargin1-25em: 1.25em;
 }
 
 form {
-  margin-left: var(--transaltionPadding);
-  margin-top: 10em;
+  margin-left: var(--transaltionMargin2rem);
+  margin-top: calc(var(--transaltionMargin2rem) * 2);
 }
 
 .header {
-  margin-top: var(--translationMarginTop);
-  margin-left: var(--transaltionPadding);
+  margin-top: var(--translationMargin1-25em);
+  margin-left: var(--transaltionMargin2rem);
   text-decoration: underline;
   text-decoration-color: #e0e2ec;
   text-decoration-thickness: 0.25em;
@@ -22,42 +22,25 @@ form {
 
 .select {
   &-distance {
-    margin-left: 0.375em; /* 6px */
+    margin-left: 0.375em;
   }
   &-width {
     width: 18%;
   }
 }
 
-.mat-mdc-select-panel {
-  max-height: 40em !important;
-}
-
-.mat-mdc-option.mdc-list-item.dynamic-countries-border {
-  border-left: 0.125em solid var(--globalAngularMainColour);
-  border-right: 0.125em solid var(--globalAngularMainColour);
-}
-
-.mat-mdc-option.mdc-list-item.first-country-item {
-  border-top: 0.125em solid var(--globalAngularMainColour);
-}
-
-.mat-mdc-option.mdc-list-item.last-country-item {
-  border-bottom: 0.125em solid var(--globalAngularMainColour);
-}
-
 .button {
   border-radius: 0.25em 0.25em 0 0;
   margin-bottom: 0.1875em;
-  margin-left: var(--transaltionPadding);
+  margin-left: var(--transaltionMargin2rem);
 }
 
 .tabs-container {
-  margin-top: var(--translationMarginTop);
+  margin-top: var(--translationMargin1-25em);
 }
 
 .transaltedPageContainer {
-  padding: var(--transaltionPadding);
+  margin: var(--transaltionMargin2rem);
 }
 
 .spinner-overlay {
@@ -74,11 +57,12 @@ form {
 }
 
 .source-url {
-  padding-left: var(--transaltionPadding);
+  margin-left: var(--transaltionMargin2rem);
 }
 
 .attribution-logo {
   display: block;
-  margin-top: var(--translationMarginTop);
-  padding-left: var(--transaltionPadding);
+  margin-top: var(--translationMargin1-25em);
+  margin-left: var(--transaltionMargin2rem);
+  margin-bottom: var(--translationMargin1-25em);
 }

@@ -12,7 +12,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogComponent } from '../containers/dialog/dialog.component';
+import { DialogComponent } from '../components/dialog/dialog.component';
 
 // rxjs
 import { Observable, throwError } from 'rxjs';
@@ -34,12 +34,13 @@ import { COUNTRIES } from '../constants/countries';
 import { LANG_COUNTRY_MATCH } from '../constants/lang-country-match';
 import { ONE_COUNTRY_FROM_MANY } from '../constants/one-country-from-many';
 import { NgOptimizedImage } from '@angular/common';
+import { NavbarComponent } from '../components/navbar/navbar.component';
 
 @Component({
   selector: 'root',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage],
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

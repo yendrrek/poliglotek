@@ -1,6 +1,29 @@
 :root {
-  --globalAngularMainColour: rgba(0, 92,187, 100%);
+  --globalAngularMainColour: #005cbb;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  color: #0e0f0c !important;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-select-panel {
+  max-height: 40em !important;
+}
+
+.mat-mdc-option.mdc-list-item.dynamic-countries-border {
+  border-left: 0.125em solid var(--globalAngularMainColour);
+  border-right: 0.125em solid var(--globalAngularMainColour);
+}
+
+.mat-mdc-option.mdc-list-item.first-country-item {
+  border-top: 0.125em solid var(--globalAngularMainColour);
+}
+
+.mat-mdc-option.mdc-list-item.last-country-item {
+  border-bottom: 0.125em solid var(--globalAngularMainColour);
+}

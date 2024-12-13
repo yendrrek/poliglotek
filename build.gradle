@@ -7,7 +7,7 @@ plugins {
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.48.7"
+version = "0.48.8"
 group = "com.poliglotek"
 
 repositories {

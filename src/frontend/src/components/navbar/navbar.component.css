@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "WendyOne-Regular";
+  src: url("/fonts/WendyOne-Regular.ttf") format("truetype");
+}
+
+.mat-toolbar {
+  background: none;
+  color: #0e0f0c;
+}
+
+.mat-toolbar-single-row {
+  padding: 0;
+}
+
+.navbar-spacer {
+  flex: 1 1 auto;
+}
+
+.navbar-item {
+  margin: 0 var(--transaltionMargin2rem);
+}
+
+.poliglotek-logo {
+  margin-top: 0.625em;
+  margin-left: var(--transaltionMargin2rem);
+  font-family: "WendyOne-Regular", serif;
+  font-size: 3em;
+}

@@ -4,6 +4,8 @@
   </div>
 }
 
+<navbar></navbar>
+
 <form [formGroup]="form">
   <mat-form-field class="search-term-input-width">
     <mat-label>Wyszukiwana fraza po polsku</mat-label>
@@ -68,7 +70,7 @@
     <mat-tab [label]="'Strona ' + (i + 1)">
       <div class="transaltedPageContainer" [innerHTML]="page.body"></div>
       <a [href]="page.url" target="_blank" class="source-url">Źródło</a>
-      <img class="attribution-logo" ngSrc="google-attribution.svg" alt="Google attribution image" height="16" width="122">
+      <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image" height="16" width="122">
     </mat-tab>
   }
 </mat-tab-group>
