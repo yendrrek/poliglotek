@@ -1,0 +1,13 @@
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 40%;
+  margin-top: var(--formMarginTop);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-button {
+  border-radius: var(--buttonRadius);
+}

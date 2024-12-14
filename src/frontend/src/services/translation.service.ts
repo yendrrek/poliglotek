@@ -1,18 +1,11 @@
-// angular
+import { environment } from '../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
-
-// rxjs
 import { Observable } from 'rxjs';
-
-// models
 import { TranslatedPage } from '../models/translated-page';
 import { SearchData } from '../models/search-data';
 import { Response } from '../models/response';
-
-import { environment } from '../environments/environment';
-
 
 @Injectable({
   providedIn: 'root'

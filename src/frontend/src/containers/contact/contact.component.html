@@ -1,0 +1,30 @@
+<navbar></navbar>
+
+<form class="contact-form" [formGroup]="contactForm">
+  <mat-form-field>
+    <mat-label>Imię</mat-label>
+    <input
+      required
+      matInput
+      type="text"
+      formControlName="name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input
+      required
+      matInput
+      type="text"
+      formControlName="email">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Wiadomość</mat-label>
+    <textarea matInput required formControlName="message"></textarea>
+  </mat-form-field>
+
+  <button mat-raised-button class="contact-button" type="submit" (submit)="sendMessage()">Wyślij</button>
+</form>
+
+<router-outlet></router-outlet>

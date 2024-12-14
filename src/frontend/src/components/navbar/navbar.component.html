@@ -1,8 +1,9 @@
 <mat-toolbar>
-  <span class="poliglotek-logo">POLiglotek</span>
+  <a class="poliglotek-logo" mat-button routerLink="/home">POLiglotek</a>
   <span class="navbar-spacer"></span>
-  <a class="navbar-item" aria-label="Example icon-button with heart icon">O aplikacji
+  <a class="navbar-item" mat-button routerLink="/oAplikacji" aria-label="Example icon-button with heart icon">O aplikacji
   </a>
-  <a class="navbar-item" aria-label="Example icon-button with share icon">Kontakt
+  <a class="navbar-item" mat-button routerLink="/kontakt" aria-label="Example icon-button with share icon">Kontakt
   </a>
 </mat-toolbar>
+<router-outlet></router-outlet>

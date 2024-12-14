@@ -1,11 +1,6 @@
-// angular
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-
-// rxjs
 import { finalize, Observable } from 'rxjs';
-
-// services
 import { LoaderService } from './loader.service';
 
 @Injectable({

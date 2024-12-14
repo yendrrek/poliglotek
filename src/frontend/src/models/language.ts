@@ -1,4 +1,3 @@
-// types
 import { LanguageValue } from '../types/language-value';
 
 export interface Language {

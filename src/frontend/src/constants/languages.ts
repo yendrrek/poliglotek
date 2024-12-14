@@ -125,12 +125,12 @@ export const LANGUAGES: Language[] = [
   { languageValue: 'ak', languageViewValue: 'Twi' },
   { languageValue: 'uk', languageViewValue: 'Ukraiński' },
   { languageValue: 'ur', languageViewValue: 'Urdu' },
-  { languageValue: 'ug', languageViewValue: 'Ujgurski' },// MULTIPLE COUNTRIES (Chiny, Kazachstan)
+  { languageValue: 'ug', languageViewValue: 'Ujgurski' },
   { languageValue: 'uz', languageViewValue: 'Uzbecki' },
   { languageValue: 'vi', languageViewValue: 'Wietnamski' },
   { languageValue: 'cy', languageViewValue: 'Walijski' },
   { languageValue: 'xh', languageViewValue: 'Xhosa' },
-  { languageValue: 'yi', languageViewValue: 'Jidysz' },// MULTIPLE COUNTRIES (check where most pages hosted?) (Stany Zjednoczone, Rosja, Litwa, Francja, Izrael, Polska, Ukraina, Niemcy, Bialorus, Kanda, Brazylia, Argentyna, Australia)
-  { languageValue: 'yo', languageViewValue: 'Joruba' },// MULTIPLE COUNTRIES (Nigeria, Benin, Togo)
+  { languageValue: 'yi', languageViewValue: 'Jidysz' },
+  { languageValue: 'yo', languageViewValue: 'Joruba' },
   { languageValue: 'zu', languageViewValue: 'Zulu' },
 ];

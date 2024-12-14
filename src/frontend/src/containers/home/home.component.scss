@@ -1,19 +1,14 @@
-:host {
-  --transaltionMargin2rem: 2rem;
-  --translationMargin1-25em: 1.25em;
-}
-
-form {
-  margin-left: var(--transaltionMargin2rem);
-  margin-top: calc(var(--transaltionMargin2rem) * 2);
-}
-
 .header {
   margin-top: var(--translationMargin1-25em);
   margin-left: var(--transaltionMargin2rem);
   text-decoration: underline;
   text-decoration-color: #e0e2ec;
   text-decoration-thickness: 0.25em;
+}
+
+.search-form {
+  margin-top: var(--formMarginTop);
+  margin-left: var(--transaltionMargin2rem);
 }
 
 .search-term-input-width {
@@ -29,8 +24,8 @@ form {
   }
 }
 
-.button {
-  border-radius: 0.25em 0.25em 0 0;
+.search-button {
+  border-radius: var(--buttonRadius);
   margin-bottom: 0.1875em;
   margin-left: var(--transaltionMargin2rem);
 }

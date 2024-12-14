@@ -1,5 +1,9 @@
 :root {
   --globalAngularMainColour: #005cbb;
+  --transaltionMargin2rem: 2rem;
+  --translationMargin1-25em: 1.25em;
+  --buttonRadius: 0.25em 0.25em 0 0;
+  --formMarginTop: calc(var(--transaltionMargin2rem) * 2);
 }
 
 html, body {
