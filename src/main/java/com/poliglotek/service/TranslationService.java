@@ -1,9 +1,9 @@
 package com.poliglotek.service;
 
 import com.google.cloud.translate.v3.*;
-import com.poliglotek.model.error.Response;
 import com.poliglotek.model.googletranslate.TranslatedPage;
 import com.poliglotek.model.jsoup.ScrapedWebPage;
+import com.poliglotek.model.translationresponse.TranslationResponse;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
@@ -36,14 +36,14 @@ public class TranslationService {
         this.projectId = projectId;
     }
 
-    public Response<List<TranslatedPage>> getTranslatedPagesResponse(String query, String targetLang, String countryCode) {
+    public TranslationResponse<List<TranslatedPage>> getTranslatedPagesResponse(String query, String targetLang, String countryCode) {
         log.info("User selected >> " + LOG_LINE, query, targetLang, countryCode);
         String translatedQuery = getTranslation(query, targetLang, projectId);
         log.info("Polish query: {}. Translated to {}: {}", query, targetLang, translatedQuery);
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         if (urls == null || urls.isEmpty()) {
             log.info("No results for combination >> " + LOG_LINE, query, targetLang, countryCode);
-            return Response.error("Nie znaleziono żadnych stron");
+            return TranslationResponse.error("Nie znaleziono żadnych stron");
         }
         List<ScrapedWebPage> pages = scrapService.scrapWebPages(urls);
         if (containsFailedPage(pages)) {
@@ -52,17 +52,17 @@ public class TranslationService {
             int numberOfFailedPages = pages.size() - filteredPages.size();
             log.warn("Number of pages which failed to be scraped: {}", numberOfFailedPages);
             String warning = createFailedPageWarning(numberOfFailedPages);
-            return Response.success(translatedPages, warning);
+            return TranslationResponse.success(translatedPages, warning);
         }
         List<TranslatedPage> translatedPages = translatePages(pages);
         if (translatedPages.stream().allMatch(Objects::isNull)) {
-            return Response.error("Ilość znaków do tłumaczenia na wszystkich wyszukanych stronach przekracza limit 20 tysięcy");
+            return TranslationResponse.error("Ilość znaków do tłumaczenia na wszystkich wyszukanych stronach przekracza limit 20 tysięcy");
         }
         if (translatedPages.contains(null)) {
             String warning = createCharacterLimitWarning(translatedPages);
-            return Response.success(translatedPages, warning);
+            return TranslationResponse.success(translatedPages, warning);
         }
-        return Response.success(translatedPages);
+        return TranslationResponse.success(translatedPages);
     }
 
     private List<TranslatedPage> translatePages(List<ScrapedWebPage> pages) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
   countries: Country[] = Object.values(COUNTRIES).sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
   dynamicCountries: Country[] = [];
   translatedPages: TranslatedPage[] = [];
-  searchForm: FormGroup;
+  searchForm: FormGroup = new FormGroup({});
   isLoading: boolean = false;
 
   constructor(
@@ -49,14 +49,14 @@ export class HomeComponent implements OnInit {
     private loaderService: LoaderService,
     private dialog: MatDialog,
   ) {
-    this.searchForm = this.formBuilder.group({
-      query: [''],
-      langCode: [''],
-      countryCode: [''],
-    });
   }
 
   ngOnInit(): void {
+    this.searchForm = this.formBuilder.group({
+      query: ['', Validators.required],
+      langCode: ['', Validators.required],
+      countryCode: ['', Validators.required],
+    });
     this.autoSelectOneOrMoreMatchingCountries();
     this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
   }

@@ -1,7 +1,7 @@
 package com.poliglotek.controller;
 
-import com.poliglotek.model.error.Response;
 import com.poliglotek.model.googletranslate.TranslatedPage;
+import com.poliglotek.model.translationresponse.TranslationResponse;
 import com.poliglotek.service.TranslationService;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -22,7 +22,7 @@ public class TranslationController {
     }
 
     @Get()
-    public Response<List<TranslatedPage>> getTranslatedPages(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
+    public TranslationResponse<List<TranslatedPage>> getTranslatedPages(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
         return translationService.getTranslatedPagesResponse(query, langCode, countryCode);
     }
 }

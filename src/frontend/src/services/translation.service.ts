@@ -15,7 +15,8 @@ export class TranslationService {
   constructor(private http: HttpClient) { }
 
   getTranslatedPages(form: FormGroup): Observable<Response<TranslatedPage[]>> {
-    return this.http.get<Response<TranslatedPage[]>>(this.buildUrl(form));
+    const url: string = this.buildUrl(form);
+    return this.http.get<Response<TranslatedPage[]>>(url);
   }
 
   private buildUrl(form: FormGroup): string {
