@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
@@ -29,10 +37,32 @@ export class ContactComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private mailService: MailService) { }
 
   ngOnInit(): void {
+    const polishCharacters: string = "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ";
+    const acceptedCharacters: RegExp = new RegExp(`^[a-zA-Z0-9\\s${polishCharacters}.,!?'"-]*$`);
     this.contactForm = this.formBuilder.group({
-      senderName: ['', Validators.required],
-      senderEmail: ['', Validators.email],
-      message: ['', Validators.required]
+      senderName: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(50),
+          this.validateCharacters(acceptedCharacters)
+        ]
+      ],
+      senderEmail: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.maxLength(254)
+        ]
+      ],
+      message: [
+        '',
+        [
+          Validators.required,
+          this.validateCharacters(acceptedCharacters)
+        ]
+      ]
     });
   }
 
@@ -55,5 +85,12 @@ export class ContactComponent implements OnInit {
         console.log("Mail response", resp);
       });
     }
+  }
+
+  private validateCharacters(acceptedCharacters: RegExp): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const isForbiddenCharacter: boolean = !acceptedCharacters.test(control.value);
+      return isForbiddenCharacter ? { forbiddenInput: { value: control.value } } : null;
+    };
   }
 }

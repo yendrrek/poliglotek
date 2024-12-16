@@ -11,6 +11,9 @@
     @if (senderName?.hasError("required")) {
       <mat-error>Imię jest wymagane</mat-error>
     }
+    @if (senderName?.hasError("forbiddenInput")) {
+      <mat-error>Wykryto niedozwolone znaki</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field>
@@ -33,6 +36,9 @@
     <textarea matInput required formControlName="message"></textarea>
     @if (message?.hasError("required")) {
       <mat-error>Wiadomość nie może być pusta</mat-error>
+    }
+    @if (message?.hasError("forbiddenInput")) {
+      <mat-error>Wykryto niedozwolone znaki</mat-error>
     }
   </mat-form-field>
 
