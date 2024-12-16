@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgOptimizedImage } from '@angular/common';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -9,8 +11,9 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 import { DialogComponent } from '../../components/dialog/dialog.component';
-import { Observable, throwError } from 'rxjs';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Language } from '../../models/language';
 import { Country } from '../../models/country';
 import { TranslatedPage } from '../../models/translated-page';
@@ -22,9 +25,7 @@ import { LANGUAGES } from '../../constants/languages';
 import { COUNTRIES } from '../../constants/countries';
 import { LANG_COUNTRY_MATCH } from '../../constants/lang-country-match';
 import { ONE_COUNTRY_FROM_MANY } from '../../constants/one-country-from-many';
-import { NgOptimizedImage } from '@angular/common';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { RouterOutlet } from '@angular/router';
+import { handleHttpError } from '../../utils/utils';
 
 @Component({
   selector: 'home',
@@ -75,12 +76,7 @@ export class HomeComponent implements OnInit {
           }
         },
         error: (error: HttpErrorResponse): Observable<never> => {
-          if (error.error instanceof  ErrorEvent) {
-            console.warn('Client-side error', error.message);
-          } else {
-            console.warn('Server-side error', error.status);
-          }
-          return throwError((): Error => new Error(error.message));
+          return handleHttpError(error);
         }
       });
     }

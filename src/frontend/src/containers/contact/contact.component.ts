@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import {
   AbstractControl,
@@ -12,9 +13,11 @@ import {
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
+import { Observable } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { MailService } from '../../services/mail.service';
 import { MailResponse } from '../../models/mail-response';
+import { handleHttpError } from '../../utils/utils';
 
 @Component({
   selector: 'contact',
@@ -81,8 +84,13 @@ export class ContactComponent implements OnInit {
   sendMessage(): void {
     if (this.contactForm.valid) {
       console.log("Contact form", this.contactForm.value);
-      this.mailService.sendMail(this.contactForm.value).subscribe((resp: MailResponse) => {
-        console.log("Mail response", resp);
+      this.mailService.sendMail(this.contactForm.value).subscribe({
+        next: (resp: MailResponse): void => {
+          console.log("Mail response", resp);
+        },
+        error: (error: HttpErrorResponse): Observable<never> => {
+          return handleHttpError(error);
+        }
       });
     }
   }
