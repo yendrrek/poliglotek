@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from '../containers/home/home.component';
+import { TranslationComponent } from '../containers/translation/translation.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
-  { path: "home", component: HomeComponent },
+  { path: "home", component: TranslationComponent },
   // { path: "oAplikacji", component: AboutComponent },
   { path: "kontakt",
     loadComponent: () =>

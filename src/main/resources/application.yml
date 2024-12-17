@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: toPolish
+    name: poliglotek
   server:
     cors:
       enabled: true
@@ -28,7 +28,7 @@ jsoup:
 mailgun:
   apiKey: ${mailgunApiKey}
   politlotekEmailTo: poliglotek.translator@gmail.com
-  subjectStaticPart: Poliglotek contact form
+  subjectStaticPart: Poliglotek contact form submitted by
 
 akismet:
   apiKey: ${akismetApiKey}

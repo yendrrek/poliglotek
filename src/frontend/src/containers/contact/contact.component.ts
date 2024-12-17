@@ -15,7 +15,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { Observable } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { MailService } from '../../services/mail.service';
+import { ContactService } from '../../services/contact.service';
 import { MailResponse } from '../../models/mail-response';
 import { handleHttpError } from '../../utils/utils';
 
@@ -37,7 +37,7 @@ import { handleHttpError } from '../../utils/utils';
 export class ContactComponent implements OnInit {
   contactForm: FormGroup = new FormGroup({});
 
-  constructor(private formBuilder: FormBuilder, private mailService: MailService) { }
+  constructor(private formBuilder: FormBuilder, private mailService: ContactService) { }
 
   ngOnInit(): void {
     const polishCharacters: string = "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ";

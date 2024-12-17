@@ -8,7 +8,7 @@ import { ContactFormData } from '../models/contact-form-data';
 @Injectable({
   providedIn: 'root'
 })
-export class MailService {
+export class ContactService {
 
   constructor(private http: HttpClient) { }
 

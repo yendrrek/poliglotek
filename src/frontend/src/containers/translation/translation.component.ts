@@ -32,10 +32,10 @@ import { handleHttpError } from '../../utils/utils';
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
     FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage, NavbarComponent, RouterOutlet],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  templateUrl: './translation.component.html',
+  styleUrl: './translation.component.scss'
 })
-export class HomeComponent implements OnInit {
+export class TranslationComponent implements OnInit {
   title: string = 'frontend';
   languages: Language[] = LANGUAGES.sort((a: Language, b: Language) => a.languageViewValue.localeCompare(b.languageViewValue));
   countries: Country[] = Object.values(COUNTRIES).sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
