@@ -1,48 +1,8 @@
 <navbar></navbar>
 
-<form class="contact-form" [formGroup]="contactForm" (ngSubmit)="sendMessage()">
-  <mat-form-field>
-    <mat-label>Imię</mat-label>
-    <input
-      required
-      matInput
-      type="text"
-      formControlName="senderName">
-    @if (senderName?.hasError("required")) {
-      <mat-error>Imię jest wymagane</mat-error>
-    }
-    @if (senderName?.hasError("forbiddenInput")) {
-      <mat-error>Wykryto niedozwolone znaki</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>Email</mat-label>
-    <input
-      required
-      matInput
-      type="email"
-      formControlName="senderEmail">
-    @if (senderEmail?.hasError("required")) {
-      <mat-error>Email jest wymagany</mat-error>
-    }
-    @if (senderEmail?.hasError("email")) {
-      <mat-error>Email jest nieprawidłowy</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>Wiadomość</mat-label>
-    <textarea matInput required formControlName="message"></textarea>
-    @if (message?.hasError("required")) {
-      <mat-error>Wiadomość nie może być pusta</mat-error>
-    }
-    @if (message?.hasError("forbiddenInput")) {
-      <mat-error>Wykryto niedozwolone znaki</mat-error>
-    }
-  </mat-form-field>
-
-  <button mat-raised-button class="contact-button" type="submit">Wyślij</button>
-</form>
+<div class="contact-form">
+  <div>Będziemy wdzięczni za wszelkie uwagi i sugestie</div>
+  <div>poliglotek.translator [małpa] gmail [kropka] com</div>
+</div>
 
 <router-outlet></router-outlet>

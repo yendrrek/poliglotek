@@ -5,11 +5,15 @@ textarea {
 .contact-form {
   display: flex;
   flex-direction: column;
+  align-items: center; // remove once the actual contact form exists
+  justify-content: center; // remove once the actual contact form exists
   gap: 1em;
   width: 40%;
-  margin-top: var(--formMarginTop);
+  //margin-top: var(--formMarginTop); to be used once the actual contact form exists
+  height: 75%; // remove once the actual contact form exists
   margin-left: auto;
   margin-right: auto;
+  text-align: center; // remove once the actual contact form exists
 }
 
 .contact-button {
