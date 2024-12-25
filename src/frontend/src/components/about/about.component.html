@@ -1,35 +1,20 @@
 <navbar></navbar>
 
 <div class="about">
-  <p>
+  <div class="about-section">
     Poliglotek został stworzony by zabrać Cię w najbardziej egzotyczne zakamrki internetu.
-    Nie władasz jeszcze biegle chińskim, jidysz czy keczua?. To żaden problem! Poliglotek umożliwi ci
-    poznanie treści stron internetowych napisanych w innych językach tłumacząc je na polski.
-
-    Zdarzyło Ci się kiedyś znaleźć świetny artykuł w internecie, tylko po to, żeby odkryć, że jest napisany w języku,
-    który brzmi jak tajemniczy kod kosmitów? Spokojnie – ta aplikacja jest właśnie dla Ciebie!
-    Stworzyliśmy ją specjalnie dla Polaków, aby odblokować sekrety internetu,
-    tłumacząc strony internetowe na polski w rekordowym czasie.
-  </p>
-
-  <p>
-    Jak to działa? Wpisujesz zapytanie po polsku (żadnych trudnych słówek, naprawdę!), a aplikacja rusza do pracy.
-    Tłumaczy Twoje zapytanie na inne języki, przeszukuje internet w poszukiwaniu najlepszych wyników,
-    zbiera treść z ciekawych stron, usuwa wszystkie zbędne elementy i tłumaczy je z powrotem na polski.
-    Wszystko po to, żebyś mógł cieszyć się międzynarodowymi treściami bez wysiłku.
-    Dosłownie jak osobisty tłumacz i odkrywca w jednym!
-  </p>
-
-  <p>
-    Idealna dla każdego w Polsce, kto chce poznać świat, prowadzić międzynarodowe badania,
-    albo po prostu poczuć się jak tajny agent przełamujący bariery językowe.
-    To Twój wielojęzyczny skrót do globalnej wiedzy – bez żadnych językowych wpadek!
-  </p>
-  <br>
-  <p>
-    Aplikacja korzysta z Google Translate, aby zapewnić tłumaczenia w ramach aplikacji.
-    Więcej informacji na temat usługi Cloud Translation można znaleźć na stronie: Google Translate link.
-  </p>
+    Nie władasz jeszcze biegle chińskim, jidysz czy keczua? To żaden problem! Nasza aplikacja umożliwi Ci
+    poznanie treści stron internetowych napisanych w obcych językach, tłumacząc je na polski.
+  </div>
+  <div class="about-section">Jak to działa?
+    <ol>
+      <li>Wpisz wyszukiwaną frazę po polsku.</li>
+      <li>Wybierz język, w którym chcesz danej frazy szukać.</li>
+      <li>Wybierz kraj, z którego chcesz otrzymać wyniki stron.</li>
+      <li>Kliknij "Szukaj" i poczekaj aż Poliglotek dostarczy Ci przetłumaczone strony.</li>
+    </ol>
+  </div>
+  <button mat-button (click)="openDisclaimerDialog()">Zastrzeżenie</button>
 </div>
 
 <router-outlet></router-outlet>

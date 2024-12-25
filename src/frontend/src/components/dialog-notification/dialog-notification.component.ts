@@ -10,10 +10,10 @@ import { MatButton } from '@angular/material/button';
     MatDialogClose,
     MatButton
   ],
-  templateUrl: './dialog.component.html',
-  styleUrl: './dialog.component.css'
+  templateUrl: './dialog-notification.component.html',
+  styleUrl: './dialog-notification.component.css'
 })
-export class DialogComponent {
+export class DialogNotificationComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { error: string }) { }
 }

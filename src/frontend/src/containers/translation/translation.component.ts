@@ -12,7 +12,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { DialogComponent } from '../../components/dialog/dialog.component';
+import { DialogNotificationComponent } from '../../components/dialog-notification/dialog-notification.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Language } from '../../models/language';
 import { Country } from '../../models/country';
@@ -116,6 +116,6 @@ export class TranslationComponent implements OnInit {
       data: {
         error: message }
     };
-    this.dialog.open(DialogComponent, dialogConfig);
+    this.dialog.open(DialogNotificationComponent, dialogConfig);
   }
 }

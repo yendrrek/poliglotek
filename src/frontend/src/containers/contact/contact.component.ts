@@ -10,9 +10,6 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
 import { Observable } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ContactService } from '../../services/contact.service';
@@ -23,13 +20,8 @@ import { handleHttpError } from '../../utils/utils';
   selector: 'contact',
   imports: [
     ReactiveFormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatButton,
     RouterOutlet,
-    NavbarComponent,
-    MatError
+    NavbarComponent
   ],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'

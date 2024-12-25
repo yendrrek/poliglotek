@@ -1,6 +1,4 @@
 .about {
-  /*margin-top: var(--formMarginTop);*/
-  /*margin-left: var(--transaltionMargin2rem);*/
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -8,6 +6,7 @@
   margin-top: var(--formMarginTop);
   margin-left: auto;
   margin-right: auto;
-  //font-size: 1.25em;
-  //text-align: center;
+  &-section {
+    line-height: 2em;
+  }
 }
