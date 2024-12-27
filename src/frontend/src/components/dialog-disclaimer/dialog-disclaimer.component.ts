@@ -13,7 +13,7 @@ import { MatButton } from '@angular/material/button';
     MatButton
   ],
   templateUrl: './dialog-disclaimer.component.html',
-  styleUrl: './dialog-disclaimer.component.css'
+  styleUrl: './dialog-disclaimer.component.scss'
 })
 export class DialogDisclaimerComponent {
 
