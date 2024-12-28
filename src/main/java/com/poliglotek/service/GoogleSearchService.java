@@ -50,7 +50,7 @@ public class GoogleSearchService {
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .limit(6)
+                .limit(4)
                 .toList();
     }
 

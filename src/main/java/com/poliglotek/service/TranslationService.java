@@ -2,7 +2,7 @@ package com.poliglotek.service;
 
 import com.google.cloud.translate.v3.*;
 import com.poliglotek.model.googletranslate.TranslatedPage;
-import com.poliglotek.model.jsoup.ScrapedWebPage;
+import com.poliglotek.model.jsoup.ScrapedPage;
 import com.poliglotek.model.translationresponse.TranslationResponse;
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
@@ -18,18 +18,18 @@ public class TranslationService {
 
     private final Logger log = LoggerFactory.getLogger(TranslationService.class);
     private final GoogleSearchService googlesearchService;
-    private final ScrapService scrapService;
+    private final ScrapeService scrapService;
     private final String projectId;
     private static final String POLISH = "pl";
     private static final String GLOBAL_LOCATION = "global";
     private static final String TEXT_HTML = "text/html";
     private static final String BASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int ID_LENGTH = 10;
-    private static final int CHRACTERS_LIMIT = 20000; // The actual limit is 30.000, recommended is 5.000
+    private static final int CHRACTERS_LIMIT = 15000; // The actual limit is 30.000, recommended is 5.000
     private static final String LOG_LINE = "Query: {}. Target language: {}. Page location: {}";
 
     public TranslationService(GoogleSearchService googleSearchService,
-                              ScrapService scrapService,
+                              ScrapeService scrapService,
                               @Value("${googleCloud.projectId}") String projectId) {
         this.googlesearchService = googleSearchService;
         this.scrapService = scrapService;
@@ -45,9 +45,9 @@ public class TranslationService {
             log.info("No results for combination >> " + LOG_LINE, query, targetLang, countryCode);
             return TranslationResponse.error("Nie znaleziono żadnych stron");
         }
-        List<ScrapedWebPage> pages = scrapService.scrapWebPages(urls);
+        List<ScrapedPage> pages = scrapService.scrapePages(urls);
         if (containsFailedPage(pages)) {
-            List<ScrapedWebPage> filteredPages = removeFailedPages(pages);
+            List<ScrapedPage> filteredPages = removeFailedPages(pages);
             List<TranslatedPage> translatedPages = translatePages(filteredPages);
             int numberOfFailedPages = pages.size() - filteredPages.size();
             log.warn("Number of pages which failed to be scraped: {}", numberOfFailedPages);
@@ -65,13 +65,13 @@ public class TranslationService {
         return TranslationResponse.success(translatedPages);
     }
 
-    private List<TranslatedPage> translatePages(List<ScrapedWebPage> pages) {
+    private List<TranslatedPage> translatePages(List<ScrapedPage> pages) {
         return pages.stream()
                 .map(this::translatePage)
                 .toList();
     }
 
-    private TranslatedPage translatePage(ScrapedWebPage page) {
+    private TranslatedPage translatePage(ScrapedPage page) {
         String pageBody = page.body();
         if (hasPageTooManyCharacters(pageBody)) {
             return null;
@@ -146,11 +146,11 @@ public class TranslationService {
         return id.toString();
     }
 
-    private boolean containsFailedPage(List<ScrapedWebPage> scrapedPages) {
+    private boolean containsFailedPage(List<ScrapedPage> scrapedPages) {
         return scrapedPages.stream().anyMatch(page -> page.body() == null);
     }
 
-    private List<ScrapedWebPage> removeFailedPages(List<ScrapedWebPage> scrapedPages) {
+    private List<ScrapedPage> removeFailedPages(List<ScrapedPage> scrapedPages) {
         return scrapedPages.stream()
                 .filter(page -> page.body() != null)
                 .toList();

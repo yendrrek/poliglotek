@@ -22,18 +22,15 @@ googleCloud:
   customSearchApiKey: ${googleCustomSearchApiKey}
   customSearchEngineId: ${googleCustomSearchEngineId}
 
-jsoup:
-  userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
-
 mailgun:
   apiKey: ${mailgunApiKey}
-  politlotekEmailTo: poliglotek.translator@gmail.com
-  subjectStaticPart: Poliglotek contact form submitted by
+  politlotekEmailTo: poliglotek.translator@gmail.com # todo: move to class
+  subjectStaticPart: Poliglotek contact form submitted by # todo: move to class
 
 akismet:
   apiKey: ${akismetApiKey}
 
-excludedEcommerce:
+excludedEcommerce: # todo: move to some separate static class all the below?
   language:
     af: >- 
       koop, aankoop, winkel, stoor, ooreenkoms, laaste kans, uitverkoping, afslag, promosie, aanbod, aflewering, 

@@ -7,19 +7,19 @@ import spock.lang.Subject
 import spock.lang.Unroll
 
 @MicronautTest
-class ScrapServiceOnlyElementsWithContentTest extends Specification {
+class ScrapeServiceOnlyElementsWithContentTest extends Specification {
 
     @Inject
     @Subject
-    ScrapService scrapService
+    ScrapeService scrapeService
 
     @Unroll
-    def "scrapWebPages should only return HTML elements with content and remove all empty elements"() {
+    def "scrapeWebPages should only return HTML elements with content and remove all empty elements"() {
         given:
         String testUrl2 = "https://yendrrek.github.io/poliglotek-testpage2/index.html"
 
         when:
-        List<String> result = scrapService.scrapWebPages([testUrl2])
+        List<String> result = scrapeService.scrapePages([testUrl2])
 
         then:
         result.size() == 1

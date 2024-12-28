@@ -7,19 +7,19 @@ import spock.lang.Subject
 import spock.lang.Unroll
 
 @MicronautTest
-class ScrapServiceTest extends Specification {
+class ScrapeServiceTest extends Specification {
 
     @Inject
     @Subject
-    ScrapService scrapService
+    ScrapeService scrapeService
 
     @Unroll
-    def "scrapWebPages should return cleaned HTML for URLs"() {
+    def "scrapeWebPages should return cleaned HTML for URLs"() {
         given:
         String testUrl1 = "https://yendrrek.github.io/poliglotek-testpage/index.html"
 
         when:
-        List<String> result = scrapService.scrapWebPages([testUrl1])
+        List<String> result = scrapeService.scrapePages([testUrl1])
 
         then:
         result.size() == 1
