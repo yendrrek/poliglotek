@@ -1,6 +1,6 @@
 package com.poliglotek.service;
 
-import com.poliglotek.config.ExcludedEcommerceTerms;
+import com.poliglotek.config.ExcludedFromGoogleCustomSearch;
 import com.poliglotek.model.googlesearch.SearchItem;
 import com.poliglotek.model.googlesearch.SearchResponseWrapper;
 import io.micronaut.context.annotation.Value;
@@ -17,17 +17,14 @@ public class GoogleSearchService {
     private final GoogleCustomSearchClient httpClient;
     private final String customSearchApiKey;
     private final String customSearchEngineId;
-    private final String excludedSocialMedia;
     private static final String LANG_PREFIX = "lang_";
 
     public GoogleSearchService(GoogleCustomSearchClient httpClient,
                                @Value("${googleCloud.customSearchApiKey}") String customSearchApiKey,
-                               @Value("${googleCloud.customSearchEngineId}")  String customSearchEngineId,
-                               @Value("${excludedSocialMedia}") String excludedSocialMedia) {
+                               @Value("${googleCloud.customSearchEngineId}")  String customSearchEngineId) {
         this.httpClient = httpClient;
         this.customSearchApiKey = customSearchApiKey;
         this.customSearchEngineId = customSearchEngineId;
-        this.excludedSocialMedia = excludedSocialMedia;
     }
 
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
@@ -52,7 +49,7 @@ public class GoogleSearchService {
     }
 
     private String buildTermsExcludedFromSearch(String langCode) {
-        String eCommerceTerms = ExcludedEcommerceTerms.LANGUAGES.get(langCode.toLowerCase());
-        return eCommerceTerms + ", " + excludedSocialMedia;
+        String eCommerceTerms = ExcludedFromGoogleCustomSearch.ECOMMERCE_TERMS.get(langCode.toLowerCase());
+        return eCommerceTerms + ", " + ExcludedFromGoogleCustomSearch.SOCIAL_MEDIA;
     }
 }

@@ -29,10 +29,3 @@ mailgun:
 
 akismet:
   apiKey: ${akismetApiKey}
-
-excludedSocialMedia: >-
-  facebook, twitter, x.com, linkedin, instagram, snapchat, google currents, vkontakte, mastodon, threads, youtube, tiktok, 
-  vimeo, twitch, dailymotion, bilibili, triller, pinterest, flickr, deviantart, behance, 500px, reddit, quora, tumblr, 
-  stack exchange, github, dribbble, xing, angellist, tinder, bumble, okcupid, hinge, grindr, eharmony, match.com, goodreads, 
-  letterboxd, last.fm, myanimelist, ravelry, weibo, qzone, mixi, clubhouse, spotify, anchor.fm, podbean
-  
