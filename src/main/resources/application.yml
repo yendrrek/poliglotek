@@ -22,10 +22,7 @@ googleCloud:
   customSearchApiKey: ${googleCustomSearchApiKey}
   customSearchEngineId: ${googleCustomSearchEngineId}
 
-mailgun:
-  apiKey: ${mailgunApiKey}
-  politlotekEmailTo: poliglotek.translator@gmail.com # todo: move to class
-  subjectStaticPart: Poliglotek contact form submitted by # todo: move to class
+mailguApiKey: ${mailgunApiKey}
 
 akismet:
   apiKey: ${akismetApiKey}
