@@ -7,7 +7,7 @@ plugins {
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.48.23"
+version = "0.48.24"
 group = "com.poliglotek"
 
 repositories {
@@ -109,3 +109,40 @@ tasks.named("compileJava") {
 }
 
 versionBump{ }
+
+tasks.register("buildFrontend", Exec) {
+    workingDir "src/frontend"
+    commandLine "npm", "run", "build"
+}
+
+tasks.register("copyFrontend", Copy) {
+    dependsOn buildFrontend
+    from "frontend/dist/frontend"
+    into "src/main/resources/public"
+}
+
+shadowJar {
+    archiveBaseName.set("frontend")
+    archiveVersion.set("1.0")
+    archiveClassifier.set("")
+}
+
+build.dependsOn copyFrontend
+
+tasks.withType(Test).configureEach {// should exclude test when building project
+    enabled = false
+}
+
+tasks.register("packageApp", Zip) {
+    dependsOn build
+    from("build/libs") {
+        include "*.jar"
+    }
+    into("config") {
+        from("src/main/resources") {
+            exclude "public/**"
+        }
+    }
+    archiveFileName = "poliglotek.zip"
+    destinationDirectory = file("$buildDir/distributions")
+}
