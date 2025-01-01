@@ -1,13 +1,14 @@
 plugins {
+    id "java"
     id "groovy"
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "io.micronaut.application" version "4.4.2"
-    id "io.micronaut.aot" version "4.4.2"
+    id "io.micronaut.application" version "4.4.4"
+    id "io.micronaut.aot" version "4.4.4"
     id "org.owasp.dependencycheck" version "10.0.4"
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.48.24"
+version = "0.48.25"
 group = "com.poliglotek"
 
 repositories {
@@ -46,7 +47,6 @@ dependencies {
     // mailgun
     implementation "com.mailgun:mailgun-java:1.1.3"
 
-
     // logback
     runtimeOnly "ch.qos.logback:logback-classic"
 
@@ -58,7 +58,7 @@ dependencies {
 }
 
 application {
-    mainClass = "com.transtopolish.Application"
+    mainClass = "com.poliglotek.Application"
 }
 
 java {
@@ -73,7 +73,7 @@ micronaut {
     testRuntime "spock2"
     processing {
         incremental true
-        annotations "com.transtopolish.*"
+        annotations "com.poliglotek.*"
     }
     aot {
         // https://micronaut-projects.github.io/micronaut-aot/latest/guide/
@@ -121,7 +121,7 @@ tasks.register("copyFrontend", Copy) {
     into "src/main/resources/public"
 }
 
-shadowJar {
+shadowJar { // do I need this?
     archiveBaseName.set("frontend")
     archiveVersion.set("1.0")
     archiveClassifier.set("")
@@ -133,7 +133,7 @@ tasks.withType(Test).configureEach {// should exclude test when building project
     enabled = false
 }
 
-tasks.register("packageApp", Zip) {
+tasks.register("packageApp", Zip) { // might not be needed if I use Podman
     dependsOn build
     from("build/libs") {
         include "*.jar"
