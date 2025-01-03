@@ -8,7 +8,7 @@ plugins {
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.48.26"
+version = "0.48.27"
 group = "com.poliglotek"
 
 repositories {
@@ -117,32 +117,33 @@ tasks.register("buildFrontend", Exec) {
 
 tasks.register("copyFrontend", Copy) {
     dependsOn buildFrontend
-    from "frontend/dist/frontend"
+    from "src/frontend/dist/frontend"
     into "src/main/resources/public"
 }
 
-shadowJar { // do I need this?
-    archiveBaseName.set("frontend")
-    archiveVersion.set("1.0")
-    archiveClassifier.set("")
+tasks.named("copyFrontend") {
+    // Mark the task's output as being produced for Gradle's build lifecycle
+    outputs.dir("src/main/resources/public")
+}
+
+tasks.named("processResources") {
+    dependsOn copyFrontend
+}
+
+tasks.named("classes") {
+    dependsOn copyFrontend
+}
+
+tasks.named("inspectRuntimeClasspath") {
+    dependsOn copyFrontend
 }
 
 build.dependsOn copyFrontend
 
-tasks.withType(Test).configureEach {// should exclude test when building project
-    enabled = false
+jar {
+    enabled = true
 }
 
-tasks.register("packageApp", Zip) { // might not be needed if I use Podman
-    dependsOn build
-    from("build/libs") {
-        include "*.jar"
-    }
-    into("config") {
-        from("src/main/resources") {
-            exclude "public/**"
-        }
-    }
-    archiveFileName = "poliglotek.zip"
-    destinationDirectory = file("$buildDir/distributions")
+tasks.withType(Test).configureEach {// should exclude test when building project
+    enabled = false
 }
