@@ -13,7 +13,7 @@ export class ContactService {
   constructor(private http: HttpClient) { }
 
   sendMail(contactFormData: ContactFormData): Observable<MailResponse> {
-    const url: string = environment.baseUrl + "/mail";
+    const url: string = environment.baseUrl + "/api/contact";
     return this.http.post<MailResponse>(url, contactFormData);
   }
 }

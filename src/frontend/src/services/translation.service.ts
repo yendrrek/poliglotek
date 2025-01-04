@@ -24,6 +24,6 @@ export class TranslationService {
     const query: string = `query=${formData.query}`;
     const langCode: string = `langCode=${formData.langCode}`;
     const countryCode: string = `countryCode=${formData.countryCode}`;
-    return `${environment.baseUrl}/translate?${query}&${langCode}&${countryCode}`;
+    return `${environment.baseUrl}/api/translate?${query}&${langCode}&${countryCode}`;
   }
 }

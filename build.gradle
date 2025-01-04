@@ -8,7 +8,7 @@ plugins {
     id "com.andrzejpiontek.version-bump" version "0.0.1"
 }
 
-version = "0.48.27"
+version = "0.48.29"
 group = "com.poliglotek"
 
 repositories {
@@ -88,10 +88,6 @@ micronaut {
     }
 }
 
-tasks.named("dockerfileNative") {
-    jdkVersion = "21"
-}
-
 dependencyCheck {
     nvd {
         apiKey = System.getenv("nvdApiKey")
@@ -122,7 +118,6 @@ tasks.register("copyFrontend", Copy) {
 }
 
 tasks.named("copyFrontend") {
-    // Mark the task's output as being produced for Gradle's build lifecycle
     outputs.dir("src/main/resources/public")
 }
 

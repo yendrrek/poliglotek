@@ -11,7 +11,7 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 
 import java.util.List;
 
-@Controller("/translate")
+@Controller("/api/translate")
 @ExecuteOn(TaskExecutors.BLOCKING)
 public class TranslationController {
 
@@ -22,7 +22,9 @@ public class TranslationController {
     }
 
     @Get()
-    public TranslationResponse<List<TranslatedPage>> getTranslatedPages(@QueryValue String query, @QueryValue String langCode, @QueryValue String countryCode) {
+    public TranslationResponse<List<TranslatedPage>> getTranslatedPages(@QueryValue String query,
+                                                                        @QueryValue String langCode,
+                                                                        @QueryValue String countryCode) {
         return translationService.getTranslatedPagesResponse(query, langCode, countryCode);
     }
 }

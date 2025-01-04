@@ -7,6 +7,18 @@ micronaut:
       configurations:
         default:
           allowedOrigins: ["http://localhost:4200"]
+          allwedMethods:
+            - POST
+            - GET
+            - PUT
+            - DELETE
+            - OPTIONS
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: /**
+        paths: classpath:public/browser
 
 http:
   client:
