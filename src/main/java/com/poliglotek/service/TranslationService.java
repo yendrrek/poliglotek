@@ -30,13 +30,15 @@ public class TranslationService {
 
     public TranslationService(GoogleSearchService googleSearchService,
                               ScrapeService scrapService,
-                              @Value("${googleCloud.projectId}") String projectId) {
+                              @Value("${poliglotek.googleCloud.projectId}") String projectId) {
         this.googlesearchService = googleSearchService;
         this.scrapService = scrapService;
         this.projectId = projectId;
     }
 
-    public TranslationResponse<List<TranslatedPage>> getTranslatedPagesResponse(String query, String targetLang, String countryCode) {
+    public TranslationResponse<List<TranslatedPage>> getTranslatedPagesResponse(String query,
+                                                                                String targetLang,
+                                                                                String countryCode) {
         log.info("User selected >> " + LOG_LINE, query, targetLang, countryCode);
         String translatedQuery = getTranslation(query, targetLang, projectId);
         log.info("Polish query: {}. Translated to {}: {}", query, targetLang, translatedQuery);
@@ -56,7 +58,8 @@ public class TranslationService {
         }
         List<TranslatedPage> translatedPages = translatePages(pages);
         if (translatedPages.stream().allMatch(Objects::isNull)) {
-            return TranslationResponse.error("Ilość znaków do tłumaczenia na wszystkich wyszukanych stronach przekracza limit 20 tysięcy");
+            return TranslationResponse.error("Ilość znaków do tłumaczenia na wszystkich wyszukanych stronach " +
+                    "przekracza limit 20 tysięcy");
         }
         if (translatedPages.contains(null)) {
             String warning = createCharacterLimitWarning(translatedPages);
@@ -88,8 +91,8 @@ public class TranslationService {
     }
 
     private String createFailedPageWarning(int numberOfUnsupportedPages) {
-        return String.format("Niektóre wyszukane strony nie zostały przetłumaczone, ponieważ posiadają nieobsługiwany format, " +
-                "bądź są niedostępne. Ilość tych stron: %s", numberOfUnsupportedPages);
+        return String.format("Niektóre wyszukane strony nie zostały przetłumaczone, ponieważ posiadają " +
+                "nieobsługiwany format, bądź są niedostępne. Ilość tych stron: %s", numberOfUnsupportedPages);
     }
 
     private boolean hasPageTooManyCharacters(String pageBody) {

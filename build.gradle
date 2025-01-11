@@ -6,9 +6,10 @@ plugins {
     id "io.micronaut.aot" version "4.4.4"
     id "org.owasp.dependencycheck" version "10.0.4"
     id "com.andrzejpiontek.version-bump" version "0.0.1"
+    id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.48.29"
+version = "0.48.30"
 group = "com.poliglotek"
 
 repositories {
@@ -18,19 +19,19 @@ repositories {
 
 dependencies {
     // micronaut
-    implementation "io.micronaut.serde:micronaut-serde-jackson"
-    implementation "io.micronaut.validation:micronaut-validation"
     annotationProcessor "io.micronaut.validation:micronaut-validation-processor"
     annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
     annotationProcessor "io.micronaut:micronaut-http-validation"
-    compileOnly "io.micronaut:micronaut-http-client"
+    implementation "io.micronaut.serde:micronaut-serde-jackson"
+    implementation "io.micronaut.validation:micronaut-validation"
+    implementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut:micronaut-http-client"
 
     // lombok
     annotationProcessor "org.projectlombok:lombok:1.18.34"
     testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
+    implementation "org.projectlombok:lombok:1.18.34"
     testCompileOnly "org.projectlombok:lombok:1.18.34"
-    compileOnly "org.projectlombok:lombok:1.18.34"
 
     // jsoup
     implementation "org.jsoup:jsoup:1.18.1"
@@ -48,12 +49,12 @@ dependencies {
     implementation "com.mailgun:mailgun-java:1.1.3"
 
     // logback
-    runtimeOnly "ch.qos.logback:logback-classic"
+    implementation "ch.qos.logback:logback-classic"
 
-    // byte buddy
+    // byte buddy - used by spock to mock classes and generate mock implementations
     testImplementation "net.bytebuddy:byte-buddy:1.14.9"
 
-    // objenesis
+    // objenesis - used by spock to mock classes without default constructors
     testImplementation "org.objenesis:objenesis:3.4"
 }
 
@@ -65,8 +66,6 @@ java {
     sourceCompatibility = JavaVersion.toVersion("21")
     targetCompatibility = JavaVersion.toVersion("21")
 }
-
-graalvmNative.toolchainDetection = false
 
 micronaut {
     runtime "netty"
@@ -133,12 +132,34 @@ tasks.named("inspectRuntimeClasspath") {
     dependsOn copyFrontend
 }
 
-build.dependsOn copyFrontend
-
-jar {
-    enabled = true
-}
-
-tasks.withType(Test).configureEach {// should exclude test when building project
+tasks.withType(Test).configureEach {// Excludes tests when running build
     enabled = false
 }
+
+//tasks.register("zipJarForDeploy", Zip) {
+//    dependsOn shadowJar
+//    destinationDirectory = layout.buildDirectory.dir("libs")
+//    from("build/libs") { include "${this.rootProject.name}-${this.version}-all.jar"}
+//    archiveFileName = provider { createFileName() }
+//}
+//
+//def createFileName() {
+//    def environment = System.getProperty("MICRONAUT_ENVIRONMENTS")
+//    def projectName = this.rootProject.name
+//    def version = this.version
+//    def branchName = grgit.branch.current().name.replace("/", "-")
+//    def commitId = grgit.head().abbreviatedId
+//    def localChanges = grgit.status().isClean() ? "" : "LOCAL CHANGES"
+//    def pushed = ""
+//    if (grgit.branch.current().trackingBranch &&
+//            grgit.branch.status(name: grgit.branch.current().getName()).aheadCount > 0) {
+//        pushed = "NOT-PUSHED"
+//    }
+//    def time = DateTimeFormatter.ofPattern("YYYY-MM-dd-HH-mm-ss").format(ZonedDateTime.now())
+//    return [environment, projectName, version, branchName, commitId, localChanges, pushed, time]
+//            .findAll().join("-").concat(".zip")
+//}
+
+build.dependsOn copyFrontend
+build.dependsOn shadowJar
+//build.finalizedBy(zipJarForDeploy)

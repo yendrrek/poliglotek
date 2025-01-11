@@ -2,6 +2,8 @@ micronaut:
   application:
     name: poliglotek
   server:
+    host: 0.0.0.0
+    port: 8080
     cors:
       enabled: true
       configurations:
@@ -29,12 +31,13 @@ netty:
     allocator:
       max-order: 3
 
-googleCloud:
-  projectId: ${googleCloudProjectId}
-  customSearchApiKey: ${googleCustomSearchApiKey}
-  customSearchEngineId: ${googleCustomSearchEngineId}
+poliglotek:
+  googleCloud:
+    projectId: ${googleCloudProjectId}
+    customSearchApiKey: ${googleCustomSearchApiKey}
+    customSearchEngineId: ${googleCustomSearchEngineId}
 
-mailguApiKey: ${mailgunApiKey}
+  mailguApiKey: ${mailgunApiKey}
 
-akismet:
-  apiKey: ${akismetApiKey}
+  akismet:
+    apiKey: ${akismetApiKey}
