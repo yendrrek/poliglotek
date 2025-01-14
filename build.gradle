@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.48.30"
+version = "0.48.31"
 group = "com.poliglotek"
 
 repositories {
@@ -136,30 +136,4 @@ tasks.withType(Test).configureEach {// Excludes tests when running build
     enabled = false
 }
 
-//tasks.register("zipJarForDeploy", Zip) {
-//    dependsOn shadowJar
-//    destinationDirectory = layout.buildDirectory.dir("libs")
-//    from("build/libs") { include "${this.rootProject.name}-${this.version}-all.jar"}
-//    archiveFileName = provider { createFileName() }
-//}
-//
-//def createFileName() {
-//    def environment = System.getProperty("MICRONAUT_ENVIRONMENTS")
-//    def projectName = this.rootProject.name
-//    def version = this.version
-//    def branchName = grgit.branch.current().name.replace("/", "-")
-//    def commitId = grgit.head().abbreviatedId
-//    def localChanges = grgit.status().isClean() ? "" : "LOCAL CHANGES"
-//    def pushed = ""
-//    if (grgit.branch.current().trackingBranch &&
-//            grgit.branch.status(name: grgit.branch.current().getName()).aheadCount > 0) {
-//        pushed = "NOT-PUSHED"
-//    }
-//    def time = DateTimeFormatter.ofPattern("YYYY-MM-dd-HH-mm-ss").format(ZonedDateTime.now())
-//    return [environment, projectName, version, branchName, commitId, localChanges, pushed, time]
-//            .findAll().join("-").concat(".zip")
-//}
-
 build.dependsOn copyFrontend
-build.dependsOn shadowJar
-//build.finalizedBy(zipJarForDeploy)
