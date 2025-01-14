@@ -31,13 +31,12 @@ netty:
     allocator:
       max-order: 3
 
-poliglotek:
-  googleCloud:
-    projectId: ${googleCloudProjectId}
-    customSearchApiKey: ${googleCustomSearchApiKey}
-    customSearchEngineId: ${googleCustomSearchEngineId}
+googleCloud:
+  projectId: ${googleCloudProjectId}
+  customSearchApiKey: ${googleCustomSearchApiKey}
+  customSearchEngineId: ${googleCustomSearchEngineId}
 
-  mailguApiKey: ${mailgunApiKey}
+mailguApiKey: ${mailgunApiKey}
 
-  akismet:
-    apiKey: ${akismetApiKey}
+akismet:
+  apiKey: ${akismetApiKey}

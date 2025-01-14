@@ -30,7 +30,7 @@ public class TranslationService {
 
     public TranslationService(GoogleSearchService googleSearchService,
                               ScrapeService scrapService,
-                              @Value("${poliglotek.googleCloud.projectId}") String projectId) {
+                              @Value("${googleCloud.projectId}") String projectId) {
         this.googlesearchService = googleSearchService;
         this.scrapService = scrapService;
         this.projectId = projectId;
@@ -39,12 +39,12 @@ public class TranslationService {
     public TranslationResponse<List<TranslatedPage>> getTranslatedPagesResponse(String query,
                                                                                 String targetLang,
                                                                                 String countryCode) {
-        log.info("User selected >> " + LOG_LINE, query, targetLang, countryCode);
+        log.info("User selected. " + LOG_LINE, query, targetLang, countryCode);
         String translatedQuery = getTranslation(query, targetLang, projectId);
         log.info("Polish query: {}. Translated to {}: {}", query, targetLang, translatedQuery);
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         if (urls == null || urls.isEmpty()) {
-            log.info("No results for combination >> " + LOG_LINE, query, targetLang, countryCode);
+            log.info("No results for combination. " + LOG_LINE, query, targetLang, countryCode);
             return TranslationResponse.error("Nie znaleziono żadnych stron");
         }
         List<ScrapedPage> pages = scrapService.scrapePages(urls);
