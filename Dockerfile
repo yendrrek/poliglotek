@@ -1,29 +1,27 @@
-## This is the JDK used
-FROM eclipse-temurin:21-jre
+FROM registry.fedoraproject.org/fedora-minimal:41
 
-# Working directory of the application inside the contaier
+# Update and install dependencies
+RUN microdnf update -y && \
+    microdnf install -y wget tar ca-certificates
+
+# Install Eclipse Temurin JDK 21
+RUN wget -q -O /tmp/temurin.tar.gz "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jre_x64_linux_hotspot_21.0.2_13.tar.gz" \
+    && mkdir -p /usr/local/temurin21 \
+    && tar -xzf /tmp/temurin.tar.gz -C /usr/local/temurin21 --strip-components=1 \
+    && rm -f /tmp/temurin.tar.gz \
+    && microdnf remove wget -y \
+    && microdnf clean all
+
+# Rest of your Dockerfile remains the same
+ENV JAVA_HOME=/usr/local/temurin21
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
 WORKDIR /home/app
 
-# Copy all the parts of the applciation into the container
 COPY build/docker/main/layers/app /home/app/
 COPY build/docker/main/layers/libs /home/app/libs
 COPY build/docker/main/layers/resources /home/app/resources
 
-# Install Google Chrome and dependencies
-# After installation, cached, obsolete data is removed with `rm` (saves 5MB).
-# https://stackoverflow.com/a/71008100/12208549
-RUN apt-get install -y wget
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-RUN apt-get update  \
-    && apt-get -y install google-chrome-stable \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/cache/apt/* \
-    && rm -rf /tmp/*
-
-# Port used
 EXPOSE 8080
 
-# Execute the application
-ENTRYPOINT ["java", "-jar", "/home/app/application.jar"]
+CMD ["java", "-jar", "/home/app/application.jar"]
