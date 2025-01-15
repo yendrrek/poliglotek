@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Exit on any error
+set -e
+
+# Extract short hash of the latest commit
+COMMIT_ID=$(git rev-parse --short HEAD)
+
+# Path needed to access gradlew task
+PROJECT_ROOT="/home/andrzej/dev/Poliglotek"
+
+# Extract current app version from build.gradle
+APP_VERSION=$(cd "$PROJECT_ROOT" && ./gradlew -q properties | grep "^version:" | sed 's/version: *//g')
+
+# Define image name
+IMAGE_NAME="poliglotek:${APP_VERSION}-${COMMIT_ID}"
+
+# Build image
+echo "Building Podman image: $IMAGE_NAME"
+podman build -t "$IMAGE_NAME" -f /home/andrzej/dev/Poliglotek/Dockerfile
