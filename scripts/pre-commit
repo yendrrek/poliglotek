@@ -1,33 +1,48 @@
 #!/bin/bash
 
+# Exit on errors, undefined variables, and pipeline failures
+set -euo pipefail
+
 # Get list of staged files
 staged_files=$(git diff --cached --name-only)
 
-if [ -z "$staged_files" ]; then
+# Check if the are no stage files
+if [[ -z "$staged_files" ]]; then
     echo "No files staged for commit"
     exit 0
 fi
 
-echo "Running Gradle version bump"
-./gradlew versionBump
+# Run the Gradle versionBump task
+echo "Running Gradle version bump..."
+./gradlew versionBump || { echo "Gradle version bump failed"; exit 1; }
 
-if [ -f .git/blockCommitVar ]; then
-    source .git/blockCommitVar
-    echo "Variable from Gradle: $BLOCK_COMMIT"
+# Check for the presence of the blocking variable file
+BLOCK_COMMIT=false # Default value if the file or variable is not foud
+BLOCK_VAR_FILE=".git/blockCommitVar"
+
+if [[ -f "$BLOCK_VAR_FILE" ]]; then
+    # shellcheck source=.git/blockCommitVar
+    source "$BLOCK_VAR_FILE"
+    echo "Variable from Gradle: BLOCK_COMMIT=$BLOCK_COMMIT"
+
     if [ "$BLOCK_COMMIT" == true ]; then
-        echo "Commit aborted"
+        echo "Commit aborted due to BLOCK_COMMIT=true"
         exit 1
     fi
 else
-    echo "Gradle variable not found"
+    echo "Blocking variable file not found: $BLOCK_VAR_FILE"
 fi
 
 # Re-stage only the files that were originally staged
-for file in $staged_files; do
+echo "Re-staging originally stage files..."
+while IFS= read -r file; do
     git add "$file"
-done
+done <<< "$staged_files"
 
-# Stage build.gradle if it was modified by the version bump
+# Stage `build.gradle` if modified by the version bump
 if git diff --name-only | grep -q "build.gradle"; then
+    echo "Staging modified build.gradle..."
     git add build.gradle
 fi
+
+echo "Pre-commit script completed successfully"
