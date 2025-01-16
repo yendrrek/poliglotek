@@ -3,18 +3,46 @@
 # Exit on any error
 set -e
 
-# Extract short hash of the latest commit
-COMMIT_ID=$(git rev-parse --short HEAD)
-
-# Path needed to access gradlew task
 PROJECT_ROOT="/home/andrzej/dev/Poliglotek"
-
-# Extract current app version from build.gradle
 APP_VERSION=$(cd "$PROJECT_ROOT" && ./gradlew -q properties | grep "^version:" | sed 's/version: *//g')
+COMMIT_ID=$(git rev-parse --short HEAD)
+APP_NAME="poliglotek"
+IMAGE_NAME="${APP_NAME}:${APP_VERSION}-${COMMIT_ID}"
+DOCKERFILE_PATH="/home/andrzej/dev/Poliglotek/Dockerfile"
+CREDS_FILE_NAME="gcloud-creds"
+ENV_VARS_FILE_PATH="/home/andrzej/dev/poliglotek-env-vars.env"
+EXPOSED_PORT="8080:8080"
 
-# Define image name
-IMAGE_NAME="poliglotek:${APP_VERSION}-${COMMIT_ID}"
+if [[ "$#" -lt 1 ]]; then
+    echo "Usage: $0 <flag> [image_id]"
+    exit 1
+fi
 
-# Build image
-echo "Building Podman image: $IMAGE_NAME"
-podman build -t "$IMAGE_NAME" -f /home/andrzej/dev/Poliglotek/Dockerfile
+flag="$1"
+image_id=""
+container_name=""
+image_tag=""
+
+case $flag in
+    -i|--image)
+        echo "Building Podman image: $IMAGE_NAME"
+        podman build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH"
+        ;;
+    -c|--container)
+    if [[ "$#" -eq 2 ]]; then
+        image_id="$2"
+        image_tag=$(podman images --filter "id=$image_id" --format "{{.Tag}}")
+        container_name="$APP_NAME-$image_tag"
+        echo "Building Podman container: $container_name"
+        podman run --name "$container_name" -it --secret "$CREDS_FILE_NAME",type=mount \
+        --env-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"
+    else
+        echo "Error: -c reuiqres a valid image id"
+        exit 1
+    fi
+    ;;
+    *)
+        echo "Unknown flag: $flag"
+        exit 1
+        ;;
+esac
