@@ -1,27 +1,47 @@
 #!/bin/bash
 
-# Exit on any error
-set -e
+# Exit on error, undefined variable, or pipe failure
+set -euo pipefail
 
+# Constants and configuration
 PROJECT_ROOT="/home/andrzej/dev/Poliglotek"
-APP_VERSION=$(cd "$PROJECT_ROOT" && ./gradlew -q properties | grep "^version:" | sed 's/version: *//g')
-COMMIT_ID=$(git rev-parse --short HEAD)
 APP_NAME="poliglotek"
-IMAGE_NAME="${APP_NAME}:${APP_VERSION}-${COMMIT_ID}"
-DOCKERFILE_PATH="/home/andrzej/dev/Poliglotek/Dockerfile"
+DOCKERFILE_PATH="$PROJECT_ROOT/Dockerfile"
 CREDS_FILE_NAME="gcloud-creds"
 ENV_VARS_FILE_PATH="/home/andrzej/dev/poliglotek-env-vars.env"
 EXPOSED_PORT="8080:8080"
 
-if [[ "$#" -lt 1 ]]; then
+# Function to retrieve application version from build.gradle
+get_app_version() {
+    (cd "$PROJECT_ROOT" && ./gradlew -q properties | grep "^version:" | sed 's/version: *//g')
+}
+
+# Functino to retreive the latest Git commit ID
+get_commit_id() {
+    git rev-parse --short HEAD
+}
+
+# Generate image name dynamically
+APP_VERSION=$(get_app_version)
+COMMIT_ID=$(get_commit_id)
+IMAGE_NAME="${APP_NAME}:${APP_VERSION}-${COMMIT_ID}"
+
+# Usage guide
+usage() {
     echo "Usage: $0 <flag> [image_id]"
+    echo "Flags:"
+    echo "  -i, --image       Build a Podman image"
+    echo "  -c, --container   Run a Podman container"
     exit 1
+}
+
+# Validate input arguments
+if [[ "$#" -lt 1 ]]; then
+    usage
 fi
 
+# Process the flag
 flag="$1"
-image_id=""
-container_name=""
-image_tag=""
 
 case $flag in
     -i|--image)
@@ -29,20 +49,23 @@ case $flag in
         podman build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH"
         ;;
     -c|--container)
-    if [[ "$#" -eq 2 ]]; then
-        image_id="$2"
-        image_tag=$(podman images --filter "id=$image_id" --format "{{.Tag}}")
-        container_name="$APP_NAME-$image_tag"
-        echo "Building Podman container: $container_name"
-        podman run --name "$container_name" -it --secret "$CREDS_FILE_NAME",type=mount \
-        --env-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"
-    else
-        echo "Error: -c reuiqres a valid image id"
+    if [[ "$#" -ne 2 ]]; then
+        echo "Error: -c requires a valid image ID as the second argument"
         exit 1
     fi
-    ;;
-    *)
-        echo "Unknown flag: $flag"
+    image_id="$2"
+    image_tag=$(podman images --filter "id=$image_id" --format "{{.Tag}}" || true)
+    if [[ -z "$image_tag" ]]; then
+        echo "Error: Image with ID '$image_id' not found"
         exit 1
-        ;;
+    fi
+    container_name="${APP_NAME}-${image_tag}"
+    echo "Running Podman container: $container_name"
+    podman run --name "$container_name" -it --secret "$CREDS_FILE_NAME",type=mount \
+        --env-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"
+    ;;
+*)
+    echo "Unknown flag: $flag"
+    usage
+    ;;
 esac
