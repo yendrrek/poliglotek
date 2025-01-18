@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.48.39"
+version = "0.48.40"
 group = "com.poliglotek"
 
 repositories {
@@ -106,9 +106,9 @@ tasks.named("compileJava") {
 versionBump{ }
 
 tasks.register("buildFrontend", Exec) {
-    def env = project.hasProperty("env") ? project.getProperty("env") : "prod"
+    def frontEndEnv = project.hasProperty("frontEndEnv") ? project.getProperty("frontEndEnv") : "prod"
     workingDir "src/frontend"
-    if (env == "dev") {
+    if (frontEndEnv == "dev") {
         commandLine "npm", "run", "build-dev"
     } else {
         commandLine "npm", "run", "build-prod"

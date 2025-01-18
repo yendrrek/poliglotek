@@ -5,7 +5,8 @@ RUN microdnf update -y && \
     microdnf install -y wget tar ca-certificates
 
 # Install Eclipse Temurin JDK 21
-RUN wget -q -O /tmp/temurin.tar.gz "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jre_x64_linux_hotspot_21.0.2_13.tar.gz" \
+RUN wget -q -O /tmp/temurin.tar.gz  \
+    "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jre_x64_linux_hotspot_21.0.2_13.tar.gz" \
     && mkdir -p /usr/local/temurin21 \
     && tar -xzf /tmp/temurin.tar.gz -C /usr/local/temurin21 --strip-components=1 \
     && rm -f /tmp/temurin.tar.gz \

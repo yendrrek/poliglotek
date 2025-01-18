@@ -16,15 +16,23 @@ get_app_version() {
     (cd "$PROJECT_ROOT" && ./gradlew -q properties | grep "^version:" | sed 's/version: *//g')
 }
 
-# Functino to retreive the latest Git commit ID
+# Function to retrieve the latest Git commit ID
 get_commit_id() {
     git rev-parse --short HEAD
 }
 
+# Function to retrieve the current Git branch
+get_git_branch() {
+    git rev-parse --abbrev-ref HEAD
+}
+
 # Generate image name dynamically
-APP_VERSION=$(get_app_version)
+IMAGE_NAME="${APP_NAME}-img"
+BRANCH=$(get_git_branch)
 COMMIT_ID=$(get_commit_id)
-IMAGE_NAME="${APP_NAME}:${APP_VERSION}-${COMMIT_ID}"
+APP_VERSION=$(get_app_version)
+IMAGE_TAG="${BRANCH}-${COMMIT_ID}-${APP_VERSION}"
+IMAGE_NAME_WITH_TAG="${IMAGE_NAME}:${IMAGE_TAG}"
 
 # Usage guide
 usage() {
@@ -45,8 +53,8 @@ flag="$1"
 
 case $flag in
     -i|--image)
-        echo "Building Podman image: $IMAGE_NAME"
-        podman build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH"
+        echo "Building Podman image: $IMAGE_NAME_WITH_TAG"
+        podman build -t "$IMAGE_NAME_WITH_TAG" -f "$DOCKERFILE_PATH"
         ;;
     -c|--container)
     if [[ "$#" -ne 2 ]]; then
