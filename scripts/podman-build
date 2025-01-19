@@ -1,75 +1,126 @@
 #!/bin/bash
 
+# Commands this script is executed with:
+# 1. `bash podman-build -i <environment_type>`. Environment type must be `dev` or `prod`
+# 2. `bash podman-build -c <image_id>. `image_id` is obtained beforehand with command `podman images`
+
 # Exit on error, undefined variable, or pipe failure
 set -euo pipefail
 
-# Constants and configuration
-PROJECT_ROOT="/home/andrzej/dev/Poliglotek"
-APP_NAME="poliglotek"
-DOCKERFILE_PATH="$PROJECT_ROOT/Dockerfile"
-CREDS_FILE_NAME="gcloud-creds"
-ENV_VARS_FILE_PATH="/home/andrzej/dev/poliglotek-env-vars.env"
-EXPOSED_PORT="8080:8080"
+# Create an array with shell constants which must be set in bashrc before running the script
+PREDEFINED_SHELL_CONSTANTS=(POLIGLOTEK_PROJECT_ROOT GOOGLE_CREDS_FILE_NAME ENV_VARS_FILE_PATH EXPOSED_PORT)
 
-# Function to retrieve application version from build.gradle
-get_app_version() {
-    (cd "$PROJECT_ROOT" && ./gradlew -q properties | grep "^version:" | sed 's/version: *//g')
+# Flag to track if all constants are set
+all_constants_set=true
+
+# Validate shell predefined constants. If any of them is not set do not continue.
+for constant in "${PREDEFINED_SHELL_CONSTANTS[@]}"; do
+    if [[ -z "${!constant}" ]]; then  # Use indirect expansion to check the value of the variable
+        echo "Error: The required constant '$constant' is not set"
+        all_constants_set=false
+    fi
+done
+
+if [[ "$all_constants_set" = false ]]; then
+    echo "Please set the missing constants in your bashrc and try again."
+    echo " Required constants are: ${PREDEFINED_SHELL_CONSTANTS[*]}"
+    exit 1
+fi
+
+# Other constants
+DOCKERFILE_PATH="$POLIGLOTEK_PROJECT_ROOT/Dockerfile"
+APP_NAME="poliglotek"
+VALID_ENVIRONMENT_TYPES=("dev" "prod")
+
+check_dependencies() {
+    for cmd in podman git; do
+        command -v "$cmd" >/dev/null 2>&1 || { echo "Error: $cmd is not installed."; exit 1; }
+    done
 }
 
-# Function to retrieve the latest Git commit ID
+# Retrieves application version from build.gradle
+get_app_version() {
+    (cd "$POLIGLOTEK_PROJECT_ROOT" && ./gradlew -q properties | grep "^version:" | sed 's/version: *//g')
+}
+
 get_commit_id() {
     git rev-parse --short HEAD
 }
 
-# Function to retrieve the current Git branch
-get_git_branch() {
+get_git_branch_name() {
     git rev-parse --abbrev-ref HEAD
 }
 
-# Generate image name dynamically
-IMAGE_NAME="${APP_NAME}-img"
-BRANCH=$(get_git_branch)
-COMMIT_ID=$(get_commit_id)
-APP_VERSION=$(get_app_version)
-IMAGE_TAG="${BRANCH}-${COMMIT_ID}-${APP_VERSION}"
-IMAGE_NAME_WITH_TAG="${IMAGE_NAME}:${IMAGE_TAG}"
+# Retrieves Podman image tag to use it later in container name for easier identification
+# Image tag is retrieved using image id passed from the cli as an argument
+get_image_tag() {
+    local image_id="$1" # To get image id use command `podman images` before running this script
+    podman images --filter "id=$image_id" --format "{{.Tag}}" || true
+}
 
-# Usage guide
 usage() {
-    echo "Usage: $0 <flag> [image_id]"
+    echo "Usage: $0 <flag> <env> [image_id]"
+    echo
     echo "Flags:"
     echo "  -i, --image       Build a Podman image"
     echo "  -c, --container   Run a Podman container"
+    echo
+    echo "Env:"
+    echo "  dev, prod         Mandatory environment specifier for image build"
+    echo
+    echo "Examples:"
+    echo "  Build an image: $0 -i dev"
+    echo "  Run a container: $0 -c <image_id>"
     exit 1
 }
 
 # Validate input arguments
-if [[ "$#" -lt 1 ]]; then
+# There must be two: `-i <environment_name>` or `-c <image_id>`
+if [[ "$#" -lt 2 ]]; then
     usage
 fi
 
-# Process the flag
+check_dependencies
+
 flag="$1"
+env="$2"  # Mandatory for -i, ignored for -c
 
 case $flag in
     -i|--image)
-        echo "Building Podman image: $IMAGE_NAME_WITH_TAG"
-        podman build -t "$IMAGE_NAME_WITH_TAG" -f "$DOCKERFILE_PATH"
-        ;;
-    -c|--container)
-    if [[ "$#" -ne 2 ]]; then
-        echo "Error: -c requires a valid image ID as the second argument"
+
+    # Validate mandatory environment types for image build
+    # Environment type is passed from the cli as an argument
+    if [[ ! " ${VALID_ENVIRONMENT_TYPES[*]} " =~ ${env} ]]; then
+        echo "Error: Invalid environment. Valid options are: ${VALID_ENVIRONMENT_TYPES[*]}"
+        usage
+    fi
+
+    # Generate image name
+    IMAGE_NAME="${APP_NAME}-img"
+    BRANCH=$(get_git_branch_name) # Branch whose name is used must be checked out when running this script
+    COMMIT_ID=$(get_commit_id)
+    APP_VERSION=$(get_app_version)
+    IMAGE_TAG="${env}-${BRANCH}-${COMMIT_ID}-${APP_VERSION}"
+    IMAGE_NAME_WITH_TAG="${IMAGE_NAME}:${IMAGE_TAG}"
+
+    echo "Building Podman image: $IMAGE_NAME_WITH_TAG"
+    if podman build -t "$IMAGE_NAME_WITH_TAG" -f "$DOCKERFILE_PATH"; then
+        echo "Image built successfully: $IMAGE_NAME_WITH_TAG"
+    else
+        echo "Error: Failed to build image"
         exit 1
     fi
-    image_id="$2"
-    image_tag=$(podman images --filter "id=$image_id" --format "{{.Tag}}" || true)
+    ;;
+    -c|--container)
+    image_id="$env" # For -c, $env contains the image_id
+    image_tag=$(get_image_tag "$image_id")
     if [[ -z "$image_tag" ]]; then
         echo "Error: Image with ID '$image_id' not found"
         exit 1
     fi
     container_name="${APP_NAME}-${image_tag}"
     echo "Running Podman container: $container_name"
-    podman run --name "$container_name" -it --secret "$CREDS_FILE_NAME",type=mount \
+    podman run --name "$container_name" -it --secret "$GOOGLE_CREDS_FILE_NAME",type=mount \
         --env-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"
     ;;
 *)
