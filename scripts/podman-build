@@ -75,7 +75,8 @@ usage() {
     echo "Flags:"
     echo "  -i, --image       Build a Podman image"
     echo "  -c, --container   Run a Podman container"
-    echo "  -t, --tag         Tag image before pushing to Google Cloud Artifact Registry"
+    echo "  -t, --tag         Tag image before pushing to registry"
+    echo "  -p, --push        Push image to registry"
     echo
     echo "Env:"
     echo "  dev, prod         Mandatory environment specifier for image build"
@@ -83,7 +84,7 @@ usage() {
     echo "Examples:"
     echo "  Build an image: $0 -i dev"
     echo "  Run a container: $0 -c <image_id>"
-    echo "  Tag image before pushing it to Google Cloud Artifact Registry: $0 -t <image_id>"
+    echo "  Tag image before pushing it to registry: $0 -t <image_id>"
     exit 1
 }
 
@@ -151,13 +152,25 @@ case $flag in
         echo "Error: Image with ID '$image_id' not found"
         exit 1
     fi
-    gcloud_repo_name=${APP_NAME}
     if podman tag "$image_name_with_tag" "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"\
-        /"$gcloud_repo_name"/"$image_name_with_tag"; then
-        echo "Image tagged successfully. Can now be pushed to Google Cloud Artifact Registry"
+        /"${APP_NAME}"/"$image_name_with_tag"; then # APP_NAME is repo name in registry
+        echo "Image $image_name_with_tag tagged for pushing to registry successfully"
     else
-        echo "Error: Failed to tag image before pushing it to Google Cloud Artifact Registry"
+        echo "Error: Failed to tag image $image_name_with_tag for pushing to registry"
         exit 1
+    fi
+    ;;
+    -p|--push)
+    image_id="$arg"
+    image_name_with_tag=$(get_image_name_with_tag "$image_id")
+    if [[ -z "$image_name_with_tag" ]]; then
+            echo "Error: Image with ID '$image_id' not found"
+            exit 1
+    fi
+    if podman push "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"/"${APP_NAME}"/"$image_name_with_tag"; then
+        echo "Image $image_name_with_tag pushed to registry successfully "
+    else
+        echo "Error: Failed to push image $image_name_with_tag to registry"
     fi
     ;;
 *)
