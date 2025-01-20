@@ -3,6 +3,9 @@
 # Commands this script is executed with:
 # 1. `bash podman-build -i <environment_type>`. Environment type must be `dev` or `prod`
 # 2. `bash podman-build -c <image_id>. `image_id` is obtained beforehand with command `podman images`
+# 3. `bash podman-build -t <image_name_with_tag>
+# podman tag poliglotek:0.48.38-792b046 europe-west2-docker.pkg.dev/translation-to-polish-437813/poliglotek/poliglotek:0.48.38-792b046
+# podman push europe-west2-docker.pkg.dev/translation-to-polish-437813/poliglotek/poliglotek:0.48.38-792b046
 
 # Exit on error, undefined variable, or pipe failure
 set -euo pipefail
@@ -31,6 +34,9 @@ fi
 DOCKERFILE_PATH="$POLIGLOTEK_PROJECT_ROOT/Dockerfile"
 APP_NAME="poliglotek"
 VALID_ENVIRONMENT_TYPES=("dev" "prod")
+G_CLOUD_REGION="europe-west2-docker.pkg.dev"
+G_CLOUD_PROJECT_ID="translation-to-polish-437813"
+
 
 check_dependencies() {
     for cmd in podman git; do
@@ -58,12 +64,18 @@ get_image_tag() {
     podman images --filter "id=$image_id" --format "{{.Tag}}" || true
 }
 
+get_image_name_with_tag() {
+    local image_id="$1"
+    podman images --filter "id=$image_id" --format "{{.Repository}}:{{.Tag}}"
+}
+
 usage() {
-    echo "Usage: $0 <flag> <env> [image_id]"
+    echo "Usage: $0 <flag> <arg> [image_id]"
     echo
     echo "Flags:"
     echo "  -i, --image       Build a Podman image"
     echo "  -c, --container   Run a Podman container"
+    echo "  -t, --tag         Tag image before pushing to Google Cloud Artifact Registry"
     echo
     echo "Env:"
     echo "  dev, prod         Mandatory environment specifier for image build"
@@ -71,6 +83,7 @@ usage() {
     echo "Examples:"
     echo "  Build an image: $0 -i dev"
     echo "  Run a container: $0 -c <image_id>"
+    echo "  Tag image before pushing it to Google Cloud Artifact Registry: $0 -t <image_id>"
     exit 1
 }
 
@@ -83,14 +96,14 @@ fi
 check_dependencies
 
 flag="$1"
-env="$2"  # Mandatory for -i, ignored for -c
+arg="$2"
 
 case $flag in
     -i|--image)
-
     # Validate mandatory environment types for image build
     # Environment type is passed from the cli as an argument
-    if [[ ! " ${VALID_ENVIRONMENT_TYPES[*]} " =~ ${env} ]]; then
+    environment="${arg}"
+    if [[ ! " ${VALID_ENVIRONMENT_TYPES[*]} " =~ ${environment} ]]; then
         echo "Error: Invalid environment. Valid options are: ${VALID_ENVIRONMENT_TYPES[*]}"
         usage
     fi
@@ -100,9 +113,10 @@ case $flag in
     BRANCH=$(get_git_branch_name) # Branch whose name is used must be checked out when running this script
     COMMIT_ID=$(get_commit_id)
     APP_VERSION=$(get_app_version)
-    IMAGE_TAG="${env}-${BRANCH}-${COMMIT_ID}-${APP_VERSION}"
+    IMAGE_TAG="${environment}-${BRANCH}-${COMMIT_ID}-${APP_VERSION}"
     IMAGE_NAME_WITH_TAG="${IMAGE_NAME}:${IMAGE_TAG}"
 
+    # Build image and validate success
     echo "Building Podman image: $IMAGE_NAME_WITH_TAG"
     if podman build -t "$IMAGE_NAME_WITH_TAG" -f "$DOCKERFILE_PATH"; then
         echo "Image built successfully: $IMAGE_NAME_WITH_TAG"
@@ -112,7 +126,7 @@ case $flag in
     fi
     ;;
     -c|--container)
-    image_id="$env" # For -c, $env contains the image_id
+    image_id="$arg"
     image_tag=$(get_image_tag "$image_id")
     if [[ -z "$image_tag" ]]; then
         echo "Error: Image with ID '$image_id' not found"
@@ -120,8 +134,31 @@ case $flag in
     fi
     container_name="${APP_NAME}-${image_tag}"
     echo "Running Podman container: $container_name"
-    podman run --name "$container_name" -it --secret "$GOOGLE_CREDS_FILE_NAME",type=mount \
-        --env-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"
+
+    # Build container and validate success
+    if podman run --name "$container_name" -it --secret "$GOOGLE_CREDS_FILE_NAME",type=mount \
+        --arg-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"; then
+        echo "Container created successfully: $container_name"
+    else
+        echo "Error: Failed to create container"
+        exit 1
+    fi
+    ;;
+    -t|--tag)
+    image_id="$arg"
+    image_name_with_tag=$(get_image_name_with_tag "$image_id")
+    if [[ -z "$image_name_with_tag" ]]; then
+        echo "Error: Image with ID '$image_id' not found"
+        exit 1
+    fi
+    gcloud_repo_name=${APP_NAME}
+    if podman tag "$image_name_with_tag" "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"\
+        /"$gcloud_repo_name"/"$image_name_with_tag"; then
+        echo "Image tagged successfully. Can now be pushed to Google Cloud Artifact Registry"
+    else
+        echo "Error: Failed to tag image before pushing it to Google Cloud Artifact Registry"
+        exit 1
+    fi
     ;;
 *)
     echo "Unknown flag: $flag"
