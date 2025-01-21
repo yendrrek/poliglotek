@@ -24,7 +24,7 @@ for constant in "${PREDEFINED_SHELL_CONSTANTS[@]}"; do
 done
 
 if [[ "$all_constants_set" = false ]]; then
-    echo "Please set the missing constants in your bashrc and try again."
+    echo "Set the missing constants in your bashrc and try again."
     echo " Required constants are: ${PREDEFINED_SHELL_CONSTANTS[*]}"
     exit 1
 fi
@@ -95,6 +95,29 @@ make_user_answer_case_insensitive() {
     echo "$user_answer" | tr '[:upper:]' '[:lower]'
 }
 
+check_id_image_with_same_tag_exists() {
+    local new_image_tag="$1"
+    mapfile -t images_tags < <(podman images --format "{{.Tag}}")
+    if [[ " ${images_tags[*]} " == *" $new_image_tag "* ]]; then
+        echo "Image with tag '${new_image_tag}' already exists"
+    fi
+}
+
+continue_or_not() {
+    read -r -t 30 -p "Do you want to continue? (y/n?): " user_answer
+    user_answer=${user_answer:-n} # Defaults to `n` if not answered within 30 seconds
+    user_answer=$(make_user_answer_case_insensitive "$user_answer")
+    if [[ "${user_answer}" == "y" ]]; then
+        echo "Continuing..."
+    elif [[ "$user_answer" == "n" ]]; then
+        echo "Exiting..."
+        exit 0
+    else
+        echo "Invalid input. Answer 'y' or 'n'"
+        exit 0
+    fi
+}
+
 usage() {
     echo "Usage: $0 [OPTIONS] ARGUMENTS"
     echo
@@ -131,18 +154,8 @@ case $flag in
         last_modified=$(stat --format='%y' "$APP_JAR_FILE_PATH" | cut -c 1-16) # Drops seconds and millis
         echo "The file was last modified on $last_modified"
         echo "Make sure it's the most recent build"
-        read -r -t 30 -p "Do you want to continue creating image? (y/n?): " user_answer
-        user_answer=${user_answer:-n} # Defaults to `n` if not answered within 30 seconds
-        user_answer=$(make_user_answer_case_insensitive "$user_answer")
-        if [[ "${user_answer}" == "y" ]]; then
-            echo "Continuing..."
-        elif [[ "$user_answer" == "n" ]]; then
-            echo "Image not created. Exiting..."
-            exit 0
-        else
-            echo "Invalid input. Please answer 'y' or 'n'"
-            exit 0
-        fi
+
+        continue_or_not
     fi
 
     # Validate mandatory environment types for image build
@@ -160,6 +173,10 @@ case $flag in
     APP_VERSION=$(get_app_version)
     IMAGE_TAG="${environment}-${BRANCH}-${COMMIT_ID}-${APP_VERSION}"
     IMAGE_NAME_WITH_TAG="${IMAGE_NAME}:${IMAGE_TAG}"
+
+    check_id_image_with_same_tag_exists "$IMAGE_TAG"
+
+    continue_or_not
 
     # Build image and validate success
     echo "Building Podman image: $IMAGE_NAME_WITH_TAG"
