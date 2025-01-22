@@ -175,46 +175,28 @@ case $flag in
 
     check_id_image_with_same_tag_exists "$IMAGE_TAG"
 
-    # Build image and validate success
     echo "Building Podman image: $IMAGE_NAME_WITH_TAG"
-    if podman build -t "$IMAGE_NAME_WITH_TAG" -f "$DOCKERFILE_PATH"; then
-        echo "Image built successfully: $IMAGE_NAME_WITH_TAG"
-    else
-        echo "Error: Failed to build image"
-        exit 1
-    fi
+
+    podman build -t "$IMAGE_NAME_WITH_TAG" -f "$DOCKERFILE_PATH";
     ;;
     -c|--container)
     image_id="$arg"
     image_tag=$(get_image_tag "$image_id")
     container_name="${APP_NAME}-${image_tag}"
+
     echo "Running Podman container: $container_name"
-    # Build container and validate success
-    if podman run --name "$container_name" -it --secret "$GOOGLE_CREDS_FILE_NAME",type=mount \
-        --arg-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"; then
-        echo "Container created successfully: $container_name"
-    else
-        echo "Error: Failed to create container"
-        exit 1
-    fi
+
+    podman run --name "$container_name" -it --secret "$GOOGLE_CREDS_FILE_NAME",type=mount \
+        --env-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id";
     ;;
     -t|--tag)
     image_name_with_tag=$(get_image_name_with_tag "$arg")
-    if podman tag "$image_name_with_tag" "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"\
-        /"${APP_NAME}"/"$image_name_with_tag"; then # APP_NAME is repo name in registry
-        echo "Image $image_name_with_tag tagged for pushing to registry successfully"
-    else
-        echo "Error: Failed to tag image $image_name_with_tag for pushing to registry"
-        exit 1
-    fi
+    podman tag "$image_name_with_tag" "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"\
+        /"${APP_NAME}"/"$image_name_with_tag"; # APP_NAME is repo name in registry
     ;;
     -p|--push)
     image_name_with_tag=$(get_image_name_with_tag "$arg")
-    if podman push "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"/"${APP_NAME}"/"$image_name_with_tag"; then
-        echo "Image $image_name_with_tag pushed to registry successfully "
-    else
-        echo "Error: Failed to push image $image_name_with_tag to registry"
-    fi
+    podman push "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"/"${APP_NAME}"/"$image_name_with_tag"
     ;;
 *)
     echo "Unknown flag: $flag"
