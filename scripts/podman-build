@@ -100,6 +100,7 @@ check_id_image_with_same_tag_exists() {
     mapfile -t images_tags < <(podman images --format "{{.Tag}}")
     if [[ " ${images_tags[*]} " == *" $new_image_tag "* ]]; then
         echo "Image with tag '${new_image_tag}' already exists"
+        continue_or_not
     fi
 }
 
@@ -108,9 +109,8 @@ continue_or_not() {
     user_answer=${user_answer:-n} # Defaults to `n` if not answered within 30 seconds
     user_answer=$(make_user_answer_case_insensitive "$user_answer")
     if [[ "${user_answer}" == "y" ]]; then
-        echo "Continuing..."
+        echo ""
     elif [[ "$user_answer" == "n" ]]; then
-        echo "Exiting..."
         exit 0
     else
         echo "Invalid input. Answer 'y' or 'n'"
@@ -154,7 +154,6 @@ case $flag in
         last_modified=$(stat --format='%y' "$APP_JAR_FILE_PATH" | cut -c 1-16) # Drops seconds and millis
         echo "The file was last modified on $last_modified"
         echo "Make sure it's the most recent build"
-
         continue_or_not
     fi
 
@@ -176,8 +175,6 @@ case $flag in
 
     check_id_image_with_same_tag_exists "$IMAGE_TAG"
 
-    continue_or_not
-
     # Build image and validate success
     echo "Building Podman image: $IMAGE_NAME_WITH_TAG"
     if podman build -t "$IMAGE_NAME_WITH_TAG" -f "$DOCKERFILE_PATH"; then
@@ -188,10 +185,10 @@ case $flag in
     fi
     ;;
     -c|--container)
-    image_tag=$(get_image_tag "$arg")
+    image_id="$arg"
+    image_tag=$(get_image_tag "$image_id")
     container_name="${APP_NAME}-${image_tag}"
     echo "Running Podman container: $container_name"
-
     # Build container and validate success
     if podman run --name "$container_name" -it --secret "$GOOGLE_CREDS_FILE_NAME",type=mount \
         --arg-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id"; then
