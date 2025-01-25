@@ -3,8 +3,12 @@
 # Commands this script can be executed with:
 # 1. `bash podman-build -i <environment_type>`. Creates an image. Environment type must be `dev` or `prod`
 # 2. `bash podman-build -c <image_id>. Creates a container
-# 3. `bash podman-build -t <image_name_with_tag>. Tags an image before pushing to registry
-# 4. `bash podman-build -p <image_name_with_tag>. Pushes image to registry
+# 3. `bash podman-build -t <image_id>. Tags an image before pushing to registry
+# 4. `bash podman-build -p <image_id>. Pushes image to registry
+
+# Commands used for tagging and pushing. Just for a reference.
+# podman tag poliglotek:0.48.38-792b046 europe-west2-docker.pkg.dev/translation-to-polish-437813/poliglotek/poliglotek:0.48.38-792b046
+# podman push europe-west2-docker.pkg.dev/translation-to-polish-437813/poliglotek/poliglotek:0.48.38-792b046
 
 # Exit on error, undefined variable, or pipe failure
 set -euo pipefail
@@ -78,11 +82,12 @@ check_image_id_exists() {
     fi
 }
 
-get_image_name_with_tag() {
+get_image_name_with_tag_excluding_repo_name() {
     local image_id="$1"
     local image_name_with_tag
     check_image_id_exists "$image_id"
-    image_name_with_tag=$(podman images --filter "id=$image_id" --format "{{.Repository}}:{{.Tag}}" || true)
+    image_name_with_tag=$(podman images --filter "id=$image_id" \
+        --format "{{.Repository}}:{{.Tag}}" | head -n 1 | sed 's|.*/||' || true)
     if [[ -z "$image_name_with_tag" ]]; then
         echo "Error: Image with ID '$image_id' not found"
         exit 1
@@ -190,13 +195,14 @@ case $flag in
         --env-file "$ENV_VARS_FILE_PATH" -p "$EXPOSED_PORT" "$image_id";
     ;;
     -t|--tag)
-    image_name_with_tag=$(get_image_name_with_tag "$arg")
-    podman tag "$image_name_with_tag" "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"\
-        /"${APP_NAME}"/"$image_name_with_tag"; # APP_NAME is repo name in registry
+    image_name_with_tag=$(get_image_name_with_tag_excluding_repo_name "$arg")
+    # APP_NAME in the below `podman` command is the repo name in registry
+    podman tag "$image_name_with_tag" \
+        "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"/"$APP_NAME"/"$image_name_with_tag";
     ;;
     -p|--push)
-    image_name_with_tag=$(get_image_name_with_tag "$arg")
-    podman push "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"/"${APP_NAME}"/"$image_name_with_tag"
+    image_name_with_tag=$(get_image_name_with_tag_excluding_repo_name "$arg")
+    podman push "$G_CLOUD_REGION"/"$G_CLOUD_PROJECT_ID"/"$APP_NAME"/"$image_name_with_tag"
     ;;
 *)
     echo "Unknown flag: $flag"
