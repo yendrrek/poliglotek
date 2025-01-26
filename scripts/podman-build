@@ -171,12 +171,11 @@ case $flag in
     fi
 
     # Generate image name
-    IMAGE_NAME="${APP_NAME}-img"
     BRANCH=$(get_git_branch_name) # Branch whose name is used must be checked out when running this script
     COMMIT_ID=$(get_commit_id)
     APP_VERSION=$(get_app_version)
     IMAGE_TAG="${environment}-${BRANCH}-${COMMIT_ID}-${APP_VERSION}"
-    IMAGE_NAME_WITH_TAG="${IMAGE_NAME}:${IMAGE_TAG}"
+    IMAGE_NAME_WITH_TAG="${APP_NAME}:${IMAGE_TAG}"
 
     check_id_image_with_same_tag_exists "$IMAGE_TAG"
 
