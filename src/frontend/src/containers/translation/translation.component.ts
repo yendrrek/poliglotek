@@ -26,6 +26,7 @@ import { COUNTRIES } from '../../constants/countries';
 import { LANG_COUNTRY_MATCH } from '../../constants/lang-country-match';
 import { ONE_COUNTRY_FROM_MANY } from '../../constants/one-country-from-many';
 import { handleHttpError } from '../../utils/utils';
+import { CachedTranslatedPageService } from '../../services/cached-translated-page.service';
 
 @Component({
   selector: 'home',
@@ -49,6 +50,7 @@ export class TranslationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
     private dialog: MatDialog,
+    private cachedTranslationService: CachedTranslatedPageService
   ) {
   }
 
@@ -60,6 +62,10 @@ export class TranslationComponent implements OnInit {
     });
     this.autoSelectOneOrMoreMatchingCountries();
     this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
+    const cachedTranslatedPages: TranslatedPage[] = this.cachedTranslationService.getTranslatedPage();
+    if (cachedTranslatedPages && cachedTranslatedPages.length) {
+      this.translatedPages = cachedTranslatedPages;
+    }
   }
 
   handleSubmitSearchData(): void {
@@ -70,7 +76,8 @@ export class TranslationComponent implements OnInit {
             this.openDialog(resp.error);
             return;
           }
-          this.translatedPages = resp.data.filter(item => item != null);
+          this.translatedPages = resp.data.filter((page: TranslatedPage) => page != null);
+          this.cachedTranslationService.setTranslatedPage(this.translatedPages);
           if (resp.warning) {
             this.openDialog(resp.warning);
           }
