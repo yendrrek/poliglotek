@@ -7,15 +7,16 @@ import { TranslatedPage } from '../models/translated-page';
 export class CachedTranslatedPageService {
   private translatedPages: TranslatedPage[] = [];
 
-  setTranslatedPage(translatedPages: TranslatedPage[]): void {
+  setTranslatedPages(translatedPages: TranslatedPage[]): void {
     this.translatedPages = translatedPages;
+    sessionStorage.setItem('translations', JSON.stringify(translatedPages));
   }
 
-  getTranslatedPage(): TranslatedPage[] {
+  getTranslatedPages(): TranslatedPage[] {
+    const storedtranslatedPages: string | null = sessionStorage.getItem('translations');
+    if (storedtranslatedPages) {
+      this.translatedPages = JSON.parse(storedtranslatedPages);
+    }
     return this.translatedPages;
-  }
-
-  clearTranslation(): void {
-    this.translatedPages = [];
   }
 }

@@ -62,10 +62,7 @@ export class TranslationComponent implements OnInit {
     });
     this.autoSelectOneOrMoreMatchingCountries();
     this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
-    const cachedTranslatedPages: TranslatedPage[] = this.cachedTranslationService.getTranslatedPage();
-    if (cachedTranslatedPages && cachedTranslatedPages.length) {
-      this.translatedPages = cachedTranslatedPages;
-    }
+    this.handleCachedTranslatedPages();
   }
 
   handleSubmitSearchData(): void {
@@ -77,7 +74,7 @@ export class TranslationComponent implements OnInit {
             return;
           }
           this.translatedPages = resp.data.filter((page: TranslatedPage) => page != null);
-          this.cachedTranslationService.setTranslatedPage(this.translatedPages);
+          this.cachedTranslationService.setTranslatedPages(this.translatedPages);
           if (resp.warning) {
             this.openDialog(resp.warning);
           }
@@ -86,6 +83,13 @@ export class TranslationComponent implements OnInit {
           return handleHttpError(error);
         }
       });
+    }
+  }
+
+  private handleCachedTranslatedPages(): void {
+    const cachedTranslatedPages: TranslatedPage[] = this.cachedTranslationService.getTranslatedPages();
+    if (cachedTranslatedPages && cachedTranslatedPages.length) {
+      this.translatedPages = cachedTranslatedPages;
     }
   }
 
