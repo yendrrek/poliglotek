@@ -44,7 +44,7 @@ public class GoogleSearchService {
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .limit(4)
+                .limit(2)
                 .toList();
     }
 
