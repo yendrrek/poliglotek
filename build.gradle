@@ -1,15 +1,15 @@
 plugins {
     id "java"
     id "groovy"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "io.micronaut.application" version "4.4.4"
-    id "io.micronaut.aot" version "4.4.4"
-    id "org.owasp.dependencycheck" version "10.0.4"
-    id "com.andrzejpiontek.version-bump" version "0.0.2"
+    id "com.github.johnrengelman.shadow"
+    id "io.micronaut.application"
+    id "io.micronaut.aot"
+    id "org.owasp.dependencycheck"
+    id "com.andrzejpiontek.version-bump"
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.48.54"
+version = "0.48.55"
 group = "com.poliglotek"
 
 repositories {
@@ -19,43 +19,43 @@ repositories {
 
 dependencies {
     // micronaut
-    annotationProcessor "io.micronaut.validation:micronaut-validation-processor"
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
-    annotationProcessor "io.micronaut:micronaut-http-validation"
-    implementation "io.micronaut.serde:micronaut-serde-jackson"
-    implementation "io.micronaut.validation:micronaut-validation"
-    implementation "io.micronaut:micronaut-http-client"
-    testImplementation "io.micronaut:micronaut-http-client"
+    annotationProcessor "io.micronaut.validation:micronaut-validation-processor:_"
+    annotationProcessor "io.micronaut.serde:micronaut-serde-processor:_"
+    annotationProcessor "io.micronaut:micronaut-http-validation:_"
+    implementation "io.micronaut.serde:micronaut-serde-jackson:_"
+    implementation "io.micronaut.validation:micronaut-validation:_"
+    implementation "io.micronaut:micronaut-http-client:_"
+    testImplementation "io.micronaut:micronaut-http-client:_"
 
     // lombok
-    annotationProcessor "org.projectlombok:lombok:1.18.34"
-    testAnnotationProcessor "org.projectlombok:lombok:1.18.34"
-    implementation "org.projectlombok:lombok:1.18.34"
-    testCompileOnly "org.projectlombok:lombok:1.18.34"
+    annotationProcessor "org.projectlombok:lombok:_"
+    testAnnotationProcessor "org.projectlombok:lombok:_"
+    implementation "org.projectlombok:lombok:_"
+    testCompileOnly "org.projectlombok:lombok:_"
 
     // jsoup
-    implementation "org.jsoup:jsoup:1.18.1"
+    implementation "org.jsoup:jsoup:_"
 
     // selenium
-    implementation "org.seleniumhq.selenium:selenium-java:4.27.0"
+    implementation "org.seleniumhq.selenium:selenium-java:_"
 
     // google cloud
-    implementation "com.google.cloud:google-cloud-translate:2.52.0"
+    implementation "com.google.cloud:google-cloud-translate:_"
 
     // snakeyaml
-    implementation "org.yaml:snakeyaml:2.0"
+    implementation "org.yaml:snakeyaml:_"
 
     // mailgun
-    implementation "com.mailgun:mailgun-java:1.1.3"
+    implementation "com.mailgun:mailgun-java:_"
 
     // logback
-    implementation "ch.qos.logback:logback-classic"
+    implementation "ch.qos.logback:logback-classic:_"
 
     // byte buddy - used by spock to mock classes and generate mock implementations
-    testImplementation "net.bytebuddy:byte-buddy:1.14.9"
+    testImplementation "net.bytebuddy:byte-buddy:_"
 
     // objenesis - used by spock to mock classes without default constructors
-    testImplementation "org.objenesis:objenesis:3.4"
+    testImplementation "org.objenesis:objenesis:_"
 }
 
 application {
