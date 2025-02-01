@@ -114,7 +114,7 @@ continue_or_not() {
     user_answer=${user_answer:-n} # Defaults to `n` if not answered within 30 seconds
     user_answer=$(make_user_answer_case_insensitive "$user_answer")
     if [[ "${user_answer}" == "y" ]]; then
-        echo ""
+        echo "Proceeding..."
     elif [[ "$user_answer" == "n" ]]; then
         exit 0
     else
