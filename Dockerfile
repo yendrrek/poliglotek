@@ -17,12 +17,14 @@ ENV JAVA_HOME=/usr/local/temurin21
 ENV PATH="$JAVA_HOME/bin:$PATH"
 
 # Install Google Chrome (Headless)
-RUN microdnf install -y wget \
-    && wget -q -O /etc/yum.repos.d/google-chrome.repo https://dl.google.com/linux/chrome/rpm/stable/x86_64 \
-    && echo -e "[google-chrome]\nname=Google Chrome 64-bit\nbaseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://dl.google.com/linux/linux_signing_key.pub" > /etc/yum.repos.d/google-chrome.repo \
-    && microdnf install -y google-chrome-stable \
-    && microdnf clean all \
-    && rm -rf /var/cache/dnf /tmp/*
+RUN microdnf install -y wget && \
+    wget -q https://dl.google.com/linux/linux_signing_key.pub -O /tmp/google.pub && \
+    rpm --import /tmp/google.pub && \
+    echo -e "[google-chrome]\nname=google-chrome\nbaseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://dl.google.com/linux/linux_signing_key.pub" > /etc/yum.repos.d/google-chrome.repo && \
+    microdnf install -y google-chrome-stable && \
+    microdnf remove wget -y && \
+    microdnf clean all && \
+    rm -rf /var/cache/dnf /tmp/*
 
 WORKDIR /home/app
 
