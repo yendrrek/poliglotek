@@ -7,6 +7,7 @@ import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 // https://programmablesearchengine.google.com/controlpanel/overview?cx=8296b888e31bc4fb4
 // Limit of 10,000 queries per day
@@ -30,10 +31,11 @@ public class GoogleSearchService {
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
         String documentLanguage = LANG_PREFIX + langCode;
         String excludeTerms = buildTermsExcludedFromSearch(langCode);
+        String excludedFileTypes = buildExcludedFileTypes();
         SearchResponseWrapper results = httpClient.fetchSearchResults(
                 customSearchApiKey,
                 customSearchEngineId,
-                translatedQuery,
+                translatedQuery + excludedFileTypes,
                 documentLanguage,
                 null,
                 countryCode,
@@ -44,12 +46,19 @@ public class GoogleSearchService {
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .limit(4)
+                .limit(6)
                 .toList();
     }
 
     private String buildTermsExcludedFromSearch(String langCode) {
         String eCommerceTerms = ExcludedFromGoogleCustomSearch.ECOMMERCE_TERMS.get(langCode.toLowerCase());
         return eCommerceTerms + ", " + ExcludedFromGoogleCustomSearch.SOCIAL_MEDIA;
+    }
+
+    private String buildExcludedFileTypes() {
+        String queryOperator = " -filetype:";
+        return ExcludedFromGoogleCustomSearch.FILE_TYPES.stream()
+                .map(type -> queryOperator + type)
+                .collect(Collectors.joining());
     }
 }
