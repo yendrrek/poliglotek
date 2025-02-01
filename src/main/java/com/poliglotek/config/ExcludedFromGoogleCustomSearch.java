@@ -10,7 +10,7 @@ import java.util.Map;
 public class ExcludedFromGoogleCustomSearch {
 
     public static final List<String> FILE_TYPES = List.of("pdf", "ps", "csv", "epub", "kml", "kmz", "gpx",
-            "hwp", "htm", "html", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp", "ods", "odt", "rtf", "svg", "tex",
+            "hwp", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp", "ods", "odt", "rtf", "svg", "tex",
             "txt", "text", "bas", "c", "cc", "cpp", "cxx", "h", "hpp", "cs", "java", "pl", "py", "wml", "wap", "xml"
     );
 
