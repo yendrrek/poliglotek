@@ -47,7 +47,7 @@ public class ScrapeService {
                 return null;
             }
             if (isDynamicPage(doc)) {
-                log.info("Body is empty, so it's a dynamic page. Using Selenium for scraping, not Jsoup");
+                log.info("Body is empty, so it's probably a dynamic page. Using Selenium for scraping, not Jsoup");
                 driver = createChromeDriver();
                 String page = scrapePageWithSelenium(url, driver);
                 if (page == null) {
