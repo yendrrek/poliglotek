@@ -9,7 +9,7 @@ micronaut:
       configurations:
         default:
           allowedOrigins: ["http://localhost:4200"]
-          allwedMethods:
+          allowedMethods:
             - POST
             - GET
             - PUT
@@ -36,7 +36,7 @@ googleCloud:
   customSearchApiKey: ${googleCustomSearchApiKey}
   customSearchEngineId: ${googleCustomSearchEngineId}
 
-mailguApiKey: ${mailgunApiKey}
+mailgunApiKey: ${mailgunApiKey}
 
 akismet:
   apiKey: ${akismetApiKey}

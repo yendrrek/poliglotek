@@ -26,36 +26,41 @@ import { COUNTRIES } from '../../constants/countries';
 import { LANG_COUNTRY_MATCH } from '../../constants/lang-country-match';
 import { ONE_COUNTRY_FROM_MANY } from '../../constants/one-country-from-many';
 import { handleHttpError } from '../../utils/utils';
-import { CachedTranslatedPageService } from '../../services/cached-translated-page.service';
+import { CacheService } from '../../services/cache.service';
+import { TranslationFormInput } from '../../models/translation-form-input';
+import { CountryValue } from '../../types/country-value';
 
 @Component({
   selector: 'home',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage, NavbarComponent, RouterOutlet],
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage, NavbarComponent,
+    RouterOutlet],
   templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss'
 })
 export class TranslationComponent implements OnInit {
   title: string = 'frontend';
-  languages: Language[] = LANGUAGES.sort((a: Language, b: Language) => a.languageViewValue.localeCompare(b.languageViewValue));
-  countries: Country[] = Object.values(COUNTRIES).sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
+  languages: Language[] = LANGUAGES.sort((a: Language, b: Language) =>
+    a.languageViewValue.localeCompare(b.languageViewValue));
+  countries: Country[] = Object.values(COUNTRIES).sort((a: Country, b: Country) =>
+    a.countryViewValue.localeCompare(b.countryViewValue));
   dynamicCountries: Country[] = [];
-  translatedPages: TranslatedPage[] = [];
-  searchForm: FormGroup = new FormGroup({});
   isLoading: boolean = false;
+  translatedPages: TranslatedPage[] = [];
+  translationForm: FormGroup = new FormGroup({});
 
   constructor(
     private translationService: TranslationService,
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
     private dialog: MatDialog,
-    private cachedTranslationService: CachedTranslatedPageService
+    private cacheService: CacheService
   ) {
   }
 
   ngOnInit(): void {
-    this.searchForm = this.formBuilder.group({
+    this.translationForm = this.formBuilder.group({
       query: ['', Validators.required],
       langCode: ['', Validators.required],
       countryCode: ['', Validators.required],
@@ -66,35 +71,81 @@ export class TranslationComponent implements OnInit {
   }
 
   handleSubmitSearchData(): void {
-    if (this.searchForm.valid) {
-      this.translationService.getTranslatedPages(this.searchForm).subscribe({
-        next: (resp: Response<TranslatedPage[]>): void => {
-          if (!resp.success) {
-            this.openDialog(resp.error);
-            return;
-          }
-          this.translatedPages = resp.data.filter((page: TranslatedPage) => page != null);
-          this.cachedTranslationService.setTranslatedPages(this.translatedPages);
-          if (resp.warning) {
-            this.openDialog(resp.warning);
-          }
-        },
-        error: (error: HttpErrorResponse): Observable<never> => {
-          return handleHttpError(error);
-        }
-      });
+    if (!this.translationForm.valid) return;
+    const choice: TranslationFormInput = this.translationForm.value;
+    if (this.checkForDuplicateChoice(choice)) return;
+    this.processTranslationRequest(choice);
+  }
+
+  private checkForDuplicateChoice(currentChoice: TranslationFormInput): boolean {
+    const previousChoice: TranslationFormInput = this.cacheService.getTranslationChoice();
+    if (this.isDuplicateChoice(previousChoice, currentChoice)) {
+      const dialogMessage: string = this.buildDialogMessage(previousChoice, currentChoice);
+      this.openDialog(dialogMessage);
+      return true;
     }
+    return false;
+  }
+
+  private isDuplicateChoice(previous: TranslationFormInput, current: TranslationFormInput): boolean {
+    return previous && Object.keys(current).every((key: string) =>
+      previous[key as keyof TranslationFormInput].trim() === current[key as keyof TranslationFormInput].trim());
+  }
+
+  private buildDialogMessage(previousChoice: TranslationFormInput, currentChoice: TranslationFormInput): string {
+    const currentLanguage: string = this.getCurrentLanguageChoice(currentChoice);
+    const currentCountry: string = this.getCurrentCountryChoice(currentChoice);
+    const lowQuote = '\u201E';
+    return `Rezultaty wybranych przez Ciebie opcji
+        ${lowQuote}${previousChoice.query}", ${lowQuote}${currentLanguage}", ${lowQuote}${currentCountry}"
+        są już wyświetlone.`;
+  }
+
+  private getCurrentLanguageChoice(currentChoice: TranslationFormInput): string {
+    return LANGUAGES.filter((lang: Language) =>
+      lang.languageValue === currentChoice.langCode)[0].languageViewValue;
+  }
+
+  private getCurrentCountryChoice(currentChoice: TranslationFormInput): string {
+    return COUNTRIES[currentChoice.countryCode as keyof Record<CountryValue, Country>].countryViewValue;
+  }
+
+  private processTranslationRequest(choice: TranslationFormInput): void {
+    this.translationService.getTranslatedPages(choice).subscribe({
+      next: (resp: Response<TranslatedPage[]>): void => {
+        this.handleTranslationResponse(resp, choice);
+      },
+      error: (error: HttpErrorResponse): Observable<never> => {
+        return handleHttpError(error);
+      }
+    });
+  }
+
+  private handleTranslationResponse(resp: Response<TranslatedPage[]>, choice: TranslationFormInput): void {
+    if (!resp.success) {
+      this.openDialog(resp.error);
+      return;
+    }
+    this.updateCacheAndTranslatedPages(resp.data, choice);
+    if (resp.warning) {
+      this.openDialog(resp.warning);
+    }
+  }
+
+  private updateCacheAndTranslatedPages(pages: TranslatedPage[], choice: TranslationFormInput): void {
+    this.translatedPages = pages.filter((page: TranslatedPage) => page != null);
+    this.cacheService.setTranslationChoice(choice);
+    this.cacheService.setTranslatedPages(this.translatedPages);
   }
 
   private handleCachedTranslatedPages(): void {
-    const cachedTranslatedPages: TranslatedPage[] = this.cachedTranslationService.getTranslatedPages();
-    if (cachedTranslatedPages && cachedTranslatedPages.length) {
-      this.translatedPages = cachedTranslatedPages;
-    }
+    const cachedTranslatedPages: TranslatedPage[] = this.cacheService.getTranslatedPages();
+    if (!cachedTranslatedPages.length) return;
+    this.translatedPages = cachedTranslatedPages;
   }
 
   private autoSelectOneOrMoreMatchingCountries(): void {
-    this.searchForm.get('langCode')?.valueChanges.subscribe((selectedValue: LanguageValue) => {
+    this.translationForm.get('langCode')?.valueChanges.subscribe((selectedValue: LanguageValue) => {
       if (LANG_COUNTRY_MATCH[selectedValue] === null) {
         console.error(`Language code '${selectedValue}' must have a matching country for automatic selection.`);
         return;
@@ -112,13 +163,15 @@ export class TranslationComponent implements OnInit {
   }
 
   private autoSelectOneCountry(oneMatchingCountry: Country | undefined): void {
-    this.searchForm.get('countryCode')?.setValue(oneMatchingCountry?.countryValue);
+    this.translationForm.get('countryCode')?.setValue(oneMatchingCountry?.countryValue);
   }
 
   private autoSelectMoreMatchingCountries(moreMatchingCountries: Country[]): void {
-    this.dynamicCountries = moreMatchingCountries.sort((a: Country, b: Country) => a.countryViewValue.localeCompare(b.countryViewValue));
+    this.dynamicCountries = moreMatchingCountries.sort((a: Country, b: Country) =>
+      a.countryViewValue.localeCompare(b.countryViewValue));
     this.dynamicCountries.forEach((dynamicCountry: Country) => {
-      this.countries = this.countries.filter((country: Country) => country.countryValue !== dynamicCountry.countryValue);
+      this.countries = this.countries.filter((country: Country) =>
+        country.countryValue !== dynamicCountry.countryValue);
     });
   }
 
