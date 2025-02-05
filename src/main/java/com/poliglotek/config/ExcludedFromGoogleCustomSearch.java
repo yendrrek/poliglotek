@@ -14,12 +14,6 @@ public class ExcludedFromGoogleCustomSearch {
             "txt", "text", "bas", "c", "cc", "cpp", "cxx", "h", "hpp", "cs", "java", "pl", "py", "wml", "wap", "xml"
     );
 
-    public static final String SOCIAL_MEDIA = "facebook, twitter, x.com, linkedin, instagram, snapchat, " +
-            "google currents, vkontakte, mastodon, threads, youtube, tiktok, vimeo, twitch, dailymotion, bilibili, " +
-            "triller, pinterest, flickr, deviantart, behance, 500px, reddit, quora, tumblr, stack exchange, github, " +
-            "dribbble, xing, angellist, tinder, bumble, okcupid, hinge, grindr, eharmony, match.com, goodreads, " +
-            "letterboxd, last.fm, myanimelist, ravelry, weibo, qzone, mixi, clubhouse, spotify, anchor.fm, podbean";
-
     public static final Map<String, String> ECOMMERCE_TERMS = new HashMap<>();
     static {
         ECOMMERCE_TERMS.put("af", "koop, aankoop, winkel, stoor, ooreenkoms, laaste kans, uitverkoping, afslag, " +

@@ -30,7 +30,7 @@ public class GoogleSearchService {
 
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
         String documentLanguage = LANG_PREFIX + langCode;
-        String excludeTerms = buildTermsExcludedFromSearch(langCode);
+        String excludeTerms = ExcludedFromGoogleCustomSearch.ECOMMERCE_TERMS.get(langCode.toLowerCase());
         String excludedFileTypes = buildExcludedFileTypes();
         SearchResponseWrapper results = httpClient.fetchSearchResults(
                 customSearchApiKey,
@@ -46,13 +46,8 @@ public class GoogleSearchService {
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .limit(4)
+                .limit(1)
                 .toList();
-    }
-
-    private String buildTermsExcludedFromSearch(String langCode) {
-        String eCommerceTerms = ExcludedFromGoogleCustomSearch.ECOMMERCE_TERMS.get(langCode.toLowerCase());
-        return eCommerceTerms + ", " + ExcludedFromGoogleCustomSearch.SOCIAL_MEDIA;
     }
 
     private String buildExcludedFileTypes() {
