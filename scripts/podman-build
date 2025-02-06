@@ -116,6 +116,7 @@ continue_or_not() {
     if [[ "${user_answer}" == "y" ]]; then
         echo "Proceeding..."
     elif [[ "$user_answer" == "n" ]]; then
+        echo "Quitting..."
         exit 0
     else
         echo "Invalid input. Answer 'y' or 'n'"
