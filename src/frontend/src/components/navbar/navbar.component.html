@@ -1,12 +1,20 @@
 <mat-toolbar>
-  <a class="poliglotek-logo" routerLink="/home" aria-label="Logo aplikacji i link do strony głównej">POLiglotek</a>
+  <a class="logo" routerLink="/home" aria-label="Logo aplikacji i link do strony głównej">POLiglotek</a>
   <span class="navbar-spacer"></span>
-  <a class="navbar-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
-  <a class="navbar-item" mat-button routerLink="/oAplikacji"
-     aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
-  </a>
-  <a class="navbar-item" mat-button routerLink="/kontakt"
-     aria-label="Link do strony z danymi kontaktowymi autorów aplikacji">Kontakt
-  </a>
+
+  <div responsive="hide" id="nav-big"> <!--for big screens-->
+    <a class="navbar-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
+    <a class="navbar-item" mat-button routerLink="/oAplikacji"
+       aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
+    </a>
+    <a class="navbar-item" mat-button routerLink="/kontakt"
+       aria-label="Link do strony z danymi kontaktowymi autorów aplikacji">Kontakt
+    </a>
+  </div>
+
+  <div responsive="show"> <!--for small screens-->
+    <button mat-icon-button (click)="openNav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
-<router-outlet></router-outlet>

@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatAnchor } from '@angular/material/button';
+import { MatAnchor, MatIconButton } from '@angular/material/button';
+import { ResponsiveDirective } from '../../directives/responsive.directive';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'navbar',
@@ -9,11 +11,18 @@ import { MatAnchor } from '@angular/material/button';
     MatToolbar,
     RouterLink,
     MatAnchor,
-    RouterOutlet
+    ResponsiveDirective,
+    MatIcon,
+    MatIconButton
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
 
+  @Output() _openNav: EventEmitter<void> = new EventEmitter<void>();
+
+  openNav(): void {
+    this._openNav.emit();
+  }
 }

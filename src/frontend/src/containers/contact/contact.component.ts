@@ -11,7 +11,6 @@ import {
   Validators
 } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ContactService } from '../../services/contact.service';
 import { MailResponse } from '../../models/mail-response';
 import { handleHttpError } from '../../utils/utils';
@@ -20,13 +19,13 @@ import { handleHttpError } from '../../utils/utils';
   selector: 'contact',
   imports: [
     ReactiveFormsModule,
-    RouterOutlet,
-    NavbarComponent
+    RouterOutlet
   ],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'
 })
 export class ContactComponent implements OnInit {
+
   contactForm: FormGroup = new FormGroup({});
 
   constructor(private formBuilder: FormBuilder, private mailService: ContactService) { }

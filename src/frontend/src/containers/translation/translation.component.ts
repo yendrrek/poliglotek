@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgOptimizedImage } from '@angular/common';
@@ -13,7 +12,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { DialogNotificationComponent } from '../../components/dialog-notification/dialog-notification.component';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Language } from '../../models/language';
 import { Country } from '../../models/country';
 import { TranslatedPage } from '../../models/translated-page';
@@ -34,12 +32,12 @@ import { CountryValue } from '../../types/country-value';
   selector: 'home',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage, NavbarComponent,
-    RouterOutlet],
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage],
   templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss'
 })
 export class TranslationComponent implements OnInit {
+
   title: string = 'frontend';
   languages: Language[] = LANGUAGES.sort((a: Language, b: Language) =>
     a.languageViewValue.localeCompare(b.languageViewValue));
