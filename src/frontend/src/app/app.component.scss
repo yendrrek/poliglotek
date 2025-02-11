@@ -3,6 +3,11 @@ mat-sidenav-container {
   height: 100vh;
 }
 
+mat-sidenav {
+  width: 20%;
+  height: 37%;
+}
+
 .close-icon {
   text-align: right;
   margin: 0.75em var(--transaltionMargin2rem);
