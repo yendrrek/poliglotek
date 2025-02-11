@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAnchor, MatIconButton } from '@angular/material/button';
-import { MatNavList } from '@angular/material/list';
+import { MatIconButton } from '@angular/material/button';
+import { MatListItem, MatNavList } from '@angular/material/list';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
 import { ResponsiveDirective } from '../directives/responsive.directive';
 import { NavbarComponent } from '../components/navbar/navbar.component';
@@ -13,7 +13,6 @@ import { MatIcon } from '@angular/material/icon';
   imports: [
     RouterOutlet,
     FormsModule,
-    MatAnchor,
     MatNavList,
     MatSidenav,
     MatSidenavContainer,
@@ -23,7 +22,8 @@ import { MatIcon } from '@angular/material/icon';
     RouterLink,
     NavbarComponent,
     MatIcon,
-    MatIconButton
+    MatIconButton,
+    MatListItem
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

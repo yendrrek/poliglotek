@@ -2,7 +2,7 @@
   <a class="logo" routerLink="/home" aria-label="Logo aplikacji i link do strony głównej">POLiglotek</a>
   <span class="navbar-spacer"></span>
 
-  <div responsive="hide" id="nav-big"> <!--for big screens-->
+  <div responsive="hide"> <!--for big screens-->
     <a class="navbar-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
     <a class="navbar-item" mat-button routerLink="/oAplikacji"
        aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
@@ -12,7 +12,7 @@
     </a>
   </div>
 
-  <div responsive="show"> <!--for small screens-->
+  <div responsive="show" class="navbar-item"> <!--for small screens-->
     <button mat-icon-button (click)="openNav()">
       <mat-icon>menu</mat-icon>
     </button>

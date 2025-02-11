@@ -1,21 +1,21 @@
 <mat-sidenav-container responsive="show" class="sidenav-container">
   <mat-sidenav position="end" #drawer mode="over" [opened]="false">
-    <mat-nav-list>
-      <a class="navbar-item" mat-button routerLink="/home"
-         aria-label="Link do strony głównej">Strona główna
-      </a>
-      <a class="navbar-item" mat-button routerLink="/oAplikacji"
-         aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
-      </a>
-      <a class="navbar-item" mat-button routerLink="/kontakt"
-         aria-label="Link do strony z danymi kontaktowymi autorów aplikacji">Kontakt
-      </a>
-    </mat-nav-list>
-    <div responsive="show"> <!--for small screens-->
+    <div responsive="show" class="close-icon"> <!--for small screens-->
       <button mat-icon-button (click)="closeNav()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home"
+         aria-label="Link do strony głównej">Strona główna
+      </a>
+      <a mat-list-item routerLink="/oAplikacji"
+         aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
+      </a>
+      <a mat-list-item routerLink="/kontakt"
+         aria-label="Link do strony z danymi kontaktowymi autorów aplikacji">Kontakt
+      </a>
+    </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <navbar (_openNav)="openNav()"></navbar>
