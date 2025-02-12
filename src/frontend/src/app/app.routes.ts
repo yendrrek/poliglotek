@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   { path: "kontakt",
     loadComponent: () =>
-      import("../containers/contact/contact.component")
+      import("../components/contact/contact.component")
         .then((module) => module.ContactComponent)
   },
   { path: "**", pathMatch: "full", component: NotFoundComponent }

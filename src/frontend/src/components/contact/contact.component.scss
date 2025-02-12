@@ -8,7 +8,7 @@ textarea {
   align-items: center; // remove once the actual contact form exists
   justify-content: center; // remove once the actual contact form exists
   gap: 1em;
-  width: 40%;
+  width: clamp(320px, 40%, 800px);
   //margin-top: var(--formMarginTop); to be used once the actual contact form exists
   height: 75%; // remove once the actual contact form exists
   margin-left: auto;

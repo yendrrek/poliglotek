@@ -32,11 +32,11 @@ export class AppComponent {
 
   @ViewChild('drawer') drawer!: MatSidenav;
 
-  openNav(): void {
+  openSideNavigation(): void {
     this.drawer.open();
   }
 
-  closeNav(): void {
+  closeSideNavigation(): void {
     this.drawer.close();
   }
 }

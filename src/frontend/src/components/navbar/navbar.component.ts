@@ -20,9 +20,9 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class NavbarComponent {
 
-  @Output() _openNav: EventEmitter<void> = new EventEmitter<void>();
+  @Output() openNav: EventEmitter<void> = new EventEmitter<void>();
 
-  openNav(): void {
-    this._openNav.emit();
+  openSideNavigation(): void {
+    this.openNav.emit();
   }
 }
