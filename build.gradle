@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.48.73"
+version = "0.48.74"
 group = "com.poliglotek"
 
 repositories {
@@ -46,7 +46,7 @@ dependencies {
     implementation "org.yaml:snakeyaml:_"
 
     // mailgun
-    implementation "com.mailgun:mailgun-java:_"
+//    implementation "com.mailgun:mailgun-java:_"
 
     // logback
     implementation "ch.qos.logback:logback-classic:_"
