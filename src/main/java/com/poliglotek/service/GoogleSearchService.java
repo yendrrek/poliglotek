@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 // https://programmablesearchengine.google.com/controlpanel/overview?cx=8296b888e31bc4fb4
 // Limit of 10,000 queries per day
-// All Amazon domains are exluded through the front-end settings (link above)
+// All Amazon domains are excluded through the front-end settings (link above)
 @Singleton
 public class GoogleSearchService {
 
@@ -46,7 +46,7 @@ public class GoogleSearchService {
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .limit(4)
+                .limit(1)
                 .toList();
     }
 
