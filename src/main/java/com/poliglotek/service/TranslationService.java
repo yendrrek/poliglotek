@@ -25,7 +25,7 @@ public class TranslationService {
     private static final String TEXT_HTML = "text/html";
     private static final String BASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int ID_LENGTH = 10;
-    private static final int CHRACTERS_LIMIT = 15000; // Hard limit: 30000; recommended: 5000, but websites need more
+    private static final int CHARACTERS_LIMIT = 15000; // Hard limit: 30000; recommended: 5000, but websites need more
     private static final int CHARACTERS_LIMIT_LOG = 15;
 
     public TranslationService(GoogleSearchService googleSearchService,
@@ -41,7 +41,7 @@ public class TranslationService {
                                                                                 String countryCode) {
         log.info("Query: {} | Target language: {} | Page location: {}", query, targetLang, countryCode);
         String translatedQuery = getTranslation(query, targetLang, projectId);
-        log.info("Polish query: '{}' is translatated to '{}' as '{}'", query, targetLang, translatedQuery);
+        log.info("Polish query: '{}' is translated to '{}' as '{}'", query, targetLang, translatedQuery);
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         if (urls == null || urls.isEmpty()) {
             log.info("No results for combination | {} | {} | {} |", query, targetLang, countryCode);
@@ -98,8 +98,8 @@ public class TranslationService {
     private boolean hasPageTooManyCharacters(String pageBody) {
         int numberOfCharacters = pageBody.length();
         log.info("Number of web page characters to translate: {}", numberOfCharacters);
-        if (numberOfCharacters > CHRACTERS_LIMIT) {
-            log.error("Number of web page characters to translate must not exceed {} characters", CHRACTERS_LIMIT);
+        if (numberOfCharacters > CHARACTERS_LIMIT) {
+            log.error("Number of web page characters to translate must not exceed {} characters", CHARACTERS_LIMIT);
             return true;
         }
         return false;
