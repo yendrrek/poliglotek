@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.48.78"
+version = "0.48.79"
 group = "com.poliglotek"
 
 repositories {
@@ -28,10 +28,10 @@ dependencies {
     testImplementation "io.micronaut:micronaut-http-client:_"
 
     // lombok
-    annotationProcessor "org.projectlombok:lombok:_"
-    testAnnotationProcessor "org.projectlombok:lombok:_"
-    implementation "org.projectlombok:lombok:_"
-    testCompileOnly "org.projectlombok:lombok:_"
+//    annotationProcessor "org.projectlombok:lombok:_"
+//    testAnnotationProcessor "org.projectlombok:lombok:_"
+//    implementation "org.projectlombok:lombok:_"
+//    testCompileOnly "org.projectlombok:lombok:_"
 
     // jsoup
     implementation "org.jsoup:jsoup:_"

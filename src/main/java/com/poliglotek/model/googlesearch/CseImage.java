@@ -2,11 +2,22 @@ package com.poliglotek.model.googlesearch;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
 
 @Introspected
 @Serdeable.Deserializable
-@Data
 public class CseImage {
-    String src;
+
+    private String src;
+
+    public CseImage(String src) {
+        this.src = src;
+    }
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
+    }
 }

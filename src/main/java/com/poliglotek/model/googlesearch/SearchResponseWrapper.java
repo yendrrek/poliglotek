@@ -2,18 +2,79 @@ package com.poliglotek.model.googlesearch;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
 
 import java.util.List;
 
 @Introspected
 @Serdeable.Deserializable
-@Data
 public class SearchResponseWrapper {
-    private final String kind;
-    private final SearchUrl url;
-    private final SearchQueries queries;
-    private final SearchContext context;
-    private final SearchInformation searchInformation;
-    private final List<SearchItem> items;
+
+    private String kind;
+    private SearchUrl url;
+    private SearchQueries queries;
+    private SearchContext context;
+    private SearchInformation searchInformation;
+    private List<SearchItem> items;
+
+    public SearchResponseWrapper(String kind,
+                                 SearchUrl url,
+                                 SearchQueries queries,
+                                 SearchContext context,
+                                 SearchInformation searchInformation,
+                                 List<SearchItem> items) {
+        this.kind = kind;
+        this.url = url;
+        this.queries = queries;
+        this.context = context;
+        this.searchInformation = searchInformation;
+        this.items = items;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public SearchUrl getUrl() {
+        return url;
+    }
+
+    public void setUrl(SearchUrl url) {
+        this.url = url;
+    }
+
+    public SearchQueries getQueries() {
+        return queries;
+    }
+
+    public void setQueries(SearchQueries queries) {
+        this.queries = queries;
+    }
+
+    public SearchContext getContext() {
+        return context;
+    }
+
+    public void setContext(SearchContext context) {
+        this.context = context;
+    }
+
+    public SearchInformation getSearchInformation() {
+        return searchInformation;
+    }
+
+    public void setSearchInformation(SearchInformation searchInformation) {
+        this.searchInformation = searchInformation;
+    }
+
+    public List<SearchItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<SearchItem> items) {
+        this.items = items;
+    }
 }

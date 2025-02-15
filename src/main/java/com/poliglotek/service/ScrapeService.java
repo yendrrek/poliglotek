@@ -102,7 +102,7 @@ public class ScrapeService {
                 .removeTags(TAGS_ONLY)
                 .removeAttributes(":all", "style");
         String safeBody = Jsoup.clean(documentBody.html(), safelist);
-        return filterElemenstWithContent(Jsoup.parse(safeBody));
+        return filterElementsWithContent(Jsoup.parse(safeBody));
     }
 
     private void removeJsAttributes(Element bodyElement) {
@@ -113,7 +113,7 @@ public class ScrapeService {
         });
     }
 
-    private static String filterElemenstWithContent(Document doc) {
+    private static String filterElementsWithContent(Document doc) {
         Element combinedElement = new Element("div");
         for (Element element : doc.getAllElements()) {
             if (!element.ownText().trim().isEmpty()) {
