@@ -5,13 +5,12 @@ mat-sidenav-container {
 
 mat-sidenav {
   background: #fff;
-  border-radius: 0.25em 0 0 0.25em !important;
   width: 11em;
   height: 100%;
 }
 
 .close-icon {
   text-align: right;
-  margin: 0.75em var(--transaltionMargin2rem);
+  margin: 0.5em 0.5em 0.5em 0;
 }
 
