@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.48.80"
+version = "0.48.81"
 group = "com.poliglotek"
 
 repositories {
@@ -26,12 +26,6 @@ dependencies {
     implementation "io.micronaut.validation:micronaut-validation:_"
     implementation "io.micronaut:micronaut-http-client:_"
     testImplementation "io.micronaut:micronaut-http-client:_"
-
-    // lombok
-//    annotationProcessor "org.projectlombok:lombok:_"
-//    testAnnotationProcessor "org.projectlombok:lombok:_"
-//    implementation "org.projectlombok:lombok:_"
-//    testCompileOnly "org.projectlombok:lombok:_"
 
     // jsoup
     implementation "org.jsoup:jsoup:_"
@@ -106,11 +100,13 @@ tasks.named("compileJava") {
 versionBump{ }
 
 tasks.register("buildFrontend", Exec) {
-    def frontEndEnv = project.hasProperty("frontEndEnv") ? project.getProperty("frontEndEnv") : "prod"
+    def environment = System.getenv("MICRONAUT_ENVIRONMENTS")
     workingDir "src/frontend"
-    if (frontEndEnv == "dev") {
+    if (environment == "dev") {
+        println("Building front-end for dev environment")
         commandLine "npm", "run", "build-dev"
     } else {
+        println("Building front-end for prod environment")
         commandLine "npm", "run", "build-prod"
     }
 }
