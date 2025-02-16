@@ -18,14 +18,17 @@ public class GoogleSearchService {
     private final GoogleCustomSearchClient httpClient;
     private final String customSearchApiKey;
     private final String customSearchEngineId;
+    private final int customSearchLimit;
     private static final String LANG_PREFIX = "lang_";
 
     public GoogleSearchService(GoogleCustomSearchClient httpClient,
                                @Value("${googleCloud.customSearchApiKey}") String customSearchApiKey,
-                               @Value("${googleCloud.customSearchEngineId}")  String customSearchEngineId) {
+                               @Value("${googleCloud.customSearchEngineId}")  String customSearchEngineId,
+                               @Value("${customSearchLimit}") int customSearchLimit) {
         this.httpClient = httpClient;
         this.customSearchApiKey = customSearchApiKey;
         this.customSearchEngineId = customSearchEngineId;
+        this.customSearchLimit = customSearchLimit;
     }
 
     public List<String> fetchUrls(String translatedQuery, String langCode, String countryCode) {
@@ -46,7 +49,7 @@ public class GoogleSearchService {
         }
         return searchItems.stream()
                 .map(SearchItem::getLink)
-                .limit(1)
+                .limit(customSearchLimit)
                 .toList();
     }
 
