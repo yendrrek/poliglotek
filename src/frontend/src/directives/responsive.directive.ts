@@ -9,10 +9,11 @@ export class ResponsiveDirective implements OnInit {
   @Input() responsive!: 'show' | 'hide';
 
   ngOnInit() {
-    const currentBreakpoint: boolean = this.breakpointObserver.isMatched(Breakpoints.Small);
+    const breakPoints: string[] = [Breakpoints.Small, Breakpoints.XSmall];
+    const currentBreakpoint: boolean = this.breakpointObserver.isMatched(breakPoints);
     this.showOrHideNavigation(currentBreakpoint);
 
-    this.breakpointObserver.observe(Breakpoints.Small).subscribe((result: BreakpointState) => {
+    this.breakpointObserver.observe(breakPoints).subscribe((result: BreakpointState) => {
       this.showOrHideNavigation(result.matches);
     });
   }
