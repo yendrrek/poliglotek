@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatListItem, MatNavList } from '@angular/material/list';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
-import { ResponsiveDirective } from '../directives/responsive.directive';
+import { MenuResponsiveDirective } from '../directives/menu-responsive.directive';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { MatIcon } from '@angular/material/icon';
 
@@ -18,7 +18,7 @@ import { MatIcon } from '@angular/material/icon';
     MatSidenavContainer,
     MatSidenavContent,
     ReactiveFormsModule,
-    ResponsiveDirective,
+    MenuResponsiveDirective,
     RouterLink,
     NavbarComponent,
     MatIcon,
