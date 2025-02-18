@@ -11,7 +11,7 @@ import { MatButton } from '@angular/material/button';
     MatButton
   ],
   templateUrl: './dialog-notification.component.html',
-  styleUrl: './dialog-notification.component.css'
+  styleUrl: './dialog-notification.component.scss'
 })
 export class DialogNotificationComponent {
 

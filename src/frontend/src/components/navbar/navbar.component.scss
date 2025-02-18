@@ -25,9 +25,14 @@
   margin-top: 0.625em;
   margin-left: var(--translationMargin2rem);
   font-family: "WendyOne-Regular", serif;
-  font-size: 3em;
   color: #1a1b1f;
   text-decoration: none;
+  &-bigger {
+    font-size: 3em;
+  }
+  &-smaller {
+    font-size: 2.5em;
+  }
 }
 
 .hide {

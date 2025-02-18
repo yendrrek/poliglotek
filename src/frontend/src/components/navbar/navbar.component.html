@@ -1,8 +1,9 @@
 <mat-toolbar>
-  <a class="logo" routerLink="/home" aria-label="Logo aplikacji i link do strony głównej">POLiglotek</a>
+  <a responsiveLogo="logo-smaller" class="logo" routerLink="/home" aria-label="Logo aplikacji i link do strony głównej">
+    POLiglotek</a>
   <span class="navbar-spacer"></span>
 
-  <div responsive="hide"> <!--for big screens-->
+  <div responsiveNavigation="hide"> <!--for big screens-->
     <a class="navbar-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
     <a class="navbar-item" mat-button routerLink="/oAplikacji"
        aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
@@ -12,7 +13,7 @@
     </a>
   </div>
 
-  <div responsive="show" class="navbar-item"> <!--for small screens-->
+  <div responsiveNavigation="show" class="navbar-item"> <!--for small screens-->
     <button mat-icon-button (click)="openSideNavigation()">
       <mat-icon>menu</mat-icon>
     </button>
