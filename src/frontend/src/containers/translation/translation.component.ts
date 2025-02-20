@@ -27,12 +27,13 @@ import { handleHttpError } from '../../utils/utils';
 import { CacheService } from '../../services/cache.service';
 import { TranslationFormInput } from '../../models/translation-form-input';
 import { CountryValue } from '../../types/country-value';
+import { FormLabelResponsiveDirective } from '../../directives/form-label-responsive.directive';
 
 @Component({
   selector: 'home',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage],
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage, FormLabelResponsiveDirective],
   templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss'
 })
@@ -47,6 +48,9 @@ export class TranslationComponent implements OnInit {
   isLoading: boolean = false;
   translatedPages: TranslatedPage[] = [];
   translationForm: FormGroup = new FormGroup({});
+  queryLabel: string = '';
+  langCodeLabel: string = '';
+  countryCodeLabel: string = '';
 
   constructor(
     private translationService: TranslationService,
@@ -73,6 +77,18 @@ export class TranslationComponent implements OnInit {
     const choice: TranslationFormInput = this.translationForm.value;
     if (this.checkForDuplicateChoice(choice)) return;
     this.processTranslationRequest(choice);
+  }
+
+  onQueryLabelLayoutChange(queryLabel: string) {
+    this.queryLabel = queryLabel;
+  }
+
+  onLangCodeLabelLayoutChange(langCodeLabel: string) {
+    this.langCodeLabel = langCodeLabel;
+  }
+
+  onCountryCodeLayoutChange(countryCodeLabel: string): void {
+    this.countryCodeLabel = countryCodeLabel;
   }
 
   private checkForDuplicateChoice(currentChoice: TranslationFormInput): boolean {
