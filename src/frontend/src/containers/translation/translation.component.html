@@ -4,54 +4,36 @@
   </div>
 }
 
-<form class="search-form" [formGroup]="translationForm">
-  <mat-form-field class="search-term-input-width">
-    <mat-label formFieldFontResponsive (queryLabelLayoutChange)="onQueryLabelLayoutChange($event)">
-      <span [innerHTML]="queryLabel"></span>
-    </mat-label>
-    <input
-      required
-      matInput
-      type="text"
-      formControlName="query">
+<form class="search-form-container" [formGroup]="translationForm" formResponsive>
+  <mat-form-field class="search-form--query-input-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+    <mat-label formFieldResponsive>Szukana fraza po polsku</mat-label>
+    <input required matInput type="text" formControlName="query">
     @if (translationForm.get('query')?.value) {
-      <button
-        matSuffix
-        mat-icon-button
-        aria-label="Clear"
+      <button matSuffix mat-icon-button aria-label="Clear"
         (click)="translationForm.get('query')?.setValue('')">
         <mat-icon>close</mat-icon>
       </button>
     }
   </mat-form-field>
 
-  <mat-form-field class="select-distance select-width">
-    <mat-label formFieldFontResponsive (langCodeLabelLayoutChange)="onLangCodeLabelLayoutChange($event)">
-      <span [innerHTML]="langCodeLabel"></span>
-    </mat-label>
-    <mat-select
-      required
-      formControlName="langCode">
+  <mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+    <mat-label formFieldResponsive>Tłumacz frazę na</mat-label>
+    <mat-select required formControlName="langCode">
       @for (language of languages; track language.languageValue) {
         <mat-option [value]="language.languageValue">{{ language.languageViewValue }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="select-distance select-width">
-    <mat-label formFieldFontResponsive (countryCodeLabelLayoutChange)="onCountryCodeLayoutChange($event)">
-      <span [innerHTML]="countryCodeLabel"></span>
-    </mat-label>
-    <mat-select
-      required
-      formControlName="countryCode">
+  <mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+    <mat-label formFieldResponsive>Kraj wyników</mat-label>
+    <mat-select required formControlName="countryCode">
       @if (dynamicCountries) {
         @for (dynamicCountry of dynamicCountries;
           let isLastDynamicCountry = $last ;
           let isFirstDynamicCountry = $first;
           track dynamicCountry.countryViewValue) {
-          <mat-option
-            class="dynamic-countries-border"
+          <mat-option class="dynamic-countries-border"
             [class.first-country-item]="isFirstDynamicCountry"
             [class.last-country-item]="isLastDynamicCountry"
             [value]="dynamicCountry.countryValue">{{ dynamicCountry.countryViewValue }}

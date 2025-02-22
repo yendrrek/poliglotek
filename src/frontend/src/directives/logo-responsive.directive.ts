@@ -42,7 +42,6 @@ export class LogoResponsiveDirective implements OnInit {
   }
 
   private observeBreakpointsForLogo(breakpoints: LogoBreakpoints): void {
-    console.log('breakpoints', breakpoints);
     this.breakpointObserver.observe([breakpoints.xsmall, breakpoints._400px])
       .subscribe((result: BreakpointState) => {
         this.classes.forEach((cls: string) => this.renderer.removeClass(this.element.nativeElement,cls));
