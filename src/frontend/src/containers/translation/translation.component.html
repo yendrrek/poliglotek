@@ -46,7 +46,9 @@
     </mat-select>
   </mat-form-field>
 
-  <button mat-raised-button class="search-button" (click)="handleSubmitSearchData()">Szukaj</button>
+  <button mat-raised-button class="search-button"
+          searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
+  </button>
 </form>
 
 <div class="header">Tłumacznie znalezionych stron na polski:</div>

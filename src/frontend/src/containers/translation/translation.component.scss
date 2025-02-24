@@ -41,11 +41,13 @@
 
 .search-button {
   border-radius: var(--buttonRadius);
-  margin-bottom: 0.1875em;
+  margin-bottom: var(--search-button--margin-bottom);
   margin-top: 1.125em;
   margin-left: var(--translationMargin2rem);
-  &-reset-margin-left {
+  &--column-layout {
+    margin-bottom: calc(var(--search-button--margin-bottom) * 4);
     margin-left: 0;
+    width: 93%;
   }
 }
 
