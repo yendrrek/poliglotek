@@ -2,19 +2,18 @@
   <a logoResponsive class="logo" routerLink="/home"
      aria-label="Logo aplikacji i link do strony głównej">
     POLiglotek</a>
-  <span class="navbar-spacer"></span>
 
-  <div menuResponsive="hide"> <!--for big screens-->
-    <a class="navbar-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
-    <a class="navbar-item" mat-button routerLink="/oAplikacji"
+  <div class="right-menu" menuResponsive="hide"> <!--for big screens-->
+    <a class="right-menu-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
+    <a class="right-menu-item" mat-button routerLink="/oAplikacji"
        aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
     </a>
-    <a class="navbar-item" mat-button routerLink="/kontakt"
+    <a class="right-menu-item right-menu-item--edge" mat-button routerLink="/kontakt"
        aria-label="Link do strony z danymi kontaktowymi autorów aplikacji">Kontakt
     </a>
   </div>
 
-  <div menuResponsive="show" class="navbar-item"> <!--for small screens-->
+  <div class="hamburger" menuResponsive="show"> <!--for small screens-->
     <button mat-icon-button (click)="openSideNavigation()">
       <mat-icon>menu</mat-icon>
     </button>

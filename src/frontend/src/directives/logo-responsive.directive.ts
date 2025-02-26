@@ -9,10 +9,11 @@ import { LogoCustomBreakpoints } from '../enums/logo-custom-breakpoints';
 
 export class LogoResponsiveDirective extends ResponsiveHelper implements OnInit {
 
-  private logoBigger: string = 'logo-bigger';
-  private logoSmaller: string = 'logo-smaller';
-  private logo400px: string = 'logo-400px';
-  private classes: string[] = [this.logoBigger, this.logoSmaller, this.logo400px];
+  private min599_98px: string = 'logo-min599_98px';
+  private max599_98px: string = 'logo-max599_98px';
+  private _350px_410px: string = 'logo-_350px_410px';
+  private max349px: string = 'logo-max-349px';
+  private classes: string[] = [this.min599_98px, this.max599_98px, this._350px_410px, this.max349px];
 
   constructor(
     breakpointObserver: BreakpointObserver,
@@ -33,7 +34,7 @@ export class LogoResponsiveDirective extends ResponsiveHelper implements OnInit 
   }
 
   private adjustLogoWhenResizingDynamically(): void {
-    this.breakpointObserver.observe([Breakpoints.XSmall, LogoCustomBreakpoints.Max400px])
+    this.breakpointObserver.observe([Breakpoints.XSmall, LogoCustomBreakpoints._350px_410px])
       .subscribe((result: BreakpointState) => {
         this.removeClasses(this.classes);
         this.addClasses(result);
@@ -42,11 +43,14 @@ export class LogoResponsiveDirective extends ResponsiveHelper implements OnInit 
 
   private addClasses(result: BreakpointState | undefined): void {
     if (this.isBreakpointMatched(Breakpoints.XSmall, result)) {
-      this.addClassToRespectiveElement([this.logoSmaller], 'logoResponsive');
+      this.addClassToRespectiveElement([this.max599_98px], 'logoResponsive');
     }
-    if (this.isBreakpointMatched(LogoCustomBreakpoints.Max400px, result)) {
-      this.addClassToRespectiveElement([this.logo400px], 'logoResponsive');
+    if (this.isBreakpointMatched(LogoCustomBreakpoints._350px_410px, result)) {
+      this.addClassToRespectiveElement([this._350px_410px], 'logoResponsive');
     }
-    this.addClassToRespectiveElement([this.logoBigger], 'logoResponsive');
+    if (this.isBreakpointMatched(LogoCustomBreakpoints.Max349px, result)) {
+      this.addClassToRespectiveElement([this.max349px], 'logoResponsive');
+    }
+    this.addClassToRespectiveElement([this.min599_98px], 'logoResponsive');
   }
 }

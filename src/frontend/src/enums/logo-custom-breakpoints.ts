@@ -1,3 +1,4 @@
 export enum LogoCustomBreakpoints {
-  Max400px = '(max-width: 400px)'
+  Max349px = '(max-width: 349px)',
+  _350px_410px = '(min-width: 350px) and (max-width: 410px)'
 }

@@ -1,6 +1,6 @@
 import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { FormFieldBreakpoints } from '../enums/form-field-breakpoints';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { TranslationFormCustomBreakpoints } from '../enums/translation-form-custom-breakpoints';
 import { ResponsiveHelper } from './helpers/responsive-helper';
 
 @Directive({
@@ -8,15 +8,23 @@ import { ResponsiveHelper } from './helpers/responsive-helper';
 })
 export class TranslationFormResponsiveDirective extends ResponsiveHelper implements OnInit {
 
-  private formFieldsWidth: string = 'search-form--field-width-max916px';
-  private formContainerLayout: string = 'search-form-container--max916px';
-  private selectElementDistanceReset: string = 'select-distance--reset';
-  private searchButtonLayout: string = 'search-button--column-layout';
+  private fieldsWidth: string = 'search-form--field-width-max916px';
+  private formColumn: string = 'search-form-container-column';
+  private modifierMax916px: string = 'search-form-container-column_margin-top-modifier--max916px';
+  private modifierMax599_98px: string = 'search-form-container-column_margin-top-modifier--max599_98px';
+  private modifier_350px_410px: string = 'search-form-container-column_margin-top-modifier--350px_410px';
+  private modifierMax349px: string = 'search-form-container-column_margin-top-modifier--max349px';
+  private selectDistanceReset: string = 'select-distance--reset';
+  private buttonColumn: string = 'search-button--column-layout';
   private classes: string[] = [
-    this.formFieldsWidth,
-    this.formContainerLayout,
-    this.selectElementDistanceReset,
-    this.searchButtonLayout
+    this.fieldsWidth,
+    this.formColumn,
+    this.modifierMax916px,
+    this.modifierMax599_98px,
+    this.modifier_350px_410px,
+    this.modifierMax349px,
+    this.selectDistanceReset,
+    this.buttonColumn
   ];
 
   constructor(
@@ -38,7 +46,14 @@ export class TranslationFormResponsiveDirective extends ResponsiveHelper impleme
   }
 
   private adjustFormWhenResizingDynamically(): void {
-    this.breakpointObserver.observe(FormFieldBreakpoints.max916px)
+    this.breakpointObserver.observe(
+      [
+        TranslationFormCustomBreakpoints.Max916px,
+        Breakpoints.XSmall,
+        TranslationFormCustomBreakpoints._350px_410px,
+        TranslationFormCustomBreakpoints.Max349px
+      ]
+    )
       .subscribe((result: BreakpointState) => {
         this.removeClasses(this.classes);
         this.addClasses(result);
@@ -46,11 +61,19 @@ export class TranslationFormResponsiveDirective extends ResponsiveHelper impleme
   }
 
   private addClasses(result: BreakpointState | undefined): void {
-    if (this.isBreakpointMatched(FormFieldBreakpoints.max916px, result)) {
-      this.addClassToRespectiveElement([this.formContainerLayout], 'formResponsive');
-      this.addClassToRespectiveElement([this.formFieldsWidth, this.selectElementDistanceReset], 'formFieldResponsive');
-      this.addClassToRespectiveElement([this.searchButtonLayout], 'searchButtonResponsive');
-
+    if (this.isBreakpointMatched(TranslationFormCustomBreakpoints.Max916px, result)) {
+      this.addClassToRespectiveElement([this.formColumn, this.modifierMax916px], 'formResponsive');
+      this.addClassToRespectiveElement([this.fieldsWidth, this.selectDistanceReset], 'formFieldResponsive');
+      this.addClassToRespectiveElement([this.buttonColumn], 'searchButtonResponsive');
+    }
+    if (this.isBreakpointMatched(Breakpoints.XSmall, result)) {
+      this.addClassToRespectiveElement([this.modifierMax599_98px], 'formResponsive');
+    }
+    if (this.isBreakpointMatched(TranslationFormCustomBreakpoints._350px_410px, result)) {
+      this.addClassToRespectiveElement([this.modifier_350px_410px], 'formResponsive');
+    }
+    if (this.isBreakpointMatched(TranslationFormCustomBreakpoints.Max349px, result)) {
+      this.addClassToRespectiveElement([this.modifierMax349px], 'formResponsive');
     }
   }
 }

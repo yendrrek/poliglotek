@@ -1,42 +1,47 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { CssClassToggle } from '../types/css-class-toggle';
+import { ResponsiveHelper } from './helpers/responsive-helper';
+import { RightMenuCustomBreakpoints } from '../enums/right-menu-custom-breakpoints';
 
 @Directive({
   selector: '[menuResponsive]'
 })
-export class MenuResponsiveDirective implements OnInit {
+export class MenuResponsiveDirective extends ResponsiveHelper implements OnInit {
 
   @Input() menuResponsive!: CssClassToggle;
 
-  ngOnInit(): void {
-    this.toggleNavigation(this.breakpointObserver.isMatched([Breakpoints.Small, Breakpoints.XSmall]));
-    this.observeBreakpointsForNavigation([Breakpoints.Small, Breakpoints.XSmall]);
+  constructor(
+    breakpointObserver: BreakpointObserver,
+    renderer: Renderer2,
+    element: ElementRef,
+  ) {
+    super(breakpointObserver, renderer, element);
   }
 
-  constructor(
-    private element: ElementRef,
-    private renderer: Renderer2,
-    private breakpointObserver: BreakpointObserver
-  ) {}
+  ngOnInit(): void {
+    this.adjustRightMenuWhenLoading(this.isBreakpointMatched(RightMenuCustomBreakpoints.Max960px, undefined));
+    this.adjustRightMenuWhenResizingDynamically();
+  }
 
-  private toggleNavigation(isSmallScreen: boolean): void {
+  private adjustRightMenuWhenLoading(isSmallScreen: boolean): void {
     const showClass = 'show';
     const hideClass = 'hide';
     const shouldHamburgerMenuBeActive: boolean = this.menuResponsive === showClass;
-    const addClass: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? showClass : hideClass;
-    const removeClass: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? hideClass : showClass;
-    this.toggleCSSClass(addClass, removeClass);
+    const classToAdd: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? showClass : hideClass;
+    const classToRemove: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? hideClass : showClass;
+    this.toggleVisibility(classToAdd, classToRemove);
   }
 
-  private toggleCSSClass(addClass: string, removeClass: string): void {
-    this.renderer.addClass(this.element.nativeElement, addClass);
-    this.renderer.removeClass(this.element.nativeElement, removeClass);
+  private toggleVisibility(classToAdd: string, classToRemove: string): void {
+    this.addClassToRespectiveElement([classToAdd], 'menuResponsive');
+    this.removeClasses([classToRemove]);
   }
 
-  private observeBreakpointsForNavigation(breakpoints: string[]): void {
-    this.breakpointObserver.observe(breakpoints).subscribe((result: BreakpointState) => {
-      this.toggleNavigation(result.matches);
+  private adjustRightMenuWhenResizingDynamically(): void {
+    this.breakpointObserver.observe(RightMenuCustomBreakpoints.Max960px)
+      .subscribe((result: BreakpointState) => {
+      this.adjustRightMenuWhenLoading(result.matches);
     });
   }
 }
