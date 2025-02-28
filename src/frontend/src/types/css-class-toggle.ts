@@ -1,1 +1,1 @@
-export type CssClassToggle = 'show' | 'hide';
+export type CssClassToggle = 'showMenu' | 'hideMenu';

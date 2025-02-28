@@ -13,11 +13,11 @@ export class ResponsiveHelper {
     return result && result.breakpoints[breakpoint] || this.breakpointObserver.isMatched(breakpoint);
   }
 
-  protected removeClasses(classes: string[]): void {
+  protected removeStyles(classes: string[]): void {
     classes.forEach((cls: string) => this.renderer.removeClass(this.element.nativeElement, cls));
   }
 
-  protected addClassToRespectiveElement(classes: string[], attribute: string | undefined): void {
+  protected addStyleToRespectiveElement(classes: string[], attribute: string | undefined): void {
     if (this.element.nativeElement.hasAttribute(attribute)) {
       classes.forEach((cls: string) => this.renderer.addClass(this.element.nativeElement, cls));
     }

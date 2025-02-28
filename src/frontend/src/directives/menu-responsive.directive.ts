@@ -25,17 +25,17 @@ export class MenuResponsiveDirective extends ResponsiveHelper implements OnInit 
   }
 
   private adjustRightMenuWhenLoading(isSmallScreen: boolean): void {
-    const showClass = 'show';
-    const hideClass = 'hide';
-    const shouldHamburgerMenuBeActive: boolean = this.menuResponsive === showClass;
-    const classToAdd: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? showClass : hideClass;
-    const classToRemove: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? hideClass : showClass;
-    this.toggleVisibility(classToAdd, classToRemove);
+    const showStyle = 'showMenu';
+    const hideStyle = 'hideMenu';
+    const shouldHamburgerMenuBeActive: boolean = this.menuResponsive === showStyle;
+    const styleToAdd: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? showStyle : hideStyle;
+    const styleToRemove: CssClassToggle = isSmallScreen === shouldHamburgerMenuBeActive ? hideStyle : showStyle;
+    this.toggleVisibility(styleToAdd, styleToRemove);
   }
 
   private toggleVisibility(classToAdd: string, classToRemove: string): void {
-    this.addClassToRespectiveElement([classToAdd], 'menuResponsive');
-    this.removeClasses([classToRemove]);
+    this.addStyleToRespectiveElement([classToAdd], 'menuResponsive');
+    this.removeStyles([classToRemove]);
   }
 
   private adjustRightMenuWhenResizingDynamically(): void {
