@@ -2,7 +2,7 @@ import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { ResponsiveHelper } from './helpers/responsive-helper';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ABOUT_RESPONSIVE_STYLES } from '../constants/about-responsive-styles';
-import { AboutCustomBreakpoints } from '../enums/about-custom-breakpoints';
+import { SharedCustomBreakpoints } from '../enums/shared-custom-breakpoints';
 
 @Directive({
   selector: '[aboutResponsive]'
@@ -39,10 +39,10 @@ export class AboutResponsiveDirective extends ResponsiveHelper implements OnInit
   private adjustAboutWhenResizingDynamically() {
     this.breakpointObserver.observe(
       [
-        AboutCustomBreakpoints._600px_916px,
-        AboutCustomBreakpoints._410_5px_599_98px,
-        AboutCustomBreakpoints._350px_410px,
-        AboutCustomBreakpoints.Max349_5px
+        SharedCustomBreakpoints._600px_916px,
+        SharedCustomBreakpoints._410_5px_599_98px,
+        SharedCustomBreakpoints._350px_410px,
+        SharedCustomBreakpoints.Max349_5px
       ]
     )
       .subscribe((result: BreakpointState) => {
@@ -52,25 +52,25 @@ export class AboutResponsiveDirective extends ResponsiveHelper implements OnInit
   }
 
   private addClasses(result: BreakpointState | undefined): void {
-    if (this.isBreakpointMatched(AboutCustomBreakpoints._600px_916px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints._600px_916px, result)) {
       this.addStyleToRespectiveElement(
         [ABOUT_RESPONSIVE_STYLES['about-_600px_959_98px'],
         ABOUT_RESPONSIVE_STYLES['about_margin-top-modifier--600px_959_98px']],
         'aboutResponsive');
     }
-    if (this.isBreakpointMatched(AboutCustomBreakpoints._410_5px_599_98px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints._410_5px_599_98px, result)) {
       this.addStyleToRespectiveElement(
         [ABOUT_RESPONSIVE_STYLES['about-max599_98px'],
         ABOUT_RESPONSIVE_STYLES['about_margin-top-modifier--410_5px_599_98px']],
         'aboutResponsive');
     }
-    if (this.isBreakpointMatched(AboutCustomBreakpoints._350px_410px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints._350px_410px, result)) {
       this.addStyleToRespectiveElement(
         [ABOUT_RESPONSIVE_STYLES['about-max599_98px'],
         ABOUT_RESPONSIVE_STYLES['about_margin-top-modifier--350px_410px']],
         'aboutResponsive');
     }
-    if (this.isBreakpointMatched(AboutCustomBreakpoints.Max349_5px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints.Max349_5px, result)) {
       this.addStyleToRespectiveElement(
         [ABOUT_RESPONSIVE_STYLES['about-max599_98px'],
         ABOUT_RESPONSIVE_STYLES['about_margin-top-modifier--max349px']],

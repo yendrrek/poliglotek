@@ -1,8 +1,8 @@
 import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { TranslationFormCustomBreakpoints } from '../enums/translation-form-custom-breakpoints';
 import { ResponsiveHelper } from './helpers/responsive-helper';
 import { TRANSLATION_FORM_RESPONSIVE_STYLES } from '../constants/translation-form-responsive-styles';
+import { SharedCustomBreakpoints } from '../enums/shared-custom-breakpoints';
 
 @Directive({
   selector: '[formFieldResponsive], [formResponsive], [searchButtonResponsive]'
@@ -41,10 +41,10 @@ export class TranslationFormResponsiveDirective extends ResponsiveHelper impleme
   private adjustFormWhenResizingDynamically(): void {
     this.breakpointObserver.observe(
       [
-        TranslationFormCustomBreakpoints._600px_916px,
-        TranslationFormCustomBreakpoints._410_5px_599_98px,
-        TranslationFormCustomBreakpoints._350px_410px,
-        TranslationFormCustomBreakpoints.Max349_5px
+        SharedCustomBreakpoints._600px_916px,
+        SharedCustomBreakpoints._410_5px_599_98px,
+        SharedCustomBreakpoints._350px_410px,
+        SharedCustomBreakpoints.Max349_5px
       ]
     )
       .subscribe((result: BreakpointState) => {
@@ -54,19 +54,19 @@ export class TranslationFormResponsiveDirective extends ResponsiveHelper impleme
   }
 
   private addClasses(result: BreakpointState | undefined): void {
-    if (this.isBreakpointMatched(TranslationFormCustomBreakpoints._600px_916px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints._600px_916px, result)) {
       this.addStylesToRespectiveElements(
         TRANSLATION_FORM_RESPONSIVE_STYLES['search-form-container-column_margin-top-modifier--600px_916px']);
     }
-    if (this.isBreakpointMatched(TranslationFormCustomBreakpoints._410_5px_599_98px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints._410_5px_599_98px, result)) {
       this.addStylesToRespectiveElements(
         TRANSLATION_FORM_RESPONSIVE_STYLES['search-form-container-column_margin-top-modifier--410_5px_599_98px']);
     }
-    if (this.isBreakpointMatched(TranslationFormCustomBreakpoints._350px_410px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints._350px_410px, result)) {
       this.addStylesToRespectiveElements(
         TRANSLATION_FORM_RESPONSIVE_STYLES['search-form-container-column_margin-top-modifier--350px_410px']);
     }
-    if (this.isBreakpointMatched(TranslationFormCustomBreakpoints.Max349_5px, result)) {
+    if (this.isBreakpointMatched(SharedCustomBreakpoints.Max349_5px, result)) {
       this.addStylesToRespectiveElements(
         TRANSLATION_FORM_RESPONSIVE_STYLES['search-form-container-column_margin-top-modifier--max349px']);
     }
