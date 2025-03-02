@@ -33,7 +33,8 @@ import { TranslationFormResponsiveDirective } from '../../directives/translation
   selector: 'home',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage, TranslationFormResponsiveDirective],
+    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage,
+    TranslationFormResponsiveDirective],
   templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss'
 })
@@ -48,6 +49,7 @@ export class TranslationComponent implements OnInit {
   isLoading: boolean = false;
   translatedPages: TranslatedPage[] = [];
   translationForm: FormGroup = new FormGroup({});
+  private previousChoice!: TranslationFormInput | null;
 
   constructor(
     private translationService: TranslationService,
@@ -59,10 +61,11 @@ export class TranslationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.previousChoice = this.cacheService.getTranslationChoice();
     this.translationForm = this.formBuilder.group({
-      query: ['', Validators.required],
-      langCode: ['', Validators.required],
-      countryCode: ['', Validators.required],
+      query: [this.previousChoice?.query || '', Validators.required],
+      langCode: [this.previousChoice?.langCode || '', Validators.required],
+      countryCode: [this.previousChoice?.countryCode || '', Validators.required],
     });
     this.autoSelectOneOrMoreMatchingCountries();
     this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
@@ -77,26 +80,26 @@ export class TranslationComponent implements OnInit {
   }
 
   private checkForDuplicateChoice(currentChoice: TranslationFormInput): boolean {
-    const previousChoice: TranslationFormInput = this.cacheService.getTranslationChoice();
-    if (this.isDuplicateChoice(previousChoice, currentChoice)) {
-      const dialogMessage: string = this.buildDialogMessage(previousChoice, currentChoice);
+    if (this.isDuplicateChoice(currentChoice)) {
+      const dialogMessage: string = this.buildDialogMessage(this.previousChoice, currentChoice);
       this.openDialog(dialogMessage);
       return true;
     }
     return false;
   }
 
-  private isDuplicateChoice(previous: TranslationFormInput, current: TranslationFormInput): boolean {
-    return previous && Object.keys(current).every((key: string) =>
-      previous[key as keyof TranslationFormInput].trim() === current[key as keyof TranslationFormInput].trim());
+  private isDuplicateChoice(current: TranslationFormInput): null | boolean {
+    return this.previousChoice && Object.keys(current).every((key: string) =>
+      this.previousChoice?.[key as keyof TranslationFormInput]?.trim() ===
+      current[key as keyof TranslationFormInput].trim());
   }
 
-  private buildDialogMessage(previousChoice: TranslationFormInput, currentChoice: TranslationFormInput): string {
+  private buildDialogMessage(previousChoice: TranslationFormInput | null, currentChoice: TranslationFormInput): string {
     const currentLanguage: string = this.getCurrentLanguageChoice(currentChoice);
     const currentCountry: string = this.getCurrentCountryChoice(currentChoice);
     const lowQuote = '\u201E';
     return `Rezultaty wybranych przez Ciebie opcji
-        ${lowQuote}${previousChoice.query}", ${lowQuote}${currentLanguage}", ${lowQuote}${currentCountry}"
+        ${lowQuote}${previousChoice?.query}", ${lowQuote}${currentLanguage}", ${lowQuote}${currentCountry}"
         są już wyświetlone.`;
   }
 
