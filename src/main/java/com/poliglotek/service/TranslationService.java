@@ -45,7 +45,7 @@ public class TranslationService {
         List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         if (urls == null || urls.isEmpty()) {
             log.info("No results for combination | {} | {} | {} |", query, targetLang, countryCode);
-            return TranslationResponse.error("Nie znaleziono żadnych stron");
+            return TranslationResponse.success(null, "Nie znaleziono żadnych stron");
         }
         List<ScrapedPage> pages = scrapService.scrapePages(urls);
         if (containsFailedPage(pages)) {

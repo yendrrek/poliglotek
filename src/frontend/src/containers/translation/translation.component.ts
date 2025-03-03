@@ -128,16 +128,23 @@ export class TranslationComponent implements OnInit {
       this.openDialog(resp.error);
       return;
     }
-    this.updateCacheAndTranslatedPages(resp.data, choice);
+    this.updateCachedChoice(choice);
+    this.updateCachedTranslatedPages(resp.data);
     if (resp.warning) {
       this.openDialog(resp.warning);
     }
   }
 
-  private updateCacheAndTranslatedPages(pages: TranslatedPage[], choice: TranslationFormInput): void {
-    this.translatedPages = pages.filter((page: TranslatedPage) => page != null);
+  private updateCachedTranslatedPages(pages: TranslatedPage[]): void {
+    if (pages) {
+      this.translatedPages = pages.filter((page: TranslatedPage) => page != null);
+      this.cacheService.setTranslatedPages(this.translatedPages);
+    }
+  }
+
+  private updateCachedChoice(choice: TranslationFormInput): void {
     this.cacheService.setTranslationChoice(choice);
-    this.cacheService.setTranslatedPages(this.translatedPages);
+    this.previousChoice = choice;
   }
 
   private handleCachedTranslatedPages(): void {
