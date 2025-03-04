@@ -3,6 +3,7 @@ textarea {
 }
 
 .contact-form {
+  color: var(--globalFontColour);
   display: flex;
   flex-direction: column;
   align-items: center; // remove once the actual contact form exists

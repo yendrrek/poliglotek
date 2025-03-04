@@ -5,6 +5,7 @@
   --buttonRadius: 0.25em 0.25em 0 0;
   --formMarginTop: calc(var(--translationMargin2rem) * 2);
   --search-button--margin-bottom: 0.1875em;
+  --globalFontColour: #0e0f0c;
 }
 
 html, body {
@@ -13,7 +14,6 @@ html, body {
 
 body {
   margin: 0;
-  color: #0e0f0c !important;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -36,4 +36,8 @@ body {
 
 .mat-mdc-tab-label-container {
   border-bottom-style: none !important;
+}
+
+.mdc-tab__text-label {
+  color: var(--globalFontColour) !important;
 }
