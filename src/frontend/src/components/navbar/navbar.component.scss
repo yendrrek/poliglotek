@@ -22,7 +22,6 @@
 .right-menu {
   display: flex;
   &-item {
-    color: var(--globalFontColour) !important;
     font-size: 0.75em;
     margin: 0 1.5rem;
     &--edge {
@@ -38,7 +37,7 @@
 .logo {
   margin-top: 0.625em;
   font-family: "WendyOne-Regular", serif;
-  color: var(--globalFontColour);
+  color: #1a1b1f;
   text-decoration: none;
   &-min599_98px {
     font-size: 3em;
