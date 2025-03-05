@@ -1,5 +1,15 @@
+fail_fast: true
 repos:
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.24.0
     hooks:
       - id: gitleaks
+  - repo: local
+    hooks:
+      - id: versionbump
+        name: Bump version hook
+        entry: bash
+        args: [./scripts/pre-commit]
+        language: system
+        pass_filenames: false
+
