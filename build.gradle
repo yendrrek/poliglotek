@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.49.8"
+version = "0.49.9"
 group = "com.poliglotek"
 
 repositories {
@@ -90,7 +90,23 @@ dependencyCheck {
 tasks.register("installGitHook", Copy) {
     from new File(rootProject.rootDir, "scripts/pre-commit")
     into { new File(rootProject.rootDir, ".git/hooks") }
-    fileMode 0755
+    filePermissions {
+        user {
+            read = true
+            write = true
+            execute = true
+        }
+        group {
+            read = true
+            write = false
+            execute = true
+        }
+        other {
+            read = true
+            write = false
+            execute = true
+        }
+    }
 }
 
 tasks.named("compileJava") {
