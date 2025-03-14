@@ -33,7 +33,7 @@
 
 ## 🚀 Deployment
 
-Poliglotek is currently in the **testing phase** and is deployed on **Google Cloud** using Cloud Run.
+Poliglotek is currently in the **testing phase** and is deployed on **Google Cloud** using **Cloud Run**.
 
 ## 📌 Status
 
