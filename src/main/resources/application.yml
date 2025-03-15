@@ -1,6 +1,18 @@
 micronaut:
   application:
     name: poliglotek
+  security:
+    authentication: idtoken
+    oauth2:
+      clients:
+        google:
+          client-id: ${OAUTH_CLIENT_ID}
+          client-secret: ${OAUTH_CLIENT_SECRET}
+          openid:
+            issuer: "https://accounts.google.com"
+    endpoints:
+      logout:
+        get-allowed: true
   server:
     host: 0.0.0.0
     port: 8080
@@ -32,11 +44,11 @@ netty:
       max-order: 3
 
 googleCloud:
-  projectId: ${googleCloudProjectId}
-  customSearchApiKey: ${googleCustomSearchApiKey}
-  customSearchEngineId: ${googleCustomSearchEngineId}
+  projectId: ${GOOGLE_CLOUD_PROJECT_ID}
+  customSearchApiKey: ${GOOGLE_CUSTOM_SEARCH_API_KEY}
+  customSearchEngineId: ${GOOGLE_CUSTOM_SEARCH_ENGINE_ID}
 
-mailgunApiKey: ${mailgunApiKey}
+mailgunApiKey: ${MAILGUN_API_KEY}
 
 akismet:
-  apiKey: ${akismetApiKey}
+  apiKey: ${AKISMET_API_KEY}

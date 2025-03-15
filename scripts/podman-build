@@ -2,7 +2,7 @@
 
 # Commands this script can be executed with:
 # 1. `bash podman-build -i <environment_type>`. Creates an image. Environment type must be `dev` or `prod`
-# 2. `bash podman-build -c <image_id>. Creates a container
+# 2. `bash podman-build -c <image_id>. Creates a container. Used locally only for `dev` images.
 # 3. `bash podman-build -t <image_id>. Tags an image before pushing to registry
 # 4. `bash podman-build -p <image_id>. Pushes image to registry
 
@@ -36,7 +36,7 @@ fi
 # Other constants
 DOCKERFILE_PATH="$POLIGLOTEK_PROJECT_ROOT/Dockerfile"
 APP_NAME="poliglotek"
-VALID_ENVIRONMENT_TYPES=("dev" "prod")
+VALID_ENVIRONMENT_TYPES=("dev" "prod" "npe")
 G_CLOUD_REGION="europe-west2-docker.pkg.dev"
 G_CLOUD_PROJECT_ID="translation-to-polish-437813"
 
