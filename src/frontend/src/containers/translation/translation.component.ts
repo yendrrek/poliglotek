@@ -35,7 +35,82 @@ import { TranslationFormResponsiveDirective } from '../../directives/translation
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
     FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage,
     TranslationFormResponsiveDirective],
-  templateUrl: './translation.component.html',
+  template: `
+    @if (isLoading) {
+      <div class="spinner-overlay">
+        <mat-spinner mode="indeterminate"></mat-spinner>
+      </div>
+    }
+
+    <form class="search-form-container" [formGroup]="translationForm" formResponsive>
+      <mat-form-field class="search-form--query-input-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+        <mat-label formFieldResponsive>Szukana fraza po polsku</mat-label>
+        <input required matInput type="text" formControlName="query">
+        @if (translationForm.get('query')?.value) {
+          <button matSuffix mat-icon-button aria-label="Clear"
+                  (click)="translationForm.get('query')?.setValue('')">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+        <mat-label formFieldResponsive>Tłumacz frazę na</mat-label>
+        <mat-select required formControlName="langCode">
+          @for (language of languages; track language.languageValue) {
+            <mat-option [value]="language.languageValue">{{ language.languageViewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+        <mat-label formFieldResponsive>Kraj wyników</mat-label>
+        <mat-select required formControlName="countryCode">
+          @if (dynamicCountries) {
+            @for (dynamicCountry of dynamicCountries;
+              let isLastDynamicCountry = $last ;
+              let isFirstDynamicCountry = $first;
+              track dynamicCountry.countryViewValue) {
+              <mat-option class="dynamic-countries-border"
+                          [class.first-country-item]="isFirstDynamicCountry"
+                          [class.last-country-item]="isLastDynamicCountry"
+                          [value]="dynamicCountry.countryValue">{{ dynamicCountry.countryViewValue }}
+              </mat-option>
+            }
+          }
+          @for (country of countries; track country.countryValue) {
+            <mat-option [value]="country.countryValue">{{ country.countryViewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button class="search-button"
+              searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
+      </button>
+    </form>
+
+    <mat-tab-group class="tabs-container">
+      @for (page of translatedPages; let i = $index; track page.id) {
+        <mat-tab [label]="'Strona ' + (i + 1)">
+          <div class="translatedPageContainer" [innerHTML]="page.body"></div>
+          <a [href]="page.url" target="_blank" class="source-url">Źródło</a>
+          <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image"
+               height="16" width="122">
+        </mat-tab>
+      }
+    </mat-tab-group>
+
+    <!-- TODO: For testing only. Comment out when not needed -->
+<!--    <mat-tab-group class="tabs-container">-->
+<!--      @for (page of [1, 2, 3, 4]; let i = $index; track page) {-->
+<!--        <mat-tab [label]="'Strona ' + (i + 1)">-->
+<!--          <div class="translated-page-container" [innerHTML]="'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?0Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?' + i"></div>-->
+<!--          <a [href]="'www.test.com'" target="_blank" class="source-url">Źródło</a>-->
+<!--          <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image" height="16" width="122">-->
+<!--        </mat-tab>-->
+<!--      }-->
+<!--    </mat-tab-group>-->
+  `,
   styleUrl: './translation.component.scss'
 })
 export class TranslationComponent implements OnInit {

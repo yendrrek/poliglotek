@@ -21,7 +21,13 @@ import { handleHttpError } from '../../utils/utils';
     ReactiveFormsModule,
     RouterOutlet
   ],
-  templateUrl: './contact.component.html',
+  template: `
+    <div class="contact-form">
+      <div>Będziemy wdzięczni za wszelkie uwagi i sugestie</div>
+      <div>poliglotek.translator [małpa] gmail [kropka] com</div>
+    </div>
+    <router-outlet></router-outlet>
+  `,
   styleUrl: './contact.component.scss'
 })
 export class ContactComponent implements OnInit {

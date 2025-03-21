@@ -10,7 +10,12 @@ import { MatButton } from '@angular/material/button';
     MatDialogClose,
     MatButton
   ],
-  templateUrl: './dialog-notification.component.html',
+  template: `
+    <mat-dialog-content class="dialog" [innerHTML]="data.error"></mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button mat-dialog-close>Zamknij</button>
+    </mat-dialog-actions>
+  `,
   styleUrl: './dialog-notification.component.scss'
 })
 export class DialogNotificationComponent {
