@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
@@ -7,7 +7,7 @@ import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/mat
 import { MenuResponsiveDirective } from '../directives/menu-responsive.directive';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { MatIcon } from '@angular/material/icon';
-import { environment } from '../environments/environment';
+import { GoogleSigninComponent } from '../components/google-signin/google-signin.component';
 
 @Component({
   selector: 'root',
@@ -24,7 +24,8 @@ import { environment } from '../environments/environment';
     NavbarComponent,
     MatIcon,
     MatIconButton,
-    MatListItem
+    MatListItem,
+    GoogleSigninComponent
   ],
   template: `
     <mat-sidenav-container menuResponsive="showMenu">
@@ -55,24 +56,9 @@ import { environment } from '../environments/environment';
   `,
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-
-  constructor(private renderer: Renderer2) {
-  }
+export class AppComponent {
 
   @ViewChild('drawer') drawer!: MatSidenav;
-
-  ngOnInit(): void {
-    this.populateLoginUrl();
-  }
-
-  populateLoginUrl(): void {
-    const loginUrl: string = environment.loginUrl;
-    const googleSignInElement: HTMLElement | null = document.getElementById('g_id_onload');
-    if (googleSignInElement) {
-      this.renderer.setAttribute(googleSignInElement, 'data-login_uri', loginUrl);
-    }
-  }
 
   openSideNavigation(): void {
     this.drawer.open();

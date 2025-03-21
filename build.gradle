@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.49.11"
+version = "0.49.12"
 group = "com.poliglotek"
 
 repositories {
@@ -26,7 +26,7 @@ dependencies {
     implementation "io.micronaut.validation:micronaut-validation:_"
     implementation "io.micronaut:micronaut-http-client:_"
     implementation "io.micronaut.security:micronaut-security-oauth2:_"
-    implementation "io.micronaut.security:micronaut-security-jwt_"
+    implementation "io.micronaut.security:micronaut-security-jwt:_"
     testImplementation "io.micronaut:micronaut-http-client:_"
 
     // jsoup

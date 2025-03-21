@@ -20,5 +20,4 @@ public interface GoogleCustomSearchClient {
                                              @QueryValue(defaultValue = "active") String safe,
                                              @QueryValue String cr,
                                              @QueryValue String excludeTerms);
-    // todo: remove elements with cookie notification. test: "literatura baskijska"
 }
