@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.49.12"
+version = "0.49.13"
 group = "com.poliglotek"
 
 repositories {
@@ -27,31 +27,24 @@ dependencies {
     implementation "io.micronaut:micronaut-http-client:_"
     implementation "io.micronaut.security:micronaut-security-oauth2:_"
     implementation "io.micronaut.security:micronaut-security-jwt:_"
+    implementation "io.micronaut.gcp:micronaut-gcp-common:_"
+    implementation "io.micronaut.cache:micronaut-cache-core:_"
+    implementation "io.micronaut.cache:micronaut-cache-caffeine:_"
     testImplementation "io.micronaut:micronaut-http-client:_"
 
-    // jsoup
-    implementation "org.jsoup:jsoup:_"
-
-    // selenium
-    implementation "org.seleniumhq.selenium:selenium-java:_"
-
-    // google cloud
+    // google
+    implementation "com.google.api-client:google-api-client:_"
+    implementation "com.google.cloud:google-cloud-firestore:_"
     implementation "com.google.cloud:google-cloud-translate:_"
 
-    // snakeyaml
+    // other
+    implementation "org.jsoup:jsoup:_"
+    implementation "org.seleniumhq.selenium:selenium-java:_"
     implementation "org.yaml:snakeyaml:_"
-
-    // mailgun
 //    implementation "com.mailgun:mailgun-java:_"
-
-    // logback
     implementation "ch.qos.logback:logback-classic:_"
-
-    // byte buddy - used by spock to mock classes and generate mock implementations
-    testImplementation "net.bytebuddy:byte-buddy:_"
-
-    // objenesis - used by spock to mock classes without default constructors
-    testImplementation "org.objenesis:objenesis:_"
+    testImplementation "net.bytebuddy:byte-buddy:_" // used by spock to mock classes and generate mock implementations
+    testImplementation "org.objenesis:objenesis:_" // used by spock to mock classes without default constructors
 }
 
 application {

@@ -1,12 +1,10 @@
 package com.poliglotek.model.googlesearch;
 
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.List;
 
-@Introspected
-@Serdeable.Deserializable
+@Serdeable
 public class SearchResponseWrapper {
 
     private String kind;

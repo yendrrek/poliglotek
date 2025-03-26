@@ -1,10 +1,8 @@
 package com.poliglotek.model.translationresponse;
 
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
-@Introspected
-@Serdeable.Serializable
+@Serdeable
 public class TranslationResponse<T> {
 
     private final boolean success;

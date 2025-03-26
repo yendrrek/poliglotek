@@ -1,10 +1,8 @@
 package com.poliglotek.model.googlesearch;
 
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
 
-@Introspected
-@Serdeable.Deserializable
+@Serdeable
 public class SearchUrl {
     private String type;
     private String template;
