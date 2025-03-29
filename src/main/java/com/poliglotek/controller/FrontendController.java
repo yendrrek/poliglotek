@@ -8,10 +8,13 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.server.types.files.StreamedFile;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 
 import java.util.Optional;
 
 @Controller()
+@Secured(SecurityRule.IS_ANONYMOUS) // TODO: Although functionality from UI only if user logged in
 public class FrontendController {
 
     private final ResourceResolver resourceResolver;

@@ -22,8 +22,8 @@ public class GoogleSearchService {
     private static final String LANG_PREFIX = "lang_";
 
     public GoogleSearchService(GoogleCustomSearchClient httpClient,
-                               @Value("${googleCloud.customSearchApiKey}") String customSearchApiKey,
-                               @Value("${googleCloud.customSearchEngineId}")  String customSearchEngineId,
+                               @Value("${google-cloud.custom-search-api-key}") String customSearchApiKey,
+                               @Value("${google-cloud.custom-search-engine-id}")  String customSearchEngineId,
                                @Value("${customSearchLimit}") int customSearchLimit) {
         this.httpClient = httpClient;
         this.customSearchApiKey = customSearchApiKey;

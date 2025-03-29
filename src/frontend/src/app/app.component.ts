@@ -7,7 +7,7 @@ import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/mat
 import { MenuResponsiveDirective } from '../directives/menu-responsive.directive';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { MatIcon } from '@angular/material/icon';
-import { GoogleSigninComponent } from '../components/google-signin/google-signin.component';
+import { AuthComponent } from '../components/auth/auth.component';
 
 @Component({
   selector: 'root',
@@ -25,7 +25,7 @@ import { GoogleSigninComponent } from '../components/google-signin/google-signin
     MatIcon,
     MatIconButton,
     MatListItem,
-    GoogleSigninComponent
+    AuthComponent
   ],
   template: `
     <mat-sidenav-container menuResponsive="showMenu">

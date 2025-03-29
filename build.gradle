@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.49.13"
+version = "0.50.0"
 group = "com.poliglotek"
 
 repositories {
@@ -19,18 +19,19 @@ repositories {
 
 dependencies {
     // micronaut
-    annotationProcessor "io.micronaut.validation:micronaut-validation-processor:_"
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor:_"
-    annotationProcessor "io.micronaut:micronaut-http-validation:_"
-    implementation "io.micronaut.serde:micronaut-serde-jackson:_"
-    implementation "io.micronaut.validation:micronaut-validation:_"
-    implementation "io.micronaut:micronaut-http-client:_"
-    implementation "io.micronaut.security:micronaut-security-oauth2:_"
-    implementation "io.micronaut.security:micronaut-security-jwt:_"
-    implementation "io.micronaut.gcp:micronaut-gcp-common:_"
-    implementation "io.micronaut.cache:micronaut-cache-core:_"
-    implementation "io.micronaut.cache:micronaut-cache-caffeine:_"
-    testImplementation "io.micronaut:micronaut-http-client:_"
+    implementation platform("io.micronaut:micronaut-bom:3.10.4")
+    implementation "io.micronaut.serde:micronaut-serde-jackson"
+    implementation "io.micronaut.validation:micronaut-validation"
+    implementation "io.micronaut:micronaut-http-client"
+    implementation "io.micronaut.security:micronaut-security-oauth2"
+    implementation "io.micronaut.security:micronaut-security-jwt"
+    implementation "io.micronaut.gcp:micronaut-gcp-common"
+    implementation "io.micronaut.cache:micronaut-cache-core"
+    implementation "io.micronaut.cache:micronaut-cache-caffeine"
+    annotationProcessor "io.micronaut.validation:micronaut-validation-processor"
+    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
+    annotationProcessor "io.micronaut:micronaut-http-validation"
+    testImplementation "io.micronaut:micronaut-http-client"
 
     // google
     implementation "com.google.api-client:google-api-client:_"

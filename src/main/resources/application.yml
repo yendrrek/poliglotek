@@ -2,26 +2,25 @@ micronaut:
   application:
     name: poliglotek
   security:
-    authentication: idtoken
-    oauth2:
-      clients:
-        google:
-          client-id: ${OAUTH_CLIENT_ID}
-          client-secret: ${OAUTH_CLIENT_SECRET}
-          openid:
-            issuer: "https://accounts.google.com"
-    endpoints:
-      logout:
-        get-allowed: true
+    authentication: bearer
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: "${JWT_SECRET}"
   server:
-    host: 0.0.0.0
+    host: 0.0.0.0 # https://chatgpt.com/share/67e5ac48-0b6c-8008-81b8-c8a3d93a175e
     port: 8080
     cors:
       enabled: true
       configurations:
         default:
-          allowedOrigins: ["http://localhost:4200", "http://localhost:8080", "https://www.poliglotek.com"]
-          allowedMethods:
+          allowed-origins:
+            - http://localhost:4200
+            - http://localhost:8080
+            - https://www.poliglotek.com
+          allowed-methods:
             - POST
             - GET
             - PUT
@@ -43,12 +42,13 @@ netty:
     allocator:
       max-order: 3
 
-googleCloud:
-  projectId: ${GOOGLE_CLOUD_PROJECT_ID}
-  customSearchApiKey: ${GOOGLE_CUSTOM_SEARCH_API_KEY}
-  customSearchEngineId: ${GOOGLE_CUSTOM_SEARCH_ENGINE_ID}
+google-cloud:
+  project-id: "${GOOGLE_CLOUD_PROJECT_ID}"
+  custom-search-api-key: "${GOOGLE_CUSTOM_SEARCH_API_KEY}"
+  custom-search-engine-id: "${GOOGLE_CUSTOM_SEARCH_ENGINE_ID}"
+  client-id: "${OAUTH_CLIENT_ID}"
 
-mailgunApiKey: ${MAILGUN_API_KEY}
+mailgun-api-key: "${MAILGUN_API_KEY}" # TODO: needs to be changed to kebab-case in the branch where it's used
 
 akismet:
-  apiKey: ${AKISMET_API_KEY}
+  api-key: "${AKISMET_API_KEY}" # TODO: needs to be changed to kebab-case in the branch where it's used

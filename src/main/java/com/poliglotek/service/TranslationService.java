@@ -30,7 +30,7 @@ public class TranslationService {
 
     public TranslationService(GoogleSearchService googleSearchService,
                               ScrapeService scrapService,
-                              @Value("${googleCloud.projectId}") String projectId) {
+                              @Value("${google-cloud.project-id}") String projectId) {
         this.googlesearchService = googleSearchService;
         this.scrapService = scrapService;
         this.projectId = projectId;

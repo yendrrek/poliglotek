@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   baseUrl: "https://poliglotek.com",
-  loginUrl: 'https://npe.poliglotek.com/home'
+  apiUrl: 'https://npe.poliglotek.com/api'
 };
