@@ -1,39 +1,56 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { GoogleSigninResponse } from '../../models/google-signin-response';
+import { AsyncPipe } from '@angular/common';
+import { Observable } from 'rxjs';
 
 declare const google: any;
 
 @Component({
   selector: 'google-signin',
-  imports: [CommonModule],
   template: `
-    @if (!authService.isLoggedIn()) {
+    @if (!(isLoggedIn | async)) {
       <div class="signin-container">
         <div #googleSignInButton></div>
       </div>
-    }
-    @if (authService.isLoggedIn()) {
+    } @else {
       <div>
-        <p>Logowanie powiodło się!</p>
-        <button (click)="authService.logoutThenClearJWT()"></button>
+        <p>Logowanie powiodło się!</p> <!-- TODO: name of the user instead -->
+        <button (click)="logout()">Wyloguj się</button>
       </div>
     }
   `,
+  imports: [AsyncPipe],
   styleUrl: './auth.component.scss'
 })
-export class AuthComponent implements AfterViewInit {
+export class AuthComponent implements OnInit {
 
-  @ViewChild('googleSignInButton') googleSignInButton!: ElementRef;
+  @ViewChild('googleSignInButton') googleSignInButton?: ElementRef;
 
-  constructor(public authService: AuthService) {}
+  isLoggedIn?: Observable<boolean>;
 
-  ngAfterViewInit(): void {
-    this.loadGoogleScript().then(() => this.handleGoogleSignIn());
+  constructor(
+    public authService: AuthService,
+    private changeDetector: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn;
+    this.loadGoogleScript().then(() => {
+      this.isLoggedIn?.subscribe((isLoggedIn: boolean) => {
+        if (!isLoggedIn) {
+          this.changeDetector.detectChanges();
+          this.handleGoogleSignIn();
+        }
+      });
+    });
   }
 
-  private loadGoogleScript(): Promise<void> {
+  logout(): void {
+    this.authService.logoutThenClearJWT();
+  }
+
+  protected loadGoogleScript(): Promise<void> {
     return new Promise<void>((resolve) => {
       if (typeof google !== 'undefined') {
         resolve();
@@ -62,25 +79,29 @@ export class AuthComponent implements AfterViewInit {
   private initialiseSignIn(): void {
     google.accounts.id.initialize({
       client_id: '177391411152-1ciu3vrsbsnkr9qgpke4gidbf7mvl384.apps.googleusercontent.com',
-      callback: (resp: GoogleSigninResponse) => this.authService.handleCredentialResponse(resp),
+      callback: (resp: GoogleSigninResponse) => {
+        this.authService.handleCredentialResponse(resp);
+      },
       auto_select: false,
       cancel_on_tap_outside: true
     });
   }
 
   private renderSignInButton(): void {
-    google.accounts.id.renderButton(
-      this.googleSignInButton.nativeElement,
-      {
-        theme: "outline",
-        size: "large",
-        type: "standard",
-        shape: "rectangular",
-        text: "sign_in_with",
-        logo_alignment: "left",
-        width: 240,
-        locale: "pl"
-      }
-    );
+    if (this.googleSignInButton) {
+      google.accounts.id.renderButton(
+        this.googleSignInButton.nativeElement,
+        {
+          theme: "outline",
+          size: "large",
+          type: "standard",
+          shape: "rectangular",
+          text: "sign_in_with",
+          logo_alignment: "left",
+          width: 240,
+          locale: "pl"
+        }
+      );
+    }
   }
 }

@@ -75,7 +75,7 @@ public class AuthController {
         String authHeader = request.getHeaders().get("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            tokenBlacklistService.blacklistToken(token);
+//            tokenBlacklistService.blacklistToken(token);
         }
     }
 

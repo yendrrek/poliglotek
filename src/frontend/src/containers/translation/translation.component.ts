@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NgOptimizedImage } from '@angular/common';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
@@ -28,13 +28,14 @@ import { CacheService } from '../../services/cache.service';
 import { TranslationFormInput } from '../../models/translation-form-input';
 import { CountryValue } from '../../types/country-value';
 import { TranslationFormResponsiveDirective } from '../../directives/translation-form-responsive.directive';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'home',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
     FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage,
-    TranslationFormResponsiveDirective],
+    TranslationFormResponsiveDirective, AsyncPipe],
   template: `
     @if (isLoading) {
       <div class="spinner-overlay">
@@ -84,7 +85,7 @@ import { TranslationFormResponsiveDirective } from '../../directives/translation
         </mat-select>
       </mat-form-field>
 
-      <button mat-raised-button class="search-button"
+      <button [disabled]="!(isLoggedIn | async)" mat-raised-button class="search-button"
               searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
       </button>
     </form>
@@ -101,15 +102,15 @@ import { TranslationFormResponsiveDirective } from '../../directives/translation
     </mat-tab-group>
 
     <!-- TODO: For testing only. Comment out when not needed -->
-<!--    <mat-tab-group class="tabs-container">-->
-<!--      @for (page of [1, 2, 3, 4]; let i = $index; track page) {-->
-<!--        <mat-tab [label]="'Strona ' + (i + 1)">-->
-<!--          <div class="translated-page-container" [innerHTML]="'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?0Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?' + i"></div>-->
-<!--          <a [href]="'www.test.com'" target="_blank" class="source-url">Źródło</a>-->
-<!--          <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image" height="16" width="122">-->
-<!--        </mat-tab>-->
-<!--      }-->
-<!--    </mat-tab-group>-->
+    <!--    <mat-tab-group class="tabs-container">-->
+    <!--      @for (page of [1, 2, 3, 4]; let i = $index; track page) {-->
+    <!--        <mat-tab [label]="'Strona ' + (i + 1)">-->
+    <!--          <div class="translated-page-container" [innerHTML]="'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?0Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?' + i"></div>-->
+    <!--          <a [href]="'www.test.com'" target="_blank" class="source-url">Źródło</a>-->
+    <!--          <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image" height="16" width="122">-->
+    <!--        </mat-tab>-->
+    <!--      }-->
+    <!--    </mat-tab-group>-->
   `,
   styleUrl: './translation.component.scss'
 })
@@ -124,6 +125,7 @@ export class TranslationComponent implements OnInit {
   isLoading: boolean = false;
   translatedPages: TranslatedPage[] = [];
   translationForm: FormGroup = new FormGroup({});
+  isLoggedIn?: Observable<boolean>;
   private previousChoice!: TranslationFormInput | null;
 
   constructor(
@@ -131,11 +133,12 @@ export class TranslationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private loaderService: LoaderService,
     private dialog: MatDialog,
-    private cacheService: CacheService
-  ) {
-  }
+    private cacheService: CacheService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn;
     this.previousChoice = this.cacheService.getTranslationChoice();
     this.translationForm = this.formBuilder.group({
       query: [this.previousChoice?.query || '', Validators.required],

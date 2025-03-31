@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, ViewChild } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -12,10 +12,9 @@ declare const google: any;
 })
 export class AuthService {
 
-  @ViewChild('googleSignInButton') googleButton!: ElementRef;
-
   private API_URL: string = environment.apiUrl;
   private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isLoggedIn: Observable<boolean> = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.checkUserLoggedIn();
@@ -34,10 +33,6 @@ export class AuthService {
     localStorage.removeItem('token');
     this.isLoggedInSubject.next(false);
     google.accounts.id.disableAutoSelect();
-  }
-
-  isLoggedIn(): boolean {
-    return this.isLoggedInSubject.value;
   }
 
   handleCredentialResponse(resp: GoogleSigninResponse): void {
