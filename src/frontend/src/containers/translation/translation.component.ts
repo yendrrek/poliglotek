@@ -29,13 +29,14 @@ import { TranslationFormInput } from '../../models/translation-form-input';
 import { CountryValue } from '../../types/country-value';
 import { TranslationFormResponsiveDirective } from '../../directives/translation-form-responsive.directive';
 import { AuthService } from '../../services/auth.service';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'home',
   imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
     MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
     FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage,
-    TranslationFormResponsiveDirective, AsyncPipe],
+    TranslationFormResponsiveDirective, AsyncPipe, MatTooltip],
   template: `
     @if (isLoading) {
       <div class="spinner-overlay">
@@ -85,7 +86,11 @@ import { AuthService } from '../../services/auth.service';
         </mat-select>
       </mat-form-field>
 
-      <button [disabled]="!(isLoggedIn | async)" mat-raised-button class="search-button"
+      <button [disabled]="!(isLoggedIn | async)"
+              disabledInteractive
+              mat-raised-button
+              [matTooltip]="!(isLoggedIn | async) ? 'Zaloguj się by aktywować wyszukiwanie' : ''"
+              class="search-button"
               searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
       </button>
     </form>

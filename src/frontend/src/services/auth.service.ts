@@ -3,7 +3,6 @@ import { environment } from '../environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { GoogleSigninResponse } from '../models/google-signin-response';
-import { DecodedCredential } from '../models/decoded-credential';
 
 declare const google: any;
 
@@ -60,12 +59,12 @@ export class AuthService {
     );
   }
 
-  private decodeJwtResponse(jwt: string): DecodedCredential {
-    let base64Url: string = jwt.split('.')[1];
-    let base64: string = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    let jsonPayload: string = decodeURIComponent(atob(base64).split('').map((c: string): string => {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
-  }
+  // private decodeJwtResponse(jwt: string): DecodedCredential {
+  //   let base64Url: string = jwt.split('.')[1];
+  //   let base64: string = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  //   let jsonPayload: string = decodeURIComponent(atob(base64).split('').map((c: string): string => {
+  //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  //   }).join(''));
+  //   return JSON.parse(jsonPayload);
+  // }
 }
