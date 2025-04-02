@@ -1,5 +1,10 @@
-.signin-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
+.signin {
+  &-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  &-wrapper {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
 }

@@ -11,7 +11,9 @@ declare const google: any;
   template: `
     @if (!(isLoggedIn | async)) {
       <div class="signin-container">
-        <div #googleSignInButton></div>
+        <div class="signin-wrapper">
+          <div #googleSignInButton></div>
+        </div>
       </div>
     } @else {
       <div>
@@ -92,8 +94,8 @@ export class AuthComponent implements OnInit {
       google.accounts.id.renderButton(
         this.googleSignInButton.nativeElement,
         {
-          theme: "outline",
-          size: "large",
+          theme: "filled_black",
+          size: "medium",
           type: "standard",
           shape: "rectangular",
           text: "sign_in_with",

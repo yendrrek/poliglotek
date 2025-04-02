@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
@@ -10,7 +10,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { DialogNotificationComponent } from '../../components/dialog-notification/dialog-notification.component';
 import { Language } from '../../models/language';
 import { Country } from '../../models/country';
@@ -87,10 +87,12 @@ import { MatTooltip } from '@angular/material/tooltip';
       </mat-form-field>
 
       <button [disabled]="!(isLoggedIn | async)"
+              class="search-button"
               disabledInteractive
               mat-raised-button
-              [matTooltip]="!(isLoggedIn | async) ? 'Zaloguj się by aktywować wyszukiwanie' : ''"
-              class="search-button"
+              [matTooltip]="!(isLoggedIn | async) ? 'Zaloguj się przez Google aby aktywować wyszukiwanie' : ''"
+              #tooltip="matTooltip"
+              (touchstart)="toggleTooltip(tooltip)"
               searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
       </button>
     </form>
@@ -119,7 +121,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   `,
   styleUrl: './translation.component.scss'
 })
-export class TranslationComponent implements OnInit {
+export class TranslationComponent implements OnInit, OnDestroy {
 
   title: string = 'frontend';
   languages: Language[] = LANGUAGES.sort((a: Language, b: Language) =>
@@ -131,6 +133,8 @@ export class TranslationComponent implements OnInit {
   translatedPages: TranslatedPage[] = [];
   translationForm: FormGroup = new FormGroup({});
   isLoggedIn?: Observable<boolean>;
+  isLoggedInValue: boolean = false;
+  private subscription!: Subscription;
   private previousChoice!: TranslationFormInput | null;
 
   constructor(
@@ -144,6 +148,7 @@ export class TranslationComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn;
+    this.subscription = this.isLoggedIn.subscribe((value: boolean) => this.isLoggedInValue = value);
     this.previousChoice = this.cacheService.getTranslationChoice();
     this.translationForm = this.formBuilder.group({
       query: [this.previousChoice?.query || '', Validators.required],
@@ -153,6 +158,16 @@ export class TranslationComponent implements OnInit {
     this.autoSelectOneOrMoreMatchingCountries();
     this.loaderService.isLoading.subscribe((loading: boolean) => this.isLoading = loading);
     this.handleCachedTranslatedPages();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  toggleTooltip(tooltip: MatTooltip): void {
+    if (!this.isLoggedInValue) {
+      tooltip.toggle();
+    }
   }
 
   handleSubmitSearchData(): void {
