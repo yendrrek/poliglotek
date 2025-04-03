@@ -54,6 +54,15 @@
   }
 }
 
+.header-container {
+  text-decoration: underline;
+  text-decoration-color: #e0e2ec;
+  text-decoration-thickness: 0.15em;
+  display: flex;
+  margin: 1.25em auto 0 auto;
+  width: 96%
+}
+
 .tabs-container {
   margin-top: var(--translationMargin1_25em);
 }

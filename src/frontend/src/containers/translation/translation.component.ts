@@ -93,9 +93,13 @@ import { MatTooltip } from '@angular/material/tooltip';
               [matTooltip]="!(isLoggedIn | async) ? 'Zaloguj się przez Google aby aktywować wyszukiwanie' : ''"
               #tooltip="matTooltip"
               (touchstart)="toggleTooltip(tooltip)"
-              searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
+              searchButtonReponsive (click)="handleSubmitSearchData()">Szukaj
       </button>
     </form>
+
+    <div class="header-container">
+      <span>Tłumacznie znalezionych stron na polski:</span>
+    </div>
 
     <mat-tab-group class="tabs-container">
       @for (page of translatedPages; let i = $index; track page.id) {
