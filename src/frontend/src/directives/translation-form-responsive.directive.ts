@@ -76,11 +76,13 @@ export class TranslationFormResponsiveDirective extends ResponsiveHelper impleme
     this.addStyleToRespectiveElement(
       [TRANSLATION_FORM_RESPONSIVE_STYLES['search-form-container-column'],
         marginTopModifierStyle],
-      'formResponsive');
+      'formResponsive'
+    );
     this.addStyleToRespectiveElement(
       [TRANSLATION_FORM_RESPONSIVE_STYLES['search-form--field-width-max916px'],
         TRANSLATION_FORM_RESPONSIVE_STYLES['select-distance--reset']],
-      'formFieldResponsive');
+      'formFieldResponsive'
+    );
     this.addStyleToRespectiveElement(
       [TRANSLATION_FORM_RESPONSIVE_STYLES['search-button--column-layout']],
       'searchButtonResponsive'

@@ -93,7 +93,7 @@ import { MatTooltip } from '@angular/material/tooltip';
               [matTooltip]="!(isLoggedIn | async) ? 'Zaloguj się przez Google aby aktywować wyszukiwanie' : ''"
               #tooltip="matTooltip"
               (touchstart)="toggleTooltip(tooltip)"
-              searchButtonReponsive (click)="handleSubmitSearchData()">Szukaj
+              searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
       </button>
     </form>
 

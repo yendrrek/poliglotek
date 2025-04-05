@@ -23,9 +23,6 @@ import { LogoResponsiveDirective } from '../../directives/logo-responsive.direct
          aria-label="Logo aplikacji i link do strony głównej">
         POLiglotek</a>
 
-      <!--  <div class="g-signin2" data-onsuccess="onSignIn"></div> // todo: do i need this? looks like this was inserted
-      automatically-->
-
       <div class="right-menu" menuResponsive="hideMenu"> <!--for big screens-->
         <a class="right-menu-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
         <a class="right-menu-item" mat-button routerLink="/oAplikacji"
