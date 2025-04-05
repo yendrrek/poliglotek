@@ -31,13 +31,7 @@
 - **Jsoup** – Extracts content from static websites.
 - **Selenium** – Extracts content from dynamic websites.
 
-## 🚀 Deployment
-
-Poliglotek is currently in the **testing phase** and is deployed on **Google Cloud** using **Cloud Run**.
-
 ## 📌 Status
 
-The application is actively being developed and tested.
-
-##
+Poliglotek is currently in the **testing phase** and is deployed on **Google Cloud** using **Cloud Run**.
 
