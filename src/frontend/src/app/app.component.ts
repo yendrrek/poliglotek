@@ -7,7 +7,7 @@ import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/mat
 import { MenuResponsiveDirective } from '../directives/menu-responsive.directive';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { MatIcon } from '@angular/material/icon';
-import { AuthComponent } from '../components/auth/auth.component';
+import { LogInComponent } from '../components/log-in/log-in.component';
 
 @Component({
   selector: 'root',
@@ -25,7 +25,7 @@ import { AuthComponent } from '../components/auth/auth.component';
     MatIcon,
     MatIconButton,
     MatListItem,
-    AuthComponent
+    LogInComponent
   ],
   template: `
     <mat-sidenav-container menuResponsive="showMenu">

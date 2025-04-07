@@ -5,6 +5,7 @@ import { MatAnchor, MatIconButton } from '@angular/material/button';
 import { MenuResponsiveDirective } from '../../directives/menu-responsive.directive';
 import { MatIcon } from '@angular/material/icon';
 import { LogoResponsiveDirective } from '../../directives/logo-responsive.directive';
+import { LogOutComponent } from '../log-out/log-out.component';
 
 @Component({
   selector: 'navbar',
@@ -15,7 +16,8 @@ import { LogoResponsiveDirective } from '../../directives/logo-responsive.direct
     MenuResponsiveDirective,
     MatIcon,
     MatIconButton,
-    LogoResponsiveDirective
+    LogoResponsiveDirective,
+    LogOutComponent
   ],
   template: `
     <mat-toolbar>
@@ -24,6 +26,7 @@ import { LogoResponsiveDirective } from '../../directives/logo-responsive.direct
         POLiglotek</a>
 
       <div class="right-menu" menuResponsive="hideMenu"> <!--for big screens-->
+        <log-out></log-out>
         <a class="right-menu-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
         <a class="right-menu-item" mat-button routerLink="/oAplikacji"
            aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
@@ -41,7 +44,7 @@ import { LogoResponsiveDirective } from '../../directives/logo-responsive.direct
     </mat-toolbar>
 
   `,
-  styleUrl: './navbar.component.scss'
+  styleUrls: ['./navbar.component.scss', '../../shared-styles/shared-styles.scss']
 })
 export class NavbarComponent {
 

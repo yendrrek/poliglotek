@@ -15,17 +15,14 @@ declare const google: any;
           <div #googleSignInButton></div>
         </div>
       </div>
-    } @else {
-      <div>
-        <p>Logowanie powiodło się!</p> <!-- TODO: name of the user instead -->
-        <button (click)="logout()">Wyloguj się</button>
-      </div>
     }
   `,
-  imports: [AsyncPipe],
-  styleUrl: './auth.component.scss'
+  imports: [
+    AsyncPipe
+  ],
+  styleUrl: './log-in.component.scss'
 })
-export class AuthComponent implements OnInit {
+export class LogInComponent implements OnInit {
 
   @ViewChild('googleSignInButton') googleSignInButton?: ElementRef;
 
@@ -46,10 +43,6 @@ export class AuthComponent implements OnInit {
         }
       });
     });
-  }
-
-  logout(): void {
-    this.authService.logoutThenClearJWT();
   }
 
   protected loadGoogleScript(): Promise<void> {

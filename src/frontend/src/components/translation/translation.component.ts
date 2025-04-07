@@ -11,7 +11,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
-import { DialogNotificationComponent } from '../../components/dialog-notification/dialog-notification.component';
+import { DialogNotificationComponent } from '../dialog-notification/dialog-notification.component';
 import { Language } from '../../models/language';
 import { Country } from '../../models/country';
 import { TranslatedPage } from '../../models/translated-page';

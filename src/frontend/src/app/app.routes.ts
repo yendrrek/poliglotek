@@ -5,7 +5,7 @@ export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
   { path: "home",
     loadComponent: () =>
-      import("../containers/translation/translation.component")
+      import("../components/translation/translation.component")
         .then((module) => module.TranslationComponent) },
   { path: "oAplikacji",
     loadComponent: () =>
