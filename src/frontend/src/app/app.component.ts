@@ -7,7 +7,6 @@ import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/mat
 import { MenuResponsiveDirective } from '../directives/menu-responsive.directive';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { MatIcon } from '@angular/material/icon';
-import { LogInComponent } from '../components/log-in/log-in.component';
 
 @Component({
   selector: 'root',
@@ -24,8 +23,7 @@ import { LogInComponent } from '../components/log-in/log-in.component';
     NavbarComponent,
     MatIcon,
     MatIconButton,
-    MatListItem,
-    LogInComponent
+    MatListItem
   ],
   template: `
     <mat-sidenav-container menuResponsive="showMenu">
@@ -50,7 +48,6 @@ import { LogInComponent } from '../components/log-in/log-in.component';
       <mat-sidenav-content>
         <navbar (openNav)="openSideNavigation()"></navbar>
         <router-outlet></router-outlet>
-        <google-signin></google-signin>
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,

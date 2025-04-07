@@ -5,7 +5,7 @@ import { MatAnchor, MatIconButton } from '@angular/material/button';
 import { MenuResponsiveDirective } from '../../directives/menu-responsive.directive';
 import { MatIcon } from '@angular/material/icon';
 import { LogoResponsiveDirective } from '../../directives/logo-responsive.directive';
-import { LogOutComponent } from '../log-out/log-out.component';
+import { SignInOutComponent } from '../signin/sign-in-out.component';
 
 @Component({
   selector: 'navbar',
@@ -17,7 +17,7 @@ import { LogOutComponent } from '../log-out/log-out.component';
     MatIcon,
     MatIconButton,
     LogoResponsiveDirective,
-    LogOutComponent
+    SignInOutComponent
   ],
   template: `
     <mat-toolbar>
@@ -26,7 +26,7 @@ import { LogOutComponent } from '../log-out/log-out.component';
         POLiglotek</a>
 
       <div class="right-menu" menuResponsive="hideMenu"> <!--for big screens-->
-        <log-out></log-out>
+        <google-signin></google-signin>
         <a class="right-menu-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
         <a class="right-menu-item" mat-button routerLink="/oAplikacji"
            aria-label="Link do strony z informacją na temat aplikacji">O aplikacji

@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { GoogleSigninResponse } from '../../models/google-signin-response';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { MatAnchor } from '@angular/material/button';
 
 declare const google: any;
 
@@ -10,19 +11,18 @@ declare const google: any;
   selector: 'google-signin',
   template: `
     @if (!(isLoggedIn | async)) {
-      <div class="signin-container">
-        <div class="signin-wrapper">
-          <div #googleSignInButton></div>
-        </div>
-      </div>
+      <div class="signin" #googleSignInButton></div>
+    } @else {
+      <a class="right-menu-item" mat-button aria-label="Wyloguj się" (click)="logout()">Wyloguj się</a>
     }
   `,
   imports: [
-    AsyncPipe
+    AsyncPipe,
+    MatAnchor
   ],
-  styleUrl: './log-in.component.scss'
+  styleUrls: ['./sign-in-out.component.scss', '../../shared-styles/shared-styles.scss']
 })
-export class LogInComponent implements OnInit {
+export class SignInOutComponent implements OnInit {
 
   @ViewChild('googleSignInButton') googleSignInButton?: ElementRef;
 
@@ -43,6 +43,10 @@ export class LogInComponent implements OnInit {
         }
       });
     });
+  }
+
+  logout(): void {
+    this.authService.logoutThenClearJWT();
   }
 
   protected loadGoogleScript(): Promise<void> {
@@ -87,13 +91,13 @@ export class LogInComponent implements OnInit {
       google.accounts.id.renderButton(
         this.googleSignInButton.nativeElement,
         {
-          theme: "filled_black",
+          theme: "filled_white",
           size: "medium",
           type: "standard",
           shape: "rectangular",
           text: "sign_in_with",
           logo_alignment: "left",
-          width: 240,
+          width: 215,
           locale: "pl"
         }
       );
