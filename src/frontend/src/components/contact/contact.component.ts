@@ -10,10 +10,9 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ContactService } from '../../services/contact.service';
 import { MailResponse } from '../../models/mail-response';
-import { handleHttpError } from '../../utils/utils';
 
 @Component({
   selector: 'contact',
@@ -85,8 +84,8 @@ export class ContactComponent implements OnInit {
         next: (resp: MailResponse): void => {
           console.log("Mail response", resp);
         },
-        error: (error: HttpErrorResponse): Observable<never> => {
-          return handleHttpError(error);
+        error: (err: HttpErrorResponse): Observable<never> => {
+          return throwError((): Error => new Error(err.message));
         }
       });
     }

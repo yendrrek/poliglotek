@@ -10,7 +10,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, throwError } from 'rxjs';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-notification.component';
 import { Language } from '../../models/language';
 import { Country } from '../../models/country';
@@ -23,7 +23,6 @@ import { LANGUAGES } from '../../constants/languages';
 import { COUNTRIES } from '../../constants/countries';
 import { LANG_COUNTRY_MATCH } from '../../constants/lang-country-match';
 import { ONE_COUNTRY_FROM_MANY } from '../../constants/one-country-from-many';
-import { handleHttpError } from '../../utils/utils';
 import { CacheService } from '../../services/cache.service';
 import { TranslationFormInput } from '../../models/translation-form-input';
 import { CountryValue } from '../../types/country-value';
@@ -90,7 +89,7 @@ import { MatTooltip } from '@angular/material/tooltip';
               class="search-button"
               disabledInteractive
               mat-raised-button
-              [matTooltip]="!(isLoggedIn | async) ? 'Zaloguj się przez Google aby aktywować wyszukiwanie' : ''"
+              [matTooltip]="!(isLoggedIn | async) ? noAccessMessage : ''"
               #tooltip="matTooltip"
               (touchstart)="toggleTooltip(tooltip)"
               searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
@@ -138,6 +137,7 @@ export class TranslationComponent implements OnInit, OnDestroy {
   translationForm: FormGroup = new FormGroup({});
   isLoggedIn?: Observable<boolean>;
   isLoggedInValue: boolean = false;
+  noAccessMessage: string = 'Brak dostępu. Zaloguj się, aby aktywować wyszukiwanie.';
   private subscription!: Subscription;
   private previousChoice!: TranslationFormInput | null;
 
@@ -219,8 +219,9 @@ export class TranslationComponent implements OnInit, OnDestroy {
       next: (resp: Response<TranslatedPage[]>): void => {
         this.handleTranslationResponse(resp, choice);
       },
-      error: (error: HttpErrorResponse): Observable<never> => {
-        return handleHttpError(error);
+      error: (err: HttpErrorResponse): Observable<never> => {
+        this.openDialog(this.noAccessMessage);
+        return throwError((): Error => new Error(err.message));
       }
     });
   }
