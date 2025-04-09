@@ -49,7 +49,7 @@ export class SignInOutComponent implements OnInit {
     this.authService.logoutThenClearJWT();
   }
 
-  protected loadGoogleScript(): Promise<void> {
+  private loadGoogleScript(): Promise<void> {
     return new Promise<void>((resolve) => {
       if (typeof google !== 'undefined') {
         resolve();

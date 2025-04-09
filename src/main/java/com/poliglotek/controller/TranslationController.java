@@ -8,10 +8,12 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 
 import java.util.List;
 
-@Controller("/api/translate")
+@Controller("/api")
 @ExecuteOn(TaskExecutors.BLOCKING)
 public class TranslationController {
 
@@ -21,7 +23,8 @@ public class TranslationController {
         this.translationService = translationService;
     }
 
-    @Get()
+    @Get("/translate")
+    @Secured(SecurityRule.IS_AUTHENTICATED)
     public TranslationResponse<List<TranslatedPage>> getTranslatedPages(@QueryValue String query,
                                                                         @QueryValue String langCode,
                                                                         @QueryValue String countryCode) {
