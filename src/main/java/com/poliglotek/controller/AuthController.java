@@ -4,7 +4,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.poliglotek.service.TokenBlacklistService;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.Body;
@@ -28,14 +27,11 @@ public class AuthController {
 
     private final String googleClientId;
     private final JwtTokenGenerator jwtTokenGenerator;
-    private final TokenBlacklistService tokenBlacklistService;
 
     public AuthController(@Value("${google-cloud.client-id}") String googleClientId,
-                          JwtTokenGenerator jwtTokenGenerator,
-                          TokenBlacklistService tokenBlacklistService) {
+                          JwtTokenGenerator jwtTokenGenerator) {
         this.googleClientId = googleClientId;
         this.jwtTokenGenerator = jwtTokenGenerator;
-        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @Post("/login")
@@ -57,8 +53,8 @@ public class AuthController {
                 attributes
         );
 
-        Integer _24h = 24 * 60 * 60;
-        String customJWT = jwtTokenGenerator.generateToken(authentication, _24h)
+        int _3h = 10800;
+        String customJWT = jwtTokenGenerator.generateToken(authentication, _3h)
                 .orElseThrow(() -> new RuntimeException("Failed to generate custom JWT"));
         return new LoginResponse(customJWT);
     }
@@ -75,7 +71,6 @@ public class AuthController {
         String authHeader = request.getHeaders().get("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-//            tokenBlacklistService.blacklistToken(token);
         }
     }
 
