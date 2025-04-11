@@ -42,6 +42,10 @@ netty:
     allocator:
       max-order: 3
 
+gcp:
+  firestore:
+    project-id: "${GOOGLE_CLOUD_PROJECT_ID}"
+
 google-cloud:
   project-id: "${GOOGLE_CLOUD_PROJECT_ID}"
   custom-search-api-key: "${GOOGLE_CUSTOM_SEARCH_API_KEY}"
