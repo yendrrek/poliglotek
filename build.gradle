@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.50.12"
+version = "0.50.13"
 group = "com.poliglotek"
 
 repositories {
@@ -26,7 +26,7 @@ dependencies {
     implementation "io.micronaut.security:micronaut-security-oauth2"
     implementation "io.micronaut.security:micronaut-security-jwt"
     implementation "io.micronaut.gcp:micronaut-gcp-common"
-    implementation "io.micronaut.gcp:micronaut-gcp-logging"
+    implementation "io.micronaut.gcp:micronaut-gcp-logging" // google cloud logging support
     implementation "io.micronaut.cache:micronaut-cache-core"
     implementation "io.micronaut.cache:micronaut-cache-caffeine"
     annotationProcessor "io.micronaut.validation:micronaut-validation-processor"
@@ -39,14 +39,20 @@ dependencies {
     implementation "com.google.cloud:google-cloud-firestore:_"
     implementation "com.google.cloud:google-cloud-translate:_"
 
-    // other
-    implementation "org.jsoup:jsoup:_"
-    implementation "org.seleniumhq.selenium:selenium-java:_"
+    // logging
+    implementation "ch.qos.logback:logback-classic:_"
+    implementation "org.fusesource.jansi:jansi:_" // coloured console output
+
+    // web scraping
+    implementation "org.jsoup:jsoup:_" // static pages
+    implementation "org.seleniumhq.selenium:selenium-java:_" // dynamic pages
+
+    // testing
+    testImplementation "net.bytebuddy:byte-buddy:_" // to mock classes and generate mock implementations
+    testImplementation "org.objenesis:objenesis:_" // to mock classes without default constructors
+
     implementation "org.yaml:snakeyaml:_"
 //    implementation "com.mailgun:mailgun-java:_"
-    implementation "ch.qos.logback:logback-classic:_"
-    testImplementation "net.bytebuddy:byte-buddy:_" // used by spock to mock classes and generate mock implementations
-    testImplementation "org.objenesis:objenesis:_" // used by spock to mock classes without default constructors
 }
 
 application {
@@ -146,8 +152,8 @@ tasks.named("inspectRuntimeClasspath") {
     dependsOn copyFrontend
 }
 
-tasks.withType(Test).configureEach {// Excludes tests when running build
-    enabled = false
+tasks.withType(Test).configureEach {
+    enabled = true // if set to `false` will exclude tests when running build
 }
 
 build.dependsOn copyFrontend

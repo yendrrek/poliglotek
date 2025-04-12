@@ -7,7 +7,7 @@ import spock.lang.Subject
 import spock.lang.Unroll
 
 @MicronautTest
-class ScrapeServiceTest extends Specification {
+class ScrapeServiceSpec extends Specification {
 
     @Inject
     @Subject
