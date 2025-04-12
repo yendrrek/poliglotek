@@ -1,5 +1,4 @@
 <configuration>
-    <property name="STDOUT_WITH_JANSI" value="true" />
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
@@ -9,10 +8,8 @@
             </pattern>
         </encoder>
     </appender>
-    <include resource="io/micronaut/gcp/logging/logback-json-appender.xml" />
     <root level="info">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="CONSOLE_JSON" />
     </root>
     <logger name="com.poliglotek" level="info" />
 <!--    <logger name="io.micronaut.http" level="trace" />-->
