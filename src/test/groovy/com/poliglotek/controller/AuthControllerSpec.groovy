@@ -7,6 +7,8 @@ import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import spock.lang.Specification
 
+import java.security.GeneralSecurityException
+
 class AuthControllerSpec extends Specification {
 
     JwtTokenGenerator jwtTokenGenerator = Mock()
@@ -127,7 +129,7 @@ class AuthControllerSpec extends Specification {
         }
 
         @Override
-        public AuthController.LoginResponse login(AuthController.LoginRequest request) throws java.security.GeneralSecurityException, java.io.IOException {
+        public LoginResponse login(LoginRequest request) throws GeneralSecurityException, IOException {
             // Record the token we were asked to verify
             verifiedToken = request.googleIdToken()
 
@@ -152,7 +154,7 @@ class AuthControllerSpec extends Specification {
             String customJWT = tokenGenerator.generateToken(authentication, _3h)
                     .orElseThrow(() -> new RuntimeException("Failed to generate custom JWT"))
 
-            return new AuthController.LoginResponse(customJWT)
+            return new LoginResponse(customJWT)
         }
 
         @Override

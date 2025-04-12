@@ -1,0 +1,12 @@
+micronaut:
+  security:
+    enabled: true
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: "jwt-test-secret"
+
+google-cloud:
+  client-id: "test-12345"
