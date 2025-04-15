@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { GoogleSigninResponse } from '../models/google-signin-response';
 import { DecodedCredential } from '../models/decoded-credential';
+import { AuthResponse } from '../models/auth-response';
+import { AuthRequest } from '../models/auth-request';
 
 declare const google: any;
 
@@ -20,10 +22,18 @@ export class AuthService {
     this.checkUserLoggedIn();
   }
 
+  handleCredentialResponse(resp: GoogleSigninResponse): void {
+    const googleIdToken: string = resp.credential;
+    this.loginWithGoogleThenStoreCustomJWT(googleIdToken).subscribe({
+      next: () => this.isLoggedInSubject.next(true),
+      error: err => console.error('Login failed:', err),
+    });
+  }
+
   logoutThenClearJWT(): void {
     const token: string | null = this.getJWT();
     if (token) {
-      this.http.post(`${this.API_URL}/logout`, {}, {
+      this.http.post(`${this.API_URL}/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       }).subscribe({
         next: () => console.log('Logged out on server'),
@@ -33,14 +43,6 @@ export class AuthService {
     localStorage.removeItem('token');
     this.isLoggedInSubject.next(false);
     google.accounts.id.disableAutoSelect();
-  }
-
-  handleCredentialResponse(resp: GoogleSigninResponse): void {
-    const googleIdToken: string = resp.credential;
-    this.loginWithGoogleThenStoreCustomJWT(googleIdToken).subscribe({
-      next: () => this.isLoggedInSubject.next(true),
-      error: err => console.error('Login failed:', err),
-    });
   }
 
   private checkUserLoggedIn(): void {
@@ -54,9 +56,10 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  private loginWithGoogleThenStoreCustomJWT(googleIdToken: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/login`, { googleIdToken: googleIdToken }).pipe(
-      tap((res: any) => localStorage.setItem('token', res.customToken))
+  private loginWithGoogleThenStoreCustomJWT(googleIdToken: string): Observable<AuthResponse> {
+    const authRequest: AuthRequest = { googleIdToken: googleIdToken };
+    return this.http.post<AuthResponse>(`${this.API_URL}/auth/login`, authRequest).pipe(
+      tap((res: AuthResponse) => localStorage.setItem('token', res.customToken))
     );
   }
 

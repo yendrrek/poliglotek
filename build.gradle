@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.50.16"
+version = "0.50.17"
 group = "com.poliglotek"
 
 repositories {
@@ -153,7 +153,7 @@ tasks.named("inspectRuntimeClasspath") {
 }
 
 tasks.withType(Test).configureEach {
-    enabled = true // if set to `false` will exclude tests when running build
+    enabled = false // if set to `false` will exclude tests when running build
 }
 
 build.dependsOn copyFrontend

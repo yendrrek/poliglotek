@@ -3,6 +3,7 @@ package com.poliglotek.controller
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
 import io.micronaut.security.authentication.Authentication
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
@@ -128,7 +129,7 @@ class AuthControllerSpec extends Specification {
         }
 
         @Override
-        LoginResponse login(LoginRequest request) throws GeneralSecurityException, IOException {
+        HttpResponse<LoginResponse> login(LoginRequest request) throws GeneralSecurityException, IOException {
             verifiedToken = request.googleIdToken()
 
             if (!mockVerificationResult) {
@@ -151,15 +152,16 @@ class AuthControllerSpec extends Specification {
             String customJWT = tokenGenerator.generateToken(authentication, _3h)
                     .orElseThrow(() -> new RuntimeException("Failed to generate custom JWT"))
 
-            return new LoginResponse(customJWT)
+            return HttpResponse.ok(new LoginResponse(customJWT))
         }
 
         @Override
-        void logout(HttpRequest<?> request) {
+        HttpResponse<?> logout(HttpRequest<?> request, Authentication authentication) {
             String authHeader = request.getHeaders().get("Authorization")
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 extractedToken = authHeader.substring(7)
             }
+            return HttpResponse.noContent()
         }
     }
 }
