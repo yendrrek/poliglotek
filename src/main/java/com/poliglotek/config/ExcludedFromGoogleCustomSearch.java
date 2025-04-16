@@ -1,13 +1,12 @@
 package com.poliglotek.config;
 
-import jakarta.inject.Singleton;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Singleton
-public class ExcludedFromGoogleCustomSearch {
+public final class ExcludedFromGoogleCustomSearch {
+
+    private ExcludedFromGoogleCustomSearch() {}
 
     public static final List<String> FILE_TYPES = List.of("pdf", "ps", "csv", "epub", "kml", "kmz", "gpx",
             "hwp", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp", "ods", "odt", "rtf", "svg", "tex",

@@ -13,7 +13,8 @@
 # Exit on error, undefined variable, or pipe failure
 set -euo pipefail
 
-# Create an array with shell constants which must be set in bashrc before running the script
+# Create an array with shell constants which must be set in ~/.bashrc before running the script.
+# It needs to be the bashrc from the root account
 PREDEFINED_SHELL_CONSTANTS=(POLIGLOTEK_PROJECT_ROOT GOOGLE_CREDS_FILE_NAME ENV_VARS_FILE_PATH EXPOSED_PORT)
 
 # Flag to track if all constants are set

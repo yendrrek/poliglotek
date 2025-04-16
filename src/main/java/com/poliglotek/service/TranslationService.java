@@ -1,71 +1,102 @@
 package com.poliglotek.service;
 
-import com.google.cloud.translate.v3.*;
 import com.poliglotek.model.googletranslate.TranslatedPage;
 import com.poliglotek.model.jsoup.ScrapedPage;
 import com.poliglotek.model.translationresponse.TranslationResponse;
-import io.micronaut.context.annotation.Value;
+import com.poliglotek.utils.IdGenerator;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
+
+import static com.poliglotek.config.TranslationConfig.*;
 
 @Singleton
 public class TranslationService {
 
-    private final Logger log = LoggerFactory.getLogger(TranslationService.class);
-    private final GoogleSearchService googlesearchService;
+    private final Logger LOG = LoggerFactory.getLogger(TranslationService.class);
+    private final GoogleSearchService googleSearchService;
     private final ScrapeService scrapService;
-    private final String projectId;
-    private static final String POLISH = "pl";
-    private static final String GLOBAL_LOCATION = "global";
-    private static final String TEXT_HTML = "text/html";
-    private static final String BASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final int ID_LENGTH = 10;
-    private static final int CHARACTERS_LIMIT = 15000; // Hard limit: 30000; recommended: 5000, but websites need more
-    private static final int CHARACTERS_LIMIT_LOG = 15;
+    private final IdGenerator idGenerator;
+    private final TranslateClient translateClient;
 
     public TranslationService(GoogleSearchService googleSearchService,
                               ScrapeService scrapService,
-                              @Value("${google-cloud.project-id}") String projectId) {
-        this.googlesearchService = googleSearchService;
+                              IdGenerator idGenerator,
+                              TranslateClient translateClient) {
+        this.googleSearchService = googleSearchService;
         this.scrapService = scrapService;
-        this.projectId = projectId;
+        this.idGenerator = idGenerator;
+        this.translateClient = translateClient;
     }
 
     public TranslationResponse<List<TranslatedPage>> getTranslatedPagesResponse(String query,
                                                                                 String targetLang,
                                                                                 String countryCode) {
-        log.info("Query: {} | Target language: {} | Page location: {}", query, targetLang, countryCode);
-        String translatedQuery = getTranslation(query, targetLang, projectId);
-        log.info("Polish query: '{}' is translated to '{}' as '{}'", query, targetLang, translatedQuery);
-        List<String> urls = googlesearchService.fetchUrls(translatedQuery, targetLang, countryCode);
+
+        LOG.info("Query: {} | Target language: {} | Page location: {}", query, targetLang, countryCode);
+
+        String translatedQuery = translateClient.translateQuery(query, targetLang);
+        LOG.info("Polish query: '{}' is translated to '{}' as '{}'", query, targetLang, translatedQuery);
+
+        List<String> urls = googleSearchService.fetchUrls(translatedQuery, targetLang, countryCode);
         if (urls == null || urls.isEmpty()) {
-            log.info("No results for combination | {} | {} | {} |", query, targetLang, countryCode);
+            LOG.info("No results for combination | {} | {} | {} |", query, targetLang, countryCode);
             return TranslationResponse.success(null, "Nie znaleziono żadnych stron");
         }
+
         List<ScrapedPage> pages = scrapService.scrapePages(urls);
+
         if (containsFailedPage(pages)) {
-            List<ScrapedPage> filteredPages = removeFailedPages(pages);
-            List<TranslatedPage> translatedPages = translatePages(filteredPages);
-            int numberOfFailedPages = pages.size() - filteredPages.size();
-            log.warn("Number of pages which failed to be scraped: {}", numberOfFailedPages);
-            String warning = createFailedPageWarning(numberOfFailedPages);
-            return TranslationResponse.success(translatedPages, warning);
+            return handleFailedPages(pages);
         }
+
         List<TranslatedPage> translatedPages = translatePages(pages);
-        if (translatedPages.stream().allMatch(Objects::isNull)) {
+
+        if (allPagesExceedCharacterLimit(translatedPages)) {
             return TranslationResponse.error("Ilość znaków do tłumaczenia na każdej wyszukanej stronie " +
-                    "przekracza limit " + CHARACTERS_LIMIT_LOG + " tysięcy");
+                    "przekracza limit " + CHARACTERS_LIMIT_LOG_IN_THOUSANDS + " tysięcy");
         }
-        if (translatedPages.contains(null)) {
+
+        if (somePagesExceedCharacterLimit(translatedPages)) {
             String warning = createCharacterLimitWarning(translatedPages);
             return TranslationResponse.success(translatedPages, warning);
         }
+
         return TranslationResponse.success(translatedPages);
+    }
+
+    private TranslationResponse<List<TranslatedPage>> handleFailedPages(List<ScrapedPage> pages) {
+        List<ScrapedPage> filteredPages = filterOutFailedPages(pages);
+        List<TranslatedPage> translatedPages = translatePages(filteredPages);
+        int numberOfFailedPages = pages.size() - filteredPages.size();
+        LOG.warn("Number of pages which failed to be scraped: {}", numberOfFailedPages);
+        String warning = createFailedPageWarning(numberOfFailedPages);
+        return TranslationResponse.success(translatedPages, warning);
+    }
+
+    private boolean allPagesExceedCharacterLimit(List<TranslatedPage> pages) {
+        return !pages.isEmpty() && pages.stream().allMatch(Objects::isNull);
+    }
+
+    private boolean somePagesExceedCharacterLimit(List<TranslatedPage> pages) {
+        return pages.stream().anyMatch(Objects::isNull);
+    }
+
+    private boolean hasPageTooManyCharacters(String pageBody) {
+        int numberOfCharacters = pageBody.length();
+        LOG.info("Number of web page characters to translate: {}", numberOfCharacters);
+        if (numberOfCharacters > CHARACTERS_LIMIT) {
+            LOG.error("Number of web page characters to translate must not exceed {} characters", CHARACTERS_LIMIT);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean containsFailedPage(List<ScrapedPage> scrapedPages) {
+        return scrapedPages.stream().anyMatch(page -> page.body() == null);
     }
 
     private List<TranslatedPage> translatePages(List<ScrapedPage> pages) {
@@ -79,83 +110,25 @@ public class TranslationService {
         if (hasPageTooManyCharacters(pageBody)) {
             return null;
         }
-        String translatedPageId = createTranslatedPageId();
-        String translation = getTranslation(pageBody, POLISH, projectId);
+        String translatedPageId = idGenerator.generate();
+        String translation = translateClient.translateQuery(pageBody, TARGET_LANGUAGE_POLISH);
         return new TranslatedPage(translatedPageId, translation, page.url());
+    }
+
+    private List<ScrapedPage> filterOutFailedPages(List<ScrapedPage> scrapedPages) {
+        return scrapedPages.stream()
+                .filter(page -> page.body() != null)
+                .toList();
     }
 
     private String createCharacterLimitWarning(List<TranslatedPage> translatedPages) {
         int numberOfPagesWithTooManyCharacters = (int) translatedPages.stream().filter(Objects::isNull).count();
         return String.format("Niektóre z wyszukanych stron przekraczają limit %s tysięcy znaków, więc nie mogą być " +
-                "przetłumaczone. Ilość tych stron: %s.", CHARACTERS_LIMIT_LOG, numberOfPagesWithTooManyCharacters);
+                "przetłumaczone. Ilość tych stron: %s.", CHARACTERS_LIMIT_LOG_IN_THOUSANDS, numberOfPagesWithTooManyCharacters);
     }
 
     private String createFailedPageWarning(int numberOfUnsupportedPages) {
         return String.format("Niektóre wyszukane strony nie zostały przetłumaczone, ponieważ posiadają " +
                 "nieobsługiwany format, bądź są niedostępne. Ilość tych stron: %s", numberOfUnsupportedPages);
-    }
-
-    private boolean hasPageTooManyCharacters(String pageBody) {
-        int numberOfCharacters = pageBody.length();
-        log.info("Number of web page characters to translate: {}", numberOfCharacters);
-        if (numberOfCharacters > CHARACTERS_LIMIT) {
-            log.error("Number of web page characters to translate must not exceed {} characters", CHARACTERS_LIMIT);
-            return true;
-        }
-        return false;
-    }
-
-    private String getTranslation(String text, String targetLang, String projectId) {
-        TranslateTextResponse response = translatePage(text, targetLang, projectId);
-        if (response == null) {
-            log.error("Response from Google Custom Search must not be null");
-            return null;
-        }
-        return buildTranslation(response);
-    }
-
-    private TranslateTextResponse translatePage(String text, String targetLang, String projectId) {
-        try (TranslationServiceClient client = TranslationServiceClient.create()) {
-            LocationName parent = LocationName.of(projectId, GLOBAL_LOCATION);
-            TranslateTextRequest request = TranslateTextRequest.newBuilder()
-                    .setParent(parent.toString())
-                    .setMimeType(TEXT_HTML)
-                    .setTargetLanguageCode(targetLang)
-                    .addContents(text)
-                    .build();
-            return client.translateText(request);
-        } catch (Exception e) {
-            log.error("Error translating web page", e);
-            return null;
-        }
-    }
-
-    private String buildTranslation(TranslateTextResponse response) {
-        StringBuilder translatedHTML = new StringBuilder();
-        List<Translation> translationList = response.getTranslationsList();
-        for (com.google.cloud.translate.v3.Translation translation : translationList) {
-            translatedHTML.append(translation.getTranslatedText());
-        }
-        return translatedHTML.toString();
-    }
-
-    private String createTranslatedPageId() {
-        SecureRandom secureRandom = new SecureRandom();
-        StringBuilder id = new StringBuilder(ID_LENGTH);
-        for (int i = 0; i < ID_LENGTH; i++) {
-            int index = secureRandom.nextInt(BASE_CHARACTERS.length());
-            id.append(BASE_CHARACTERS.charAt(index));
-        }
-        return id.toString();
-    }
-
-    private boolean containsFailedPage(List<ScrapedPage> scrapedPages) {
-        return scrapedPages.stream().anyMatch(page -> page.body() == null);
-    }
-
-    private List<ScrapedPage> removeFailedPages(List<ScrapedPage> scrapedPages) {
-        return scrapedPages.stream()
-                .filter(page -> page.body() != null)
-                .toList();
     }
 }
