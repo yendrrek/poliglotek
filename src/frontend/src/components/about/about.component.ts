@@ -31,15 +31,16 @@ import { AboutResponsiveDirective } from '../../directives/about-responsive.dire
       <div>Kilka uwag:</div>
       <div>Poliglotek jest aktualnie w fazie eksperymentalnej.</div>
       <div>
-        Aplikacja tłumaczy na polski tekst stron znalezionych przez wyszukiwarkę Google. Celem jest dostarczenie
-        przetłumaczonej treści jak najściślej związanej z wyszukiwanym terminem. Przewidzenie struktury HTML jest jednak
-        możliwe tylko w pewnym stopniu, więc większość tłumaczeń nieuchronnie będzie także zawierać fragmenty
-        bezużyteczne, jak na przykład elementy menu, polityki prywatności itp.
+        Aplikacja tłumaczy na polski tekst stron znalezionych przez wyszukiwarkę Google, które posiadają najlepszy
+        ranking. Celem jest dostarczenie przetłumaczonej treści jak najściślej związanej z wyszukiwanym terminem.
+        Przewidzenie struktury HTML jest jednak możliwe tylko w pewnym stopniu, więc większość tłumaczeń nieuchronnie
+        będzie także zawierać fragmenty bezużyteczne, jak na przykład elementy menu, polityki prywatności itp.
       </div>
       <div>
-        Obecnie jedno wyszukanie dostarcza maksymalnie cztery przetłumaczone strony. Ilość ta może uledz
-        zmniejszeniu ze względu na techniczne ogranicznenia, na które niestety nie zawsze będziemy
-        mieć wpływ. Prosimy o wyrozumiałość.
+        Obecnie jedno wyszukanie dostarcza maksymalnie cztery przetłumaczone strony. Po otrzymaniu rezultatów może się
+        jednak okazać, że ilość ta jest mniejsza ze względu na techniczne ogranicznenia, na które niestety nie mamy
+        wpływu. Prosimy o wyrozumiałość. Chcielibyśmy, aby wraz z rozwojem aplikacji maksymalna ilość dostarczonych
+        stron zwiększyła się, jednak zależy to od kosztów i ograniczeń serwisów Google.
       </div>
       <div>
         Bardzo chętnie przyjmiemy wszelkie konstruktywne uwagi. Adres e-mail znajduje się na stronie <a
