@@ -1,8 +1,8 @@
-package com.poliglotek.controller;
+package com.poliglotek.presentation.auth;
 
-import com.poliglotek.model.loginrequest.LoginRequest;
-import com.poliglotek.model.loginresponse.LoginResponse;
-import com.poliglotek.service.AuthService;
+import com.poliglotek.application.auth.AuthService;
+import com.poliglotek.application.auth.dto.LoginRequest;
+import com.poliglotek.application.auth.dto.LoginResponse;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -26,8 +26,9 @@ public class AuthController {
 
     @Post("/login")
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public HttpResponse<LoginResponse> login(@Body LoginRequest request) {
-        return authService.validateLoginProcess(request);
+    public HttpResponse<?> login(@Body LoginRequest request) {
+        LoginResponse response = authService.validateLoginProcess(request);
+        return HttpResponse.ok(response);
     }
 
     @Post("/logout")

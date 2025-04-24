@@ -1,6 +1,9 @@
 package com.poliglotek.controller
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
+import com.poliglotek.application.auth.dto.LoginRequest
+import com.poliglotek.application.auth.dto.LoginResponse
+import com.poliglotek.presentation.auth.AuthController
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -23,7 +26,7 @@ class AuthControllerSpec extends Specification {
 
     def "login should return a JWT token for a valid Google ID token"() {
         given:
-        def loginRequest = new AuthController.LoginRequest("valid-google-token")
+        def loginRequest = new LoginRequest("valid-google-token")
         def mockPayload = Mock(GoogleIdToken.Payload)
 
         and: "mock verification will succeed"
@@ -47,7 +50,7 @@ class AuthControllerSpec extends Specification {
 
     def "login should throw SecurityException for invalid Google ID token"() {
         given:
-        def loginRequest = new AuthController.LoginRequest("invalid-google-token")
+        def loginRequest = new LoginRequest("invalid-google-token")
 
         and: "mock verification will fail"
         authControllerWrapper.mockVerificationResult = false
@@ -62,7 +65,7 @@ class AuthControllerSpec extends Specification {
 
     def "login should throw RuntimeException when token generation fails"() {
         given:
-        def loginRequest = new AuthController.LoginRequest("valid-google-token")
+        def loginRequest = new LoginRequest("valid-google-token")
         def mockPayload = Mock(GoogleIdToken.Payload)
 
         and: "mock verification will succeed"

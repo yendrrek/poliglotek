@@ -1,4 +1,4 @@
-package com.poliglotek.model.loginresponse;
+package com.poliglotek.application.auth.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
 
