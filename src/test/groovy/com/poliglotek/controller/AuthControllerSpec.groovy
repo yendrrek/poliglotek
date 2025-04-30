@@ -2,8 +2,8 @@ package com.poliglotek.controller
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.poliglotek.interfaces.auth.AuthController
-import com.poliglotek.interfaces.auth.dto.LoginRequest
-import com.poliglotek.interfaces.auth.dto.LoginResponse
+import com.poliglotek.interfaces.auth.LoginRequest
+import com.poliglotek.interfaces.auth.LoginResponse
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse

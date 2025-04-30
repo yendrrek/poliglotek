@@ -1,7 +1,7 @@
 package com.poliglotek.infrastructure.auth;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.poliglotek.application.auth.port.out.TokenGeneratorPort;
+import com.poliglotek.application.auth.TokenGeneratorPortOut;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Singleton;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
-public class CustomTokenGenerator implements TokenGeneratorPort {
+public class CustomTokenGenerator implements TokenGeneratorPortOut {
 
     private final JwtTokenGenerator jwtTokenGenerator;
     private static final int TOKEN_EXPIRATION_3_HOURS_IN_SECONDS = 10800;

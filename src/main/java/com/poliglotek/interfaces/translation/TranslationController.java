@@ -1,7 +1,6 @@
 package com.poliglotek.interfaces.translation;
 
-import com.poliglotek.application.translation.service.TranslationApplicationService;
-import com.poliglotek.interfaces.translation.dto.TranslationResponse;
+import com.poliglotek.application.translation.TranslationApplicationService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;

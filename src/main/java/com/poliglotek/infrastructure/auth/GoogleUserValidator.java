@@ -4,12 +4,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.poliglotek.application.auth.exception.InvalidRequestException;
-import com.poliglotek.application.auth.port.out.UserValidatorPort;
-import com.poliglotek.domain.auth.exception.EmailNotVerifiedException;
-import com.poliglotek.domain.auth.exception.InvalidTokenException;
-import com.poliglotek.domain.auth.exception.TokenValidationException;
-import com.poliglotek.infrastructure.auth.config.GoogleOAuthProperties;
+import com.poliglotek.application.auth.InvalidRequestException;
+import com.poliglotek.application.auth.UserValidatorPortOut;
+import com.poliglotek.domain.auth.EmailNotVerifiedException;
+import com.poliglotek.domain.auth.InvalidTokenException;
+import com.poliglotek.domain.auth.TokenValidationException;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
@@ -17,13 +16,13 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 
 @Singleton
-public class GoogleUserValidator implements UserValidatorPort {
+public class GoogleUserValidator implements UserValidatorPortOut {
 
-    private final GoogleIdTokenVerifier verifier;
     private final GoogleOAuthProperties googleOAuthProperties;
+    private final GoogleIdTokenVerifier verifier;
 
-    public GoogleUserValidator(GoogleOAuthProperties googleOAuthProperties1) {
-        this.googleOAuthProperties = googleOAuthProperties1;
+    public GoogleUserValidator(GoogleOAuthProperties googleOAuthProperties) {
+        this.googleOAuthProperties = googleOAuthProperties;
         this.verifier = initialiseVerifier();
     }
 

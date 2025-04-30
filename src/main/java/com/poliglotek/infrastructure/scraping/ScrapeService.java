@@ -1,8 +1,7 @@
 package com.poliglotek.infrastructure.scraping;
 
-import com.poliglotek.application.translation.port.out.ScrapingPort;
-import com.poliglotek.domain.translation.search.model.UrlFound;
-import com.poliglotek.infrastructure.scraping.dto.ScrapedPage;
+import com.poliglotek.application.translation.ScrapingPortOut;
+import com.poliglotek.domain.translation.UrlFound;
 import jakarta.inject.Singleton;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Singleton
-public class ScrapeService implements ScrapingPort {
+public class ScrapeService implements ScrapingPortOut {
 
     private final Logger log = LoggerFactory.getLogger(ScrapeService.class);
     private static final String ON_PREFIX = "on";

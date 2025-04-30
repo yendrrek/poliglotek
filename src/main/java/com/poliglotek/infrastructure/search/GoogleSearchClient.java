@@ -1,6 +1,6 @@
 package com.poliglotek.infrastructure.search;
 
-import com.poliglotek.infrastructure.search.dto.SearchResponseWrapper;
+import com.poliglotek.infrastructure.search.clientmodel.SearchResponseWrapper;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Header;

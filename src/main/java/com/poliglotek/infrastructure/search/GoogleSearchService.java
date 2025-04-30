@@ -1,11 +1,9 @@
 package com.poliglotek.infrastructure.search;
 
-import com.poliglotek.application.translation.port.out.GoogleSearchPort;
-import com.poliglotek.domain.translation.search.model.UrlFound;
-import com.poliglotek.infrastructure.search.config.GoogleSearchProperties;
-import com.poliglotek.infrastructure.search.config.SearchTermsExcludedConstants;
-import com.poliglotek.infrastructure.search.dto.SearchItem;
-import com.poliglotek.infrastructure.search.dto.SearchResponseWrapper;
+import com.poliglotek.application.translation.GoogleSearchPortOut;
+import com.poliglotek.domain.translation.UrlFound;
+import com.poliglotek.infrastructure.search.clientmodel.SearchItem;
+import com.poliglotek.infrastructure.search.clientmodel.SearchResponseWrapper;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.stream.Collectors;
 // Limit of 10,000 queries per day
 // All Amazon domains are excluded through the front-end settings (url above)
 @Singleton
-public class GoogleSearchService implements GoogleSearchPort {
+public class GoogleSearchService implements GoogleSearchPortOut {
 
     private final GoogleSearchClient googleSearchClient;
     private final GoogleSearchProperties googleSearchProperties;
