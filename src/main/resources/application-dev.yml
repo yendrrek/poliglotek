@@ -1,1 +1,3 @@
-customSearchLimit: 1
+google-cloud:
+  search:
+    limit: 1

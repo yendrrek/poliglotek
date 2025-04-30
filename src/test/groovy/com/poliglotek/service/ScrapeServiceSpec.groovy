@@ -1,5 +1,6 @@
 package com.poliglotek.service
 
+import com.poliglotek.infrastructure.scraping.ScrapeService
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import spock.lang.Specification

@@ -47,10 +47,14 @@ gcp:
     project-id: "${GOOGLE_CLOUD_PROJECT_ID}"
 
 google-cloud:
-  project-id: "${GOOGLE_CLOUD_PROJECT_ID}"
-  custom-search-api-key: "${GOOGLE_CUSTOM_SEARCH_API_KEY}"
-  custom-search-engine-id: "${GOOGLE_CUSTOM_SEARCH_ENGINE_ID}"
-  client-id: "${OAUTH_CLIENT_ID}"
+  translation:
+    project-id: "${GOOGLE_CLOUD_PROJECT_ID}"
+  search:
+    api-key: "${GOOGLE_CUSTOM_SEARCH_API_KEY}"
+    engine-id: "${GOOGLE_CUSTOM_SEARCH_ENGINE_ID}"
+    limit: 4
+  oauth:
+    client-id: "${OAUTH_CLIENT_ID}"
 
 mailgun-api-key: "${MAILGUN_API_KEY}" # TODO: needs to be changed to kebab-case in the branch where it's used
 

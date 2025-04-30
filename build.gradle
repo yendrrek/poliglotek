@@ -9,7 +9,7 @@ plugins {
     id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 }
 
-version = "0.50.21"
+version = "0.51.0"
 group = "com.poliglotek"
 
 repositories {

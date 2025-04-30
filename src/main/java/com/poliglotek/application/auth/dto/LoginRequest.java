@@ -1,6 +1,0 @@
-package com.poliglotek.application.auth.dto;
-
-import io.micronaut.serde.annotation.Serdeable;
-
-@Serdeable
-public record LoginRequest(String googleIdToken) {}

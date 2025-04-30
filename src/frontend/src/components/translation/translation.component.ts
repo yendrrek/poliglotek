@@ -92,7 +92,7 @@ import { MatTooltip } from '@angular/material/tooltip';
               [matTooltip]="!(isLoggedIn | async) ? noAccessMessage : ''"
               #tooltip="matTooltip"
               (touchstart)="toggleTooltip(tooltip)"
-              searchButtonResponsive (click)="handleSubmitSearchData()">Szukaj
+              searchButtonResponsive (click)="handleSubmitSearchData()">Znajdź i przetłumacz
       </button>
     </form>
 
