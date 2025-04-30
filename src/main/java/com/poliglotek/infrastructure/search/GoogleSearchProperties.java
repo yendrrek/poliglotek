@@ -2,7 +2,7 @@ package com.poliglotek.infrastructure.search;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-@ConfigurationProperties("google-cloud-search")
+@ConfigurationProperties("google-cloud.search")
 public class GoogleSearchProperties {
 
     private String apiKey;
