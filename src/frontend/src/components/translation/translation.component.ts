@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
@@ -49,7 +49,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         <input required matInput type="text" formControlName="query">
         @if (translationForm.get('query')?.value) {
           <button matSuffix mat-icon-button aria-label="Clear"
-                  (click)="translationForm.get('query')?.setValue('')">
+                  (click)="clearQueryField()">
             <mat-icon>close</mat-icon>
           </button>
         }
@@ -69,7 +69,7 @@ import { MatTooltip } from '@angular/material/tooltip';
         <mat-select required formControlName="countryCode">
           @if (dynamicCountries) {
             @for (dynamicCountry of dynamicCountries;
-              let isLastDynamicCountry = $last ;
+              let isLastDynamicCountry = $last;
               let isFirstDynamicCountry = $first;
               track dynamicCountry.countryViewValue) {
               <mat-option class="dynamic-countries-border"
@@ -166,6 +166,13 @@ export class TranslationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  clearQueryField(): void {
+    const queryControl: AbstractControl<any, any> | null = this.translationForm.get('query');
+    if (queryControl) {
+      queryControl.setValue('');
+    }
   }
 
   toggleTooltip(tooltip: MatTooltip): void {
