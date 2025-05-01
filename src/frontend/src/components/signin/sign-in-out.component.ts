@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { GoogleSigninResponse } from '../../models/google-signin-response';
 import { AsyncPipe } from '@angular/common';
@@ -45,6 +45,7 @@ export class SignInOutComponent implements OnInit {
     });
   }
 
+  @HostListener('window:beforeunload', ['$event'])
   logout(): void {
     this.authService.logoutThenClearJWT();
   }
