@@ -1,4 +1,4 @@
-package com.poliglotek.infrastructure.auth;
+package com.poliglotek.infrastructure.authentication;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 

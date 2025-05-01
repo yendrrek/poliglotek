@@ -1,4 +1,4 @@
-package com.poliglotek.application.auth;
+package com.poliglotek.application.authentication;
 
 public class InvalidRequestException extends RuntimeException {
 

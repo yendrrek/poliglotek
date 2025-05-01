@@ -1,4 +1,4 @@
-package com.poliglotek.domain.auth;
+package com.poliglotek.domain.authentication;
 
 public class TokenValidationException extends RuntimeException {
 

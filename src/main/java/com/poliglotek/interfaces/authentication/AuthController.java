@@ -1,6 +1,6 @@
-package com.poliglotek.interfaces.auth;
+package com.poliglotek.interfaces.authentication;
 
-import com.poliglotek.application.auth.AuthApplicationService;
+import com.poliglotek.application.authentication.AuthApplicationService;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -32,7 +32,7 @@ public class AuthController {
     @Post("/logout")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     public HttpResponse<?> logout(HttpRequest<?> request, Authentication authentication) {
-        LOG.info("User logged out: {}", authentication.getName());
+        LOG.info("User logged out: {}", authentication.getAttributes().get("email"));
         return HttpResponse.noContent();
     }
 }

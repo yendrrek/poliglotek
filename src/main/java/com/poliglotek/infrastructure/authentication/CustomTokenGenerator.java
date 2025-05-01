@@ -1,7 +1,7 @@
-package com.poliglotek.infrastructure.auth;
+package com.poliglotek.infrastructure.authentication;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.poliglotek.application.auth.TokenGeneratorPortOut;
+import com.poliglotek.application.authentication.TokenGeneratorPortOut;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.generator.JwtTokenGenerator;
 import jakarta.inject.Singleton;

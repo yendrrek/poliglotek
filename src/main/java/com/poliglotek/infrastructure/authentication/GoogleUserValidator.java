@@ -1,14 +1,14 @@
-package com.poliglotek.infrastructure.auth;
+package com.poliglotek.infrastructure.authentication;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.poliglotek.application.auth.InvalidRequestException;
-import com.poliglotek.application.auth.UserValidatorPortOut;
-import com.poliglotek.domain.auth.EmailNotVerifiedException;
-import com.poliglotek.domain.auth.InvalidTokenException;
-import com.poliglotek.domain.auth.TokenValidationException;
+import com.poliglotek.application.authentication.InvalidRequestException;
+import com.poliglotek.application.authentication.UserValidatorPortOut;
+import com.poliglotek.domain.authentication.EmailNotVerifiedException;
+import com.poliglotek.domain.authentication.InvalidTokenException;
+import com.poliglotek.domain.authentication.TokenValidationException;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;

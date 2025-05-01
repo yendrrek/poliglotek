@@ -1,6 +1,6 @@
-package com.poliglotek.interfaces.auth;
+package com.poliglotek.interfaces.authentication;
 
-import com.poliglotek.domain.auth.TokenValidationException;
+import com.poliglotek.domain.authentication.TokenValidationException;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;

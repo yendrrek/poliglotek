@@ -1,8 +1,8 @@
-package com.poliglotek.application.auth;
+package com.poliglotek.application.authentication;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.poliglotek.interfaces.auth.LoginRequest;
-import com.poliglotek.interfaces.auth.LoginResponse;
+import com.poliglotek.interfaces.authentication.LoginRequest;
+import com.poliglotek.interfaces.authentication.LoginResponse;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

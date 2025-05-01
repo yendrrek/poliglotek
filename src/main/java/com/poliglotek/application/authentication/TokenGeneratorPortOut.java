@@ -1,4 +1,4 @@
-package com.poliglotek.application.auth;
+package com.poliglotek.application.authentication;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 
