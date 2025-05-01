@@ -14,8 +14,8 @@ import { Observable, Subscription, throwError } from 'rxjs';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-notification.component';
 import { Language } from '../../models/language';
 import { Country } from '../../models/country';
-import { TranslatedPage } from '../../models/translated-page';
-import { Response } from '../../models/response';
+import { Translation } from '../../models/translation';
+import { TranslationResponse } from '../../models/translation-response';
 import { LanguageValue } from '../../types/language-value';
 import { TranslationService } from '../../services/translation.service';
 import { LoaderService } from '../../services/loader.service';
@@ -101,10 +101,10 @@ import { MatTooltip } from '@angular/material/tooltip';
     </div>
 
     <mat-tab-group class="tabs-container">
-      @for (page of translatedPages; let i = $index; track page.id) {
+      @for (translation of translations; let i = $index; track translation.id) {
         <mat-tab [label]="'Strona ' + (i + 1)">
-          <div class="translatedPageContainer" [innerHTML]="page.body"></div>
-          <a [href]="page.url" target="_blank" class="source-url">Źródło</a>
+          <div class="translatedPageContainer" [innerHTML]="translation.page.body"></div>
+          <a [href]="translation.url" target="_blank" class="source-url">Źródło</a>
           <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image"
                height="16" width="122">
         </mat-tab>
@@ -133,7 +133,7 @@ export class TranslationComponent implements OnInit, OnDestroy {
     a.countryViewValue.localeCompare(b.countryViewValue));
   dynamicCountries: Country[] = [];
   isLoading: boolean = false;
-  translatedPages: TranslatedPage[] = [];
+  translations: Translation[] = [];
   translationForm: FormGroup = new FormGroup({});
   isLoggedIn?: Observable<boolean>;
   isLoggedInValue: boolean = false;
@@ -223,17 +223,18 @@ export class TranslationComponent implements OnInit, OnDestroy {
 
   private processTranslationRequest(choice: TranslationFormInput): void {
     this.translationService.getTranslatedPages(choice).subscribe({
-      next: (resp: Response<TranslatedPage[]>): void => {
+      next: (resp: TranslationResponse): void => {
+        console.log('resp', resp);
         this.handleTranslationResponse(resp, choice);
       },
       error: (err: HttpErrorResponse): Observable<never> => {
-        this.openDialog(this.noAccessMessage);
+        this.openDialog(this.noAccessMessage); // todo: should this be here?
         return throwError((): Error => new Error(err.message));
       }
     });
   }
 
-  private handleTranslationResponse(resp: Response<TranslatedPage[]>, choice: TranslationFormInput): void {
+  private handleTranslationResponse(resp: TranslationResponse, choice: TranslationFormInput): void {
     if (!resp.success) {
       this.openDialog(resp.error);
       return;
@@ -245,10 +246,10 @@ export class TranslationComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateCachedTranslatedPages(pages: TranslatedPage[]): void {
+  private updateCachedTranslatedPages(pages: Translation[]): void {
     if (pages) {
-      this.translatedPages = pages.filter((page: TranslatedPage) => page != null);
-      this.cacheService.setTranslatedPages(this.translatedPages);
+      this.translations = pages.filter((page: Translation) => page != null);
+      this.cacheService.setTranslatedPages(this.translations);
     }
   }
 
@@ -258,9 +259,9 @@ export class TranslationComponent implements OnInit, OnDestroy {
   }
 
   private handleCachedTranslatedPages(): void {
-    const cachedTranslatedPages: TranslatedPage[] = this.cacheService.getTranslatedPages();
+    const cachedTranslatedPages: Translation[] = this.cacheService.getTranslatedPages();
     if (!cachedTranslatedPages.length) return;
-    this.translatedPages = cachedTranslatedPages;
+    this.translations = cachedTranslatedPages;
   }
 
   private autoSelectOneOrMoreMatchingCountries(): void {

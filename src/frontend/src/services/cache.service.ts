@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TranslatedPage } from '../models/translated-page';
+import { Translation } from '../models/translation';
 import { TranslationFormInput } from '../models/translation-form-input';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class CacheService {
   private readonly TRANSLATIONS_KEY: 'translations' = 'translations';
   private readonly TRANSLATION_REQUEST_KEY: 'translationRequest' = 'translationRequest';
 
-  setTranslatedPages(translatedPages: TranslatedPage[]): void {
+  setTranslatedPages(translatedPages: Translation[]): void {
     try {
       sessionStorage.setItem('translations', JSON.stringify(translatedPages));
     } catch (err) {
@@ -18,7 +18,7 @@ export class CacheService {
     }
   }
 
-  getTranslatedPages(): TranslatedPage[] {
+  getTranslatedPages(): Translation[] {
     try {
       const storedTranslatedPages: string | null = sessionStorage.getItem(this.TRANSLATIONS_KEY);
       return storedTranslatedPages ? JSON.parse(storedTranslatedPages) : [];
