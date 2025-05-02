@@ -1,4 +1,4 @@
-package com.poliglotek.interfaces.authentication;
+package com.poliglotek.interfaces.auth;
 
 import io.micronaut.serde.annotation.Serdeable;
 

@@ -1,6 +1,6 @@
-package com.poliglotek.interfaces.authentication;
+package com.poliglotek.interfaces.auth;
 
-import com.poliglotek.application.authentication.InvalidRequestException;
+import com.poliglotek.application.auth.InvalidRequestException;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;

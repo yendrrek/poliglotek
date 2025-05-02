@@ -1,8 +1,8 @@
-package com.poliglotek.application.authentication;
+package com.poliglotek.application.auth;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.poliglotek.domain.authentication.EmailNotVerifiedException;
-import com.poliglotek.domain.authentication.InvalidTokenException;
+import com.poliglotek.domain.auth.EmailNotVerifiedException;
+import com.poliglotek.domain.auth.InvalidTokenException;
 
 public interface UserValidatorPortOut {
 

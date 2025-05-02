@@ -1,6 +1,6 @@
-package com.poliglotek.interfaces.authentication;
+package com.poliglotek.interfaces.auth;
 
-import com.poliglotek.application.authentication.AuthApplicationService;
+import com.poliglotek.application.auth.AuthApplicationService;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;

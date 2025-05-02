@@ -1,4 +1,4 @@
-package com.poliglotek.domain.authentication;
+package com.poliglotek.domain.auth;
 
 public class EmailNotVerifiedException extends RuntimeException {
 
