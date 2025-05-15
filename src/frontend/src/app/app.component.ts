@@ -4,8 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import { MatListItem, MatNavList } from '@angular/material/list';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
-import { MenuResponsiveDirective } from '../directives/menu-responsive.directive';
-import { NavbarComponent } from '../components/navbar/navbar.component';
+import { MenuResponsiveDirective } from './presentation/shared/ui-elements/navbar/menu-responsive.directive';
+import { NavbarComponent } from './presentation/shared/ui-elements/navbar/navbar.component';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({

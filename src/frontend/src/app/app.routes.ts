@@ -1,20 +1,20 @@
 import { Routes } from '@angular/router';
-import { NotFoundComponent } from '../components/not-found/not-found.component';
+import { NotFoundComponent } from './presentation/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: "", redirectTo: "/home", pathMatch: "full" },
   { path: "home",
     loadComponent: () =>
-      import("../components/translation/translation.component")
+      import("./presentation/translation/translation.component")
         .then((module) => module.TranslationComponent) },
   { path: "oAplikacji",
     loadComponent: () =>
-      import("../components/about/about.component")
+      import("./presentation/about/about.component")
         .then((module) => module.AboutComponent)
   },
   { path: "kontakt",
     loadComponent: () =>
-      import("../components/contact/contact.component")
+      import("./presentation/contact/contact.component")
         .then((module) => module.ContactComponent)
   },
   { path: "**", pathMatch: "full", component: NotFoundComponent }
