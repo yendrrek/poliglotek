@@ -67,15 +67,11 @@ import { DialogConfig } from '../shared/dialog-config';
           @if (autoSelectedCountries | async; as autoSelectedCountries) {
             @if (autoSelectedCountries.length > 0) {
               @for (dynamicCountry of autoSelectedCountries; track dynamicCountry.ctryValue) {
-                let isLastDynamicCountry = $last;
-                  let isFirstDynamicCountry = $first;
-                  track dynamicCountry.ctryViewValue) {
                 <mat-option class="dynamic-countries-border"
-                            [class.first-country-item]="isFirstDynamicCountry"
-                            [class.last-country-item]="isLastDynamicCountry"
+                            [class.first-country-item]="$first"
+                            [class.last-country-item]="$last"
                             [value]="dynamicCountry.ctryValue">{{ dynamicCountry.ctryViewValue }}
-                  </mat-option>
-                  }
+                </mat-option>
               }
             }
           }
