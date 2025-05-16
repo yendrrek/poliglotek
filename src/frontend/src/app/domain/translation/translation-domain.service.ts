@@ -1,4 +1,3 @@
-// TRANSLATION DOMAIN SERVICE: Core business logic for translations
 import { Injectable } from '@angular/core';
 import { TranslationRequest } from '../../infrastructure/translation/translation-request';
 

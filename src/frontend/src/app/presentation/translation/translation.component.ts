@@ -1,4 +1,3 @@
-// COMPONENT: Focus on UI/presentation only
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
@@ -22,6 +21,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { TranslationStateService } from './translation-state.service';
 import { AuthStateService } from '../../infrastructure/auth/auth-state.service';
 import { DialogConfig } from '../shared/dialog-config';
+import { CountryValue } from '../../domain/translation/types/country-value';
 
 @Component({
   selector: 'home',
@@ -66,11 +66,11 @@ import { DialogConfig } from '../shared/dialog-config';
         <mat-select required formControlName="countryCode">
           @if (autoSelectedCountries | async; as autoSelectedCountries) {
             @if (autoSelectedCountries.length > 0) {
-              @for (dynamicCountry of autoSelectedCountries; track dynamicCountry.ctryValue) {
+              @for (ctry of autoSelectedCountries; track ctry.ctryValue) {
                 <mat-option class="dynamic-countries-border"
                             [class.first-country-item]="$first"
                             [class.last-country-item]="$last"
-                            [value]="dynamicCountry.ctryValue">{{ dynamicCountry.ctryViewValue }}
+                            [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}
                 </mat-option>
               }
             }
@@ -135,11 +135,11 @@ import { DialogConfig } from '../shared/dialog-config';
 export class TranslationComponent implements OnInit, OnDestroy {
 
   // State observables
-  languages: Observable<Language[]> /*= this.sortAlphabetically(LANGUAGES, 'langViewValue')*/;
-  countries: Observable<Country[]> /*= this.sortAlphabetically(Object.values(COUNTRIES), 'ctryViewValue')*/;
-  autoSelectedCountries: Observable<Country[]>/* = []*/;
-  nonSelectedCountries: Observable<Country[]>/* = []*/;
-  translations: Observable<Translation[]>/* = []*/;
+  languages: Observable<Language[]>;
+  countries: Observable<Country[]>;
+  autoSelectedCountries: Observable<Country[]>;
+  nonSelectedCountries: Observable<Country[]>;
+  translations: Observable<Translation[]>;
   isLoading: Observable<boolean>;
   isLoggedIn?: Observable<boolean>;
 
@@ -147,17 +147,11 @@ export class TranslationComponent implements OnInit, OnDestroy {
   readonly noAccessMessage: string = 'Brak dostępu. Zaloguj się, aby aktywować wyszukiwanie.';
   private subscriptions: Subscription = new Subscription();
 
-  // spinner: boolean = false;
-  // checkedLoggedIn: boolean = false;
-  // private authSubscription: Subscription = new Subscription();
-  // private loadingSubscription: Subscription = new Subscription();
-
   constructor(
     private formBuilder: FormBuilder,
     private matDialog: MatDialog,
     private authStateService: AuthStateService,
     private translationStateService: TranslationStateService,
-    // private loading: Observable<boolean> = this.translationFacadeService.loading
   ) {
     // Subscribe to state observables
     this.languages = this.translationStateService.languages;
@@ -171,45 +165,32 @@ export class TranslationComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-
-    // Setup language code change listener
     const langSub: Subscription | undefined = this.translationForm.get('langCode')?.valueChanges.subscribe(
-      (selected: LanguageValue) => this.translationStateService.updateSelectedLanguage(selected));
+      (selected: LanguageValue) => {
+        const defaultCtry: CountryValue = this.translationStateService.updateSelectedLanguage(selected);
+        this.translationForm.get('countryCode')?.setValue(defaultCtry);
+      });
     if (langSub) {
       this.subscriptions.add(langSub);
     }
-
-    // this.checkIfUserLoggedIn();
-    // this.autoSelectCountryMatch();
-    // this.loadingSubscription = this.loading.subscribe((active: boolean) => this.spinner = active);
-    // this.translations = this.translationStateService.retrieveStoredTranslation();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    // this.authSubscription.unsubscribe();
-    // this.loadingSubscription.unsubscribe();
   }
 
   clearQueryField(): void {
-    // const queryControl: AbstractControl<any, any> | null = this.translationForm.get('query');
-    // if (queryControl) {
-    //   queryControl.setValue('');
-    // }
     this.translationForm.get('query')?.setValue('');
   }
 
   toggleTooltip(tooltip: MatTooltip): void {
     let isLoggedIn = false;
-    const loginSub: Subscription | undefined = this.isLoggedIn?.subscribe((value: boolean) => isLoggedIn = value);
+    const loginSub: Subscription | undefined = this.isLoggedIn?.subscribe(
+      (value: boolean) => isLoggedIn = value);
     this.subscriptions.add(loginSub);
     if (!isLoggedIn) {
       tooltip.toggle();
     }
-
-    // if (!this.checkedLoggedIn) {
-    //   tooltip.toggle();
-    // }
   }
 
   handleTranslation(): void {
@@ -218,33 +199,7 @@ export class TranslationComponent implements OnInit, OnDestroy {
     this.translationStateService.processTranslation(choice).subscribe((message: string | null) => {
       if (message) this.showMessageToUser(message);
     });
-
-
-    // if (this.translationStateService.isDuplicateChoice(choice)) {
-    //   this.showMessageToUser(this.buildDialogMessage(choice));
-    //   return;
-    // }
-    // this.translationStateService.translate(choice).subscribe({
-    //   next: (resp: TranslationResponse) => {
-    //     if (this.handleResponse(resp)) {
-    //       this.translationStateService.updateStoredTranslationChoice(choice);
-    //       const webPages: Translation[] = resp.data;
-    //       this.translations = webPages.filter((page: Translation) => page != null);
-    //       this.translationStateService.updateStoredTranslations(webPages);
-    //     }
-    //   },
-    //   error: (err: HttpErrorResponse) => {
-    //     // todo: should this message be here?
-    //     this.showMessageToUser(this.noAccessMessage);
-    //     throwError((): Error => new Error(err.message));
-    //   }
-    // });
   }
-
-  // private checkIfUserLoggedIn(): void {
-  //   this.authSubscription = this.authStateService.isLoggedIn.subscribe(
-  //     (confirmation: boolean) => this.checkedLoggedIn = confirmation);
-  // }
 
   private initForm(): void {
     const previous: TranslationRequest = this.translationStateService.getPreviousChoice();
@@ -258,34 +213,4 @@ export class TranslationComponent implements OnInit, OnDestroy {
   private showMessageToUser(msg: string): void {
     this.matDialog.open(DialogNotificationComponent, { data: { message: msg } } as DialogConfig);
   }
-
-  // private autoSelectCountryMatch(): void {
-  //   this.translationForm.get('langCode')?.valueChanges.subscribe((selected: LanguageValue) => {
-  //     const match: Country | Country[] = LANG_COUNTRY_MATCH[selected];
-  //     if (match === null) {
-  //       console.error(`Language code '${selected}' must have a matching country for auto selection.`);
-  //       return;
-  //     }
-  //     if (!Array.isArray(match)) {
-  //       this.translationForm.get('countryCode')?.setValue(match?.ctryValue);
-  //       return;
-  //     }
-  //     this.autoSelectedCountries = this.sortAlphabetically(match, 'ctryViewValue');
-  //     this.autoSelectedCountries.forEach((asc: Country) => {
-  //       this.nonSelectedCountries = this.countries.filter((c: Country) => c.ctryValue !== asc.ctryValue);
-  //     });
-  //     this.translationForm.get('countryCode')?.setValue(COUNTRY[selected]?.ctryValue);
-  //   });
-  // }
-  //
-  // private handleResponse(resp: TranslationResponse): boolean {
-  //   if (!resp.success) {
-  //     this.showMessageToUser(resp.error);
-  //     return false;
-  //   }
-  //   if (resp.warning) {
-  //     this.showMessageToUser(resp.warning);
-  //   }
-  //   return true;
-  // }
 }

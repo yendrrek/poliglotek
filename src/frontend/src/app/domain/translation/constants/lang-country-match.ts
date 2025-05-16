@@ -2,7 +2,7 @@ import { Country } from '../models/country';
 import { LanguageValue } from '../types/language-value';
 import { COUNTRIES } from './countries';
 
-export const LANG_COUNTRY_MATCH: Record<LanguageValue, Country | Country[]> = {
+export const COUNTRY_SINGLE_AND_MULTI_MATCH: Record<LanguageValue, Country | Country[]> = {
   'af': COUNTRIES.countryZA,
   'sq': COUNTRIES.countryAL,
   'am': COUNTRIES.countryET,

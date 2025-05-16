@@ -1,4 +1,3 @@
-// APPLICATION SERVICE: Coordinates between UI and domain, handles application concerns
 import { Injectable } from '@angular/core';
 import { TranslationApiService } from '../../infrastructure/translation/translation-api.service';
 import { TranslationStorageService } from '../../infrastructure/translation/translation-storage.service';

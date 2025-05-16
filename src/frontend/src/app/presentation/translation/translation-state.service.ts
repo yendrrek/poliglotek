@@ -1,4 +1,3 @@
-// STATE SERVICE: Manages UI state and connects to application services
 import { Injectable } from '@angular/core';
 import { TranslationRequest } from '../../infrastructure/translation/translation-request';
 import { TranslationResponse } from '../../infrastructure/translation/translation-response';
@@ -40,23 +39,15 @@ export class TranslationStateService {
     this._translations.next(this.translationApplicationService.retrieveStoredTranslations());
   }
 
-  updateSelectedLanguage(langCode: LanguageValue): CountryValue | null {
+  updateSelectedLanguage(langCode: LanguageValue): CountryValue {
     const matchedCountries: Country[] = this.languageService.getCountriesForLanguage(langCode);
-    if (!matchedCountries.length) {
-      console.error(`Language code '${langCode}' must have a matching country for auto selection.`);
-      return null;
-    }
     this._autoSelectedCountries.next(matchedCountries);
     const allCountries: Country[] = this._countries.value;
     const nonSelected: Country[] = allCountries.filter(
       (ctry: Country) => !matchedCountries.some(
         (selected: Country) => selected.ctryValue === ctry.ctryValue));
     this._nonSelectedCountries.next(nonSelected);
-    const defaultCountry: Country | null = this.languageService.getDefaultCountryForLanguage(langCode);
-    if (defaultCountry) {
-      return defaultCountry.ctryValue;
-    }
-    return null;
+    return this.languageService.getDefaultCountryForLanguage(langCode).ctryValue;
   }
 
   processTranslation(choice: TranslationRequest): Observable<string | null> {

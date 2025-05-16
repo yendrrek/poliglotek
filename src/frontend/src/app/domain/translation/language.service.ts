@@ -1,12 +1,11 @@
-// LANGUAGE SERVICE: Domain logic for languages and countries
 import { Injectable } from '@angular/core';
 import { Language } from './models/language';
 import { COUNTRIES } from './constants/countries';
 import { LANGUAGES } from './constants/languages';
 import { Country } from './models/country';
-import { LANG_COUNTRY_MATCH } from './constants/lang-country-match';
+import { COUNTRY_SINGLE_AND_MULTI_MATCH } from './constants/lang-country-match';
 import { LanguageValue } from './types/language-value';
-import { COUNTRY } from './constants/country';
+import { ONE_COUNTRY_FROM_MULTI_MATCH } from './constants/one-country-from-many';
 import { TranslationRequest } from '../../infrastructure/translation/translation-request';
 import { CountryValue } from './types/country-value';
 
@@ -24,14 +23,14 @@ export class LanguageService {
   }
 
   getCountriesForLanguage(langCode: LanguageValue): Country[] {
-    const match: Country | Country[] = LANG_COUNTRY_MATCH[langCode];
+    const match: Country | Country[] = COUNTRY_SINGLE_AND_MULTI_MATCH[langCode];
     if (!match) return [];
     if (!Array.isArray(match)) return [match];
     return this.sortAlphabetically([...match], 'ctryViewValue');
   }
 
-  getDefaultCountryForLanguage(langCode: LanguageValue): Country | null {
-    return COUNTRY[langCode] || null;
+  getDefaultCountryForLanguage(langCode: LanguageValue): Country {
+    return ONE_COUNTRY_FROM_MULTI_MATCH[langCode] || COUNTRY_SINGLE_AND_MULTI_MATCH[langCode] as Country;
   }
 
   buildDuplicateSearchMessage(choice: TranslationRequest): string {

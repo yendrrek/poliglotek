@@ -2,7 +2,7 @@ import { LanguageValue } from '../types/language-value';
 import { Country } from '../models/country';
 import { COUNTRIES } from './countries';
 
-export const COUNTRY: Partial<Record<LanguageValue, Country>> = {
+export const ONE_COUNTRY_FROM_MULTI_MATCH: Partial<Record<LanguageValue, Country>> = {
   'es': COUNTRIES.countryES,
   'qu': COUNTRIES.countryAR,
   'pt': COUNTRIES.countryPT,
