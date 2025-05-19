@@ -31,26 +31,25 @@ public class ScrapeService implements ScrapingPortOut {
         return urls.stream()
                 .map(urlFound -> {
                     String url = urlFound.url();
-                    String page = scrapePage(url);
+                    String page = scrape(url);
                     return new ScrapedPage(page, url);
-                })
-                .toList();
+                }).toList();
     }
 
     // Compatibility between Chrome installed on your machine and Chrome Driver:
     // https://googlechromelabs.github.io/chrome-for-testing/
     // Also useful is the article in your Medium in the folder "Chrome Driver"
-    private String scrapePage(String url) {
+    private String scrape(String url) {
         log.info("Scraping {}", url);
         Document doc;
         WebDriver driver = null;
         try {
-            doc = scrapePageWithJsoup(url);
+            doc = scrapeWithJsoup(url);
             if (doc == null) {
                 return null;
             }
             if (isDynamicPage(doc)) {
-                log.info("Body is empty, so it's probably a dynamic page. Using Selenium for scraping, not Jsoup");
+                log.info("Body is empty, so it's probably a dynamic page. Will use Selenium for scraping, not Jsoup");
                 driver = createChromeDriver();
                 String page = scrapePageWithSelenium(url, driver);
                 if (page == null) {
@@ -72,7 +71,7 @@ public class ScrapeService implements ScrapingPortOut {
         }
     }
 
-    private Document scrapePageWithJsoup(String url) {
+    private Document scrapeWithJsoup(String url) {
         try {
             return Jsoup.connect(url).userAgent(USER_AGENT).get();
         } catch (Exception e) {

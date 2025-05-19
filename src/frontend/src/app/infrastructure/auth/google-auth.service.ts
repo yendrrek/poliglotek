@@ -7,8 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class GoogleAuthService {
 
-  private userSubject = new BehaviorSubject<any>(null);
-  user = this.userSubject.asObservable();
+  private userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  user: Observable<any> = this.userSubject.asObservable(); // TODO: create type User?
 
   constructor(private http: HttpClient) {}
 
