@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { GoogleSigninResponse } from '../../infrastructure/auth/google-signin-response';
 import { AuthResponse } from '../../infrastructure/auth/auth-response';
 import { AuthRequest } from '../../infrastructure/auth/auth-request';
+import { AuthStorageService } from '../../infrastructure/auth/auth-storage.service';
 
 declare const google: any;
 
@@ -17,7 +18,8 @@ export class AuthFacadeService {
   private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn: Observable<boolean> = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private authStorageService: AuthStorageService) {
     this.checkUserLoggedIn();
   }
 
@@ -39,7 +41,7 @@ export class AuthFacadeService {
         error: err => console.error('Logout error', err)
       });
     }
-    localStorage.removeItem('token');
+    this.authStorageService.removeToken();
     this.isLoggedInSubject.next(false);
     google.accounts.id.disableAutoSelect();
   }
@@ -52,13 +54,13 @@ export class AuthFacadeService {
   }
 
   private getJWT(): string | null {
-    return localStorage.getItem('token');
+    return this.authStorageService.retrieveToken();
   }
 
   private loginWithGoogleThenStoreCustomJWT(googleIdToken: string): Observable<AuthResponse> {
     const authRequest: AuthRequest = { googleIdToken: googleIdToken };
     return this.http.post<AuthResponse>(`${this.API_URL}/auth/login`, authRequest).pipe(
-      tap((res: AuthResponse) => localStorage.setItem('token', res.customToken))
+      tap((resp: AuthResponse) => this.authStorageService.saveToken(resp.customToken))
     );
   }
 }
