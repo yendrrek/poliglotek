@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthFacadeService } from '../../application/auth/auth-facade.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ export class AuthStateService {
 
   readonly isLoggedIn: Observable<boolean>;
 
-  constructor(private authFacadeService: AuthFacadeService) {
+  constructor(private authFacadeService: AuthService) {
     this.isLoggedIn = this.authFacadeService.isLoggedIn;
   }
 }

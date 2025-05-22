@@ -29,12 +29,12 @@ export class SignInOutComponent implements OnInit {
   isLoggedIn?: Observable<boolean>;
 
   constructor(
-    public authService: AuthFacadeService,
+    public authFacadeService: AuthFacadeService,
     private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn;
+    this.isLoggedIn = this.authFacadeService.isLoggedIn;
     this.loadGoogleScript().then(() => {
       this.isLoggedIn?.subscribe((isLoggedIn: boolean) => {
         if (!isLoggedIn) {
@@ -47,7 +47,7 @@ export class SignInOutComponent implements OnInit {
 
   @HostListener('window:beforeunload', ['$event'])
   logout(): void {
-    this.authService.logoutThenClearJWT();
+    this.authFacadeService.logout().then(resp => console.log('logout response', resp));
   }
 
   private loadGoogleScript(): Promise<void> {
@@ -80,7 +80,8 @@ export class SignInOutComponent implements OnInit {
     google.accounts.id.initialize({
       client_id: '177391411152-1ciu3vrsbsnkr9qgpke4gidbf7mvl384.apps.googleusercontent.com',
       callback: (resp: GoogleSigninResponse) => {
-        this.authService.handleCredentialResponse(resp);
+        this.authFacadeService.handleGoogleCredentialResponse(resp).then(
+          resp => console.log('Google Sign-In response', resp));
       },
       auto_select: false,
       cancel_on_tap_outside: true
