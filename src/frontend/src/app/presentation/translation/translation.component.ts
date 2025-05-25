@@ -19,9 +19,9 @@ import { TranslationRequest } from '../../infrastructure/translation/translation
 import { TranslationResponsiveDirective } from './translation-responsive.directive';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslationStateService } from './translation-state.service';
-import { AuthStateService } from '../../infrastructure/auth/auth-state.service';
 import { DialogConfig } from '../shared/dialog-config';
 import { CountryValue } from '../../domain/translation/types/country-value';
+import { AuthFacadeService } from '../../application/auth/auth-facade.service';
 
 @Component({
   selector: 'home',
@@ -150,8 +150,8 @@ export class TranslationComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private matDialog: MatDialog,
-    private authStateService: AuthStateService,
     private translationStateService: TranslationStateService,
+    private authFacadeService: AuthFacadeService,
   ) {
     // Subscribe to state observables
     this.languages = this.translationStateService.languages;
@@ -160,7 +160,7 @@ export class TranslationComponent implements OnInit, OnDestroy {
     this.nonSelectedCountries = this.translationStateService.nonSelectedCountries;
     this.translations = this.translationStateService.translations;
     this.isLoading = this.translationStateService.isLoading;
-    this.isLoggedIn = this.authStateService.isLoggedIn;
+    this.isLoggedIn = this.authFacadeService.isLoggedIn;
   }
 
   ngOnInit(): void {
@@ -184,9 +184,11 @@ export class TranslationComponent implements OnInit, OnDestroy {
   }
 
   toggleTooltip(tooltip: MatTooltip): void {
-    let isLoggedIn = false;
+    let isLoggedIn: boolean = false;
     const loginSub: Subscription | undefined = this.isLoggedIn?.subscribe(
-      (value: boolean) => isLoggedIn = value);
+      (value: boolean) => {
+        isLoggedIn = value;
+      });
     this.subscriptions.add(loginSub);
     if (!isLoggedIn) {
       tooltip.toggle();

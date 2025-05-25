@@ -1,4 +1,4 @@
-export interface DecodedCredential {
+export interface DecodedGoogleCredential {
   aud: string,
   azp: string,
   email: string,

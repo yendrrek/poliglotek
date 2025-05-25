@@ -1,8 +1,9 @@
 import { InjectionToken } from '@angular/core';
+import { GoogleSigninResponse } from '../../infrastructure/auth/google-signin-response';
 
 export interface GoogleAuthProviderPortOut {
 
-  extractCredential(resp: unknown): { token: string };
+  extractCredential(resp: GoogleSigninResponse): string;
   disableAutoSignIn(): void;
 }
 

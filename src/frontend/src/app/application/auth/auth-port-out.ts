@@ -1,11 +1,11 @@
 import { UserIdentity } from '../../domain/auth/user-identity';
 import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface AuthPortOut {
 
-  authenticate(credentials: unknown): Promise<UserIdentity>;
-  logout(): Promise<void>;
-  getUserIdentity(): UserIdentity;
+  authenticate(credential: string): Observable<UserIdentity>;
+  logout(): Observable<void>;
 }
 
 export const AUTH_PORT_OUT = new InjectionToken<AuthPortOut>('AuthPortOut');

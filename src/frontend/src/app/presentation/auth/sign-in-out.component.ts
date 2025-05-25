@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthFacadeService } from '../../application/auth/auth-facade.service';
 import { GoogleSigninResponse } from '../../infrastructure/auth/google-signin-response';
 import { AsyncPipe } from '@angular/common';
@@ -37,6 +37,7 @@ export class SignInOutComponent implements OnInit {
     this.isLoggedIn = this.authFacadeService.isLoggedIn;
     this.loadGoogleScript().then(() => {
       this.isLoggedIn?.subscribe((isLoggedIn: boolean) => {
+        console.info('User logged in: ', isLoggedIn);
         if (!isLoggedIn) {
           this.changeDetector.detectChanges();
           this.handleGoogleSignIn();
@@ -45,9 +46,8 @@ export class SignInOutComponent implements OnInit {
     });
   }
 
-  @HostListener('window:beforeunload', ['$event'])
   logout(): void {
-    this.authFacadeService.logout().then(resp => console.log('logout response', resp));
+    this.authFacadeService.logout().subscribe(resp => console.info('User logged out'));
   }
 
   private loadGoogleScript(): Promise<void> {
@@ -80,7 +80,7 @@ export class SignInOutComponent implements OnInit {
     google.accounts.id.initialize({
       client_id: '177391411152-1ciu3vrsbsnkr9qgpke4gidbf7mvl384.apps.googleusercontent.com',
       callback: (resp: GoogleSigninResponse) => {
-        this.authFacadeService.handleGoogleCredentialResponse(resp).then(
+        this.authFacadeService.handleGoogleCredentialResponse(resp).subscribe(
           resp => console.log('Google Sign-In response', resp));
       },
       auto_select: false,
