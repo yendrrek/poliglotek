@@ -25,7 +25,7 @@ export class AuthFacadeService {
   handleGoogleCredentialResponse(resp: GoogleSigninResponse): Observable<void> {
     try {
       const googleIdToken: string = this.googleAuthProviderPortOut.extractCredential(resp);
-      return this.authPortOut.authenticate(googleIdToken).pipe(
+      return this.authPortOut.login(googleIdToken).pipe(
         tap((userIdentity: UserIdentity) => {
           console.info('User verified: ', userIdentity.emailVerified);
           this.isLoggedInSubject.next(userIdentity.emailVerified);

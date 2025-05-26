@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface AuthPortOut {
 
-  authenticate(credential: string): Observable<UserIdentity>;
+  login(credential: string): Observable<UserIdentity>;
   logout(): Observable<void>;
 }
 

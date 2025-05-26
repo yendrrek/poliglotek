@@ -19,9 +19,9 @@ import { TranslationRequest } from '../../infrastructure/translation/translation
 import { TranslationResponsiveDirective } from './translation-responsive.directive';
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslationStateService } from './translation-state.service';
-import { DialogConfig } from '../shared/dialog-config';
 import { CountryValue } from '../../domain/translation/types/country-value';
 import { AuthFacadeService } from '../../application/auth/auth-facade.service';
+import { TranslationDialogMessage } from '../../application/translation/translation-dialog-message';
 
 @Component({
   selector: 'home',
@@ -149,7 +149,7 @@ export class TranslationComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private matDialog: MatDialog,
+    private dialog: MatDialog,
     private translationStateService: TranslationStateService,
     private authFacadeService: AuthFacadeService,
   ) {
@@ -213,6 +213,6 @@ export class TranslationComponent implements OnInit, OnDestroy {
   }
 
   private showMessageToUser(msg: string): void {
-    this.matDialog.open(DialogNotificationComponent, { data: { message: msg } } as DialogConfig);
+    this.dialog.open(DialogNotificationComponent, { data: { message: msg } as TranslationDialogMessage });
   }
 }

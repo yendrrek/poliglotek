@@ -14,22 +14,20 @@ import { AuthPortOut } from '../../application/auth/auth-port-out';
 })
 export class AuthService implements AuthPortOut {
 
-  private DEFAULT_USER_IDENTITY: UserIdentity = new UserIdentity(
-    '', '', false, 0, '');
   private API_URL: string = environment.apiUrl;
   private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isLoggedIn: Observable<boolean> = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient,
               private authStorageService: AuthStorageService) {
   }
 
-  authenticate(googleCredential: string): Observable<UserIdentity> {
+  login(googleCredential: string): Observable<UserIdentity> {
+    const defaultUserIdentity: UserIdentity = new UserIdentity(
+      '', '', false, 0, '');
     if (!googleCredential) {
-      return of(this.DEFAULT_USER_IDENTITY);
+      return of(defaultUserIdentity);
     }
     const authRequest: AuthRequest = { googleIdToken: googleCredential };
-
     return this.http.post<AuthResponse>(`${this.API_URL}/auth/login`, authRequest).pipe(
       tap((resp: AuthResponse) => {
         this.authStorageService.saveToken(resp.customToken); // storing custom jcw in browser session
@@ -42,8 +40,8 @@ export class AuthService implements AuthPortOut {
         return new UserIdentity(dcg.aud, dcg.email, isEmailVerified, dcg.exp, dcg.name);
       }),
       catchError(err => {
-        console.error('Authentication failed', err);
-        return of(this.DEFAULT_USER_IDENTITY);
+        console.error('Server login failed', err);
+        return of(defaultUserIdentity);
       })
     );
   }

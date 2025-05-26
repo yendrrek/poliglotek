@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
+import { TranslationDialogMessage } from '../../../../application/translation/translation-dialog-message';
 
 @Component({
   selector: 'dialog',
@@ -11,7 +12,7 @@ import { MatButton } from '@angular/material/button';
     MatButton
   ],
   template: `
-    <mat-dialog-content class="dialog" [innerHTML]="data.error"></mat-dialog-content>
+    <mat-dialog-content class="dialog" [innerHTML]="data.message"></mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button mat-dialog-close>Zamknij</button>
     </mat-dialog-actions>
@@ -20,5 +21,5 @@ import { MatButton } from '@angular/material/button';
 })
 export class DialogNotificationComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { error: string }) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: TranslationDialogMessage) { }
 }
