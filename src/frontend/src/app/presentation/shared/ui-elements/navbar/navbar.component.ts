@@ -19,31 +19,7 @@ import { SignInOutComponent } from '../../../auth/sign-in-out.component';
     LogoResponsiveDirective,
     SignInOutComponent
   ],
-  template: `
-    <mat-toolbar>
-      <a logoResponsive class="logo" routerLink="/home"
-         aria-label="Logo aplikacji i link do strony głównej">
-        POLiglotek</a>
-
-      <div class="right-menu" menuResponsive="hideMenu"> <!--for big screens-->
-        <google-signin></google-signin>
-        <a class="right-menu-item" mat-button routerLink="/home" aria-label="Link do strony głównej">Strona główna</a>
-        <a class="right-menu-item" mat-button routerLink="/oAplikacji"
-           aria-label="Link do strony z informacją na temat aplikacji">O aplikacji
-        </a>
-        <a class="right-menu-item right-menu-item--edge" mat-button routerLink="/kontakt"
-           aria-label="Link do strony z danymi kontaktowymi autorów aplikacji">Kontakt
-        </a>
-      </div>
-
-      <div class="hamburger" menuResponsive="showMenu"> <!--for small screens-->
-        <button mat-icon-button (click)="openSideNavigation()">
-          <mat-icon>menu</mat-icon>
-        </button>
-      </div>
-    </mat-toolbar>
-
-  `,
+  templateUrl: 'navbar.component.html',
   styleUrls: ['./navbar.component.scss', '../../shared-styles.scss']
 })
 export class NavbarComponent {

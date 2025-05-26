@@ -20,13 +20,7 @@ import { MailResponse } from '../../infrastructure/contact/mail-response';
     ReactiveFormsModule,
     RouterOutlet
   ],
-  template: `
-    <div class="contact-form">
-      <div>Będziemy wdzięczni za wszelkie uwagi i sugestie</div>
-      <div>poliglotek.translator [małpa] gmail [kropka] com</div>
-    </div>
-    <router-outlet></router-outlet>
-  `,
+  templateUrl: 'contact.component.html',
   styleUrl: './contact.component.scss'
 })
 export class ContactComponent implements OnInit {

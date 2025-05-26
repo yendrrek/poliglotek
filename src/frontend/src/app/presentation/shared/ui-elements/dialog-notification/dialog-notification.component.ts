@@ -11,12 +11,7 @@ import { TranslationDialogMessage } from '../../../../application/translation/tr
     MatDialogClose,
     MatButton
   ],
-  template: `
-    <mat-dialog-content class="dialog" [innerHTML]="data.message"></mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-button mat-dialog-close>Zamknij</button>
-    </mat-dialog-actions>
-  `,
+  templateUrl: 'dialog-notification.component.html',
   styleUrl: './dialog-notification.component.scss'
 })
 export class DialogNotificationComponent {
