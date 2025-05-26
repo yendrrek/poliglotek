@@ -18,8 +18,7 @@ export class AuthService implements AuthPortOut {
   private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient,
-              private authStorageService: AuthStorageService) {
-  }
+              private authStorageService: AuthStorageService) {}
 
   login(googleCredential: string): Observable<UserIdentity> {
     const defaultUserIdentity: UserIdentity = new UserIdentity(

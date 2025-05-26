@@ -4,16 +4,19 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, Observable, throwError } from 'rxjs';
 import { TranslationRequest } from './translation-request';
 import { TranslationResponse } from './translation-response';
+import { AuthStorageService } from '../auth/auth-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationApiService {
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authStorageService: AuthStorageService) {}
 
   translate(choice: TranslationRequest): Observable<TranslationResponse> {
-    const token: string | null = localStorage.getItem('token');
+    const token: string | null = this.authStorageService.retrieveToken();
     const headers: HttpHeaders = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url: string = `${environment.baseUrl}/api/translate?` +
       `query=${choice.query}` +

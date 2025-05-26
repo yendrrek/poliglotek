@@ -14,8 +14,7 @@ export class TranslationApplicationService {
 
   constructor(private translationDomainService: TranslationDomainService,
               private translationStorageService: TranslationStorageService,
-              private translationApiService: TranslationApiService
-  ) {}
+              private translationApiService: TranslationApiService) {}
 
   isDuplicateChoice(current: TranslationRequest): boolean {
     const previous: TranslationRequest = this.getPreviousChoice();
