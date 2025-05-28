@@ -8,13 +8,13 @@ import { LoaderService } from './loader.service';
 })
 export class LoaderInterceptorService implements HttpInterceptor {
 
-  constructor(public loaderService: LoaderService) {}
+  constructor(private loaderService: LoaderService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loaderService.spinner.next(true);
+    this.loaderService.showSpinner();
     return next.handle(req).pipe(
       finalize(() => {
-        this.loaderService.spinner.next(false);
+        this.loaderService.hideSpinner();
       })
     );
   }
