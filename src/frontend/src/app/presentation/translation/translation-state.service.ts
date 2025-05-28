@@ -3,19 +3,18 @@ import { TranslationRequest } from '../../infrastructure/translation/translation
 import { TranslationResponse } from '../../infrastructure/translation/translation-response';
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { Translation } from '../../domain/translation/translation';
-import { Language } from '../../domain/translation/models/language';
+import { Language } from '../../domain/translation/language';
 import { TranslationApplicationService } from '../../application/translation/translation-application.service';
 import { LanguageService } from '../../domain/translation/language.service';
-import { Country } from '../../domain/translation/models/country';
-import { LanguageValue } from '../../domain/translation/types/language-value';
-import { CountryValue } from '../../domain/translation/types/country-value';
+import { Country } from '../../domain/translation/country';
+import { LanguageValue } from '../../domain/translation/language-value';
+import { CountryValue } from '../../domain/translation/country-value';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationStateService {
 
-  // State management
   private _languages: BehaviorSubject<Language[]> = new BehaviorSubject<Language[]>([]);
   private _countries: BehaviorSubject<Country[]> = new BehaviorSubject<Country[]>([]);
   private _autoSelectedCountries: BehaviorSubject<Country[]> = new BehaviorSubject<Country[]>([]);
@@ -23,7 +22,6 @@ export class TranslationStateService {
   private _translations: BehaviorSubject<Translation[]> = new BehaviorSubject<Translation[]>([]);
   private _isLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  // Exposing state as observables
   readonly languages: Observable<Language[]> = this._languages.asObservable();
   readonly countries: Observable<Country[]> = this._countries.asObservable();
   readonly autoSelectedCountries: Observable<Country[]> = this._autoSelectedCountries.asObservable();
@@ -33,7 +31,6 @@ export class TranslationStateService {
 
   constructor(private translationApplicationService: TranslationApplicationService,
               private languageService: LanguageService) {
-    // Initialize state
     this._languages.next(this.languageService.getSortedLanguages());
     this._countries.next(this.languageService.getSortedCountries());
     this._translations.next(this.translationApplicationService.retrieveStoredTranslations());

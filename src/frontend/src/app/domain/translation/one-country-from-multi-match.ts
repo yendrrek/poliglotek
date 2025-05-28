@@ -1,5 +1,5 @@
-import { LanguageValue } from '../types/language-value';
-import { Country } from '../models/country';
+import { LanguageValue } from './language-value';
+import { Country } from './country';
 import { COUNTRIES } from './countries';
 
 export const ONE_COUNTRY_FROM_MULTI_MATCH: Partial<Record<LanguageValue, Country>> = {

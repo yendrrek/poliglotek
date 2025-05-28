@@ -1,5 +1,5 @@
-import { Country } from '../models/country';
-import { CountryValue } from '../types/country-value';
+import { Country } from './country';
+import { CountryValue } from './country-value';
 
 export const COUNTRIES: Record<CountryValue, Country> = {
   countryAF: { ctryValue: 'countryAF', ctryViewValue: 'Afganistan' },

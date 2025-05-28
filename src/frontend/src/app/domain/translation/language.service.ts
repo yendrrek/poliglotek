@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Language } from './models/language';
-import { COUNTRIES } from './constants/countries';
-import { LANGUAGES } from './constants/languages';
-import { Country } from './models/country';
-import { COUNTRY_SINGLE_AND_MULTI_MATCH } from './constants/lang-country-match';
-import { LanguageValue } from './types/language-value';
-import { ONE_COUNTRY_FROM_MULTI_MATCH } from './constants/one-country-from-many';
+import { Language } from './language';
+import { COUNTRIES } from './countries';
+import { LANGUAGES } from './languages';
+import { Country } from './country';
+import { COUNTRY_SINGLE_AND_MULTI_MATCH } from './lang-country-match';
+import { LanguageValue } from './language-value';
+import { ONE_COUNTRY_FROM_MULTI_MATCH } from './one-country-from-multi-match';
 import { TranslationRequest } from '../../infrastructure/translation/translation-request';
-import { CountryValue } from './types/country-value';
+import { CountryValue } from './country-value';
 
 @Injectable({
   providedIn: 'root'

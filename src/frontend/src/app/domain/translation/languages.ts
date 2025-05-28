@@ -1,4 +1,4 @@
-import { Language } from '../models/language';
+import { Language } from './language';
 
 export const LANGUAGES: Language[] = [
   { langValue: 'af', langViewValue: 'Afrikaans' },

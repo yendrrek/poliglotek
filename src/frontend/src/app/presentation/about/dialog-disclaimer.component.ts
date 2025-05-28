@@ -12,37 +12,7 @@ import { MatButton } from '@angular/material/button';
     MatDialogClose,
     MatButton
   ],
-  template: `
-    <h2 mat-dialog-title>Zastrzeżenie</h2>
-    <mat-dialog-content class="mat-typography">
-      <p>
-        Ta usługa może zawierać tłumaczenia opracowane przez Google. Google zrzeka się wszelkich gwarancji związanych z
-        tłumaczeniami, wyraźnymi lub dorozumianymi, w tym wszelkiej gwarancji dokładności, niezawodności oraz wszelkiej
-        dorozumianej gwarancji przydatności handlowej, przydatności do określonego celu i nienaruszalności.
-      </p>
-      <p>
-        Wszystkie tłumaczenia stron internetowych w aplikacji Poliglotek są wykonane dla Twojej wygody przy użyciu
-        oprogramowania do tłumaczenia obsługiwanego przez Google Translate. Dołożono wszelkich starań, aby zapewnić
-        dokładne tłumaczenie, jednak żadne automatyczne tłumaczenie nie jest doskonałe, ani nie ma na celu zastąpienia
-        tłumaczy. Tłumaczenia są udostępniane jako usługa dla użytkowników strony internetowej Poliglotek i są dostarczone
-        bez żadnych gwarancji, wyraźnych ani dorozumianych, co do dokładności, niezawodności lub poprawności jakichkolwiek
-        tłumaczeń dokonanych z jakiegokolwiek języka na polski. Niektóre treści mogą nie być dokładnie przetłumaczone ze
-        względu na ograniczenia oprogramowania do tłumaczenia. Oficjalnym tekstem jest wersja strony internetowej, do której
-        podany jest link w słowie "Źródło" pod każdym tłumaczeniem na stronie poliglotek.com/home.
-      </p>
-      <p>
-        Wszelkie rozbieżności lub różnice powstałe w tłumaczeniu nie są wiążące i nie mają skutku prawnego.
-        W przypadku jakichkolwiek pytań dotyczących dokładności informacji zawartych w tłumaczeniach na stronie
-        poliglotek.com, należy odnieść się do oryginalnej wersji, do której link podany jest w słowie "Źródło", pod
-        każdym tłumaczeniem.
-      </p>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-button mat-dialog-close>Zamknij</button>
-    </mat-dialog-actions>
-  `,
+  templateUrl: 'dialog-disclaimer.component.html',
   styleUrl: './dialog-disclaimer.component.scss'
 })
-export class DialogDisclaimerComponent {
-
-}
+export class DialogDisclaimerComponent {}

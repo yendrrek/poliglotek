@@ -1,4 +1,4 @@
-import { LanguageValue } from '../types/language-value';
+import { LanguageValue } from './language-value';
 
 export interface Language {
   langValue: LanguageValue;

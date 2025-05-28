@@ -1,5 +1,5 @@
-import { Country } from '../models/country';
-import { LanguageValue } from '../types/language-value';
+import { Country } from './country';
+import { LanguageValue } from './language-value';
 import { COUNTRIES } from './countries';
 
 export const COUNTRY_SINGLE_AND_MULTI_MATCH: Record<LanguageValue, Country | Country[]> = {
