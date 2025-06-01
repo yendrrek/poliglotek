@@ -1,49 +1,72 @@
-import { Injectable } from '@angular/core';
-import { TranslationApiService } from '../../infrastructure/translation/translation-api.service';
-import { TranslationStorageService } from '../../infrastructure/translation/translation-storage.service';
+import { Inject, Injectable } from '@angular/core';
+import { Translation } from '../../domain/translation/models/translation';
+import { TranslationApiPort, TranslationResult } from './translation-api-port';
+import { TranslationRepositoryPort } from './translation-repository-port';
+import { TranslationRequest } from '../../domain/translation/models/translation-request';
+import { map, Observable, of } from 'rxjs';
 import { TranslationDomainService } from '../../domain/translation/translation-domain.service';
-import { TranslationRequest } from '../../infrastructure/translation/translation-request';
-import { Translation } from '../../domain/translation/translation';
-import { TranslationResponse } from '../../infrastructure/translation/translation-response';
-import { Observable, tap } from 'rxjs';
+
+export interface TranslationProcessResult {
+  success: boolean;
+  translations: Translation[];
+  message?: string;
+  isDuplicate: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationApplicationService {
 
-  constructor(private translationDomainService: TranslationDomainService,
-              private translationStorageService: TranslationStorageService,
-              private translationApiService: TranslationApiService) {}
+  constructor(
+    @Inject('TRANSLATION_REPOSITORY_PORT') private translationRepository: TranslationRepositoryPort,
+    @Inject('TRANSLATION_API_PORT') private translationApi: TranslationApiPort,
+    private translationDomainService: TranslationDomainService
+  ) {}
 
-  isDuplicateChoice(current: TranslationRequest): boolean {
-    const previous: TranslationRequest = this.getPreviousChoice();
-    return this.translationDomainService.compareChoices(previous, current);
-  }
-
-  getPreviousChoice(): TranslationRequest {
-    return this.translationStorageService.retrieveChoice();
-  }
-
-  updateStoredChoice(choice: TranslationRequest): void {
-    this.translationStorageService.saveChoice(choice);
-  }
-
-  retrieveStoredTranslations(): Translation[] {
-    return this.translationStorageService.retrieveTranslations();
-  }
-
-  updateStoredTranslations(translations: Translation[]): void {
-    this.translationStorageService.saveTranslations(translations);
-  }
-
-  translate(choice: TranslationRequest): Observable<TranslationResponse> {
-    return this.translationApiService.translate(choice).pipe(
-      tap((resp: TranslationResponse) => {
-        if (resp.success) {
-          this.updateStoredTranslations(resp.data);
+  processTranslationRequest(request: TranslationRequest): Observable<TranslationProcessResult> {
+    const lastRequest: TranslationRequest | null = this.translationRepository.findLastRequest();
+    if (lastRequest && this.translationDomainService.isDuplicateRequest(request, lastRequest)) {
+      return of({
+        success: true,
+        translations: this.translationRepository.findAllTranslations(),
+        message: this.translationDomainService.buildDuplicateMessage(request),
+        isDuplicate: true
+      });
+    }
+    return this.translationApi.translate(request).pipe(
+      map((result: TranslationResult) => {
+        if (result.success) {
+          this.translationRepository.saveTranslations(result.translations);
+          this.translationRepository.saveLastRequest(request);
         }
+        return {
+          success: result.success,
+          translations: result.translations,
+          message: result.warning || result.error,
+          isDuplicate: false
+        };
       })
     );
+  }
+
+  getStoredTranslations(): Translation[] {
+    return this.translationRepository.findAllTranslations();
+  }
+
+  getLastRequest(): TranslationRequest | null {
+    return this.translationRepository.findLastRequest();
+  }
+
+  clearTranslationHistory(): void {
+    this.translationRepository.clearAllTranslations();
+  }
+
+  removeOldTranslations(hoursThreshold: number): void { // TODO: I don't think I'll need this
+    const translations: Translation[] = this.translationRepository.findAllTranslations();
+    const recentTranslations: Translation[] = translations.filter(
+      (t: Translation) => !t.isOlderThan(hoursThreshold)
+    );
+    this.translationRepository.saveTranslations(recentTranslations);
   }
 }

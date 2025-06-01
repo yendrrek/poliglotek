@@ -1,82 +1,114 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AsyncPipe, NgOptimizedImage } from '@angular/common';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatOption, MatSelect } from '@angular/material/select';
-import { MatInput } from '@angular/material/input';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { TranslationViewModel, TranslationViewModelService } from './translation-view-model.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DialogNotificationComponent } from '../shared/ui-elements/dialog-notification/dialog-notification.component';
+import { TranslationDialogMessage } from '../../application/translation/translation-dialog-message';
+import { AsyncPipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
-import { DialogNotificationComponent } from '../shared/ui-elements/dialog-notification/dialog-notification.component';
+import { TranslationResponsiveDirective } from './translation-responsive.directive';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { Translation } from '../../domain/translation/models/translation';
 import { Language } from '../../domain/translation/language';
 import { Country } from '../../domain/translation/country';
-import { Translation } from '../../domain/translation/translation';
-import { LanguageValue } from '../../domain/translation/language-value';
-import { TranslationRequest } from '../../infrastructure/translation/translation-request';
-import { TranslationResponsiveDirective } from './translation-responsive.directive';
-import { MatTooltip } from '@angular/material/tooltip';
-import { TranslationStateService } from './translation-state.service';
-import { CountryValue } from '../../domain/translation/country-value';
-import { AuthFacadeService } from '../../application/auth/auth-facade.service';
-import { TranslationDialogMessage } from '../../application/translation/translation-dialog-message';
 
 @Component({
-  selector: 'home',
-  imports: [MatTab, MatTabGroup, MatFormField, MatLabel,
-    MatSelect, MatOption, MatInput, MatSuffix, MatIcon, MatIconButton,
-    FormsModule, MatButton, MatProgressSpinnerModule, ReactiveFormsModule, NgOptimizedImage,
-    TranslationResponsiveDirective, AsyncPipe, MatTooltip],
-  templateUrl: 'translation.component.html',
+  selector: 'translation',
+  imports: [
+    AsyncPipe,
+    MatProgressSpinner,
+    ReactiveFormsModule,
+    MatFormField,
+    MatIcon,
+    MatIconButton,
+    TranslationResponsiveDirective,
+    MatInput,
+    MatSelect,
+    MatOption,
+    MatButton,
+    MatTooltip,
+    MatTabGroup,
+    MatTab
+  ],
+  templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss'
 })
 export class TranslationComponent implements OnInit, OnDestroy {
 
-  // State observables
-  languages: Observable<Language[]>;
-  countries: Observable<Country[]>;
-  autoSelectedCountries: Observable<Country[]>;
-  nonSelectedCountries: Observable<Country[]>;
-  translations: Observable<Translation[]>;
-  isLoading: Observable<boolean>;
-  isLoggedIn?: Observable<boolean>;
+  translationForm: FormGroup;
+  private readonly viewModelService: TranslationViewModelService = inject(TranslationViewModelService);
+  private readonly dialog: MatDialog = inject(MatDialog);
+  private destroy: Subject<void> = new Subject<void>();
+  private isAuthenticated: boolean = false;
+  viewModel: Observable<TranslationViewModel> = this.viewModelService.viewModel;
 
-  translationForm: FormGroup = new FormGroup({});
-  readonly noAccessMessage: string = 'Brak dostępu. Zaloguj się, aby aktywować wyszukiwanie.';
-  private subscriptions: Subscription = new Subscription();
+  isLoading: Observable<boolean> = this.viewModelService.isLoading;
+  translations: Observable<Translation[]> = this.viewModelService.translations;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-    private translationStateService: TranslationStateService,
-    private authFacadeService: AuthFacadeService,
-  ) {
-    // Subscribe to state observables
-    this.languages = this.translationStateService.languages;
-    this.countries = this.translationStateService.countries;
-    this.autoSelectedCountries = this.translationStateService.autoSelectedCountries;
-    this.nonSelectedCountries = this.translationStateService.nonSelectedCountries;
-    this.translations = this.translationStateService.translations;
-    this.isLoading = this.translationStateService.isLoading;
-    this.isLoggedIn = this.authFacadeService.isLoggedIn;
+  protected readonly languages: Observable<Language[]> = this.viewModelService.languages;
+  protected readonly compatibleCountries: Observable<Country[]> = this.viewModelService.compatibleCountries;
+  protected readonly nonCompatibleCountries: Observable<Country[]> = this.viewModelService.nonCompatibleCountries;
+
+  protected readonly noAccessMessage: string = 'Brak dostępu. Zaloguj się, aby aktywować wyszukiwanie.';
+
+  constructor() {
+    this.translationForm = this.viewModelService.createTranslationForm();
   }
 
   ngOnInit(): void {
-    this.initForm();
-    const langSub: Subscription | undefined = this.translationForm.get('langCode')?.valueChanges.subscribe(
-      (selected: LanguageValue) => {
-        const defaultCtry: CountryValue = this.translationStateService.updateSelectedLanguage(selected);
-        this.translationForm.get('countryCode')?.setValue(defaultCtry);
+    this.translationForm.get('langCode')?.valueChanges
+      .pipe(
+        takeUntil(this.destroy),
+        switchMap((langCode: string) => this.viewModelService.viewModel.pipe(
+            map((vm: TranslationViewModel) => ({
+              language: vm.languages?.find((l: Language) => l.langValue === langCode),
+              selectedCountry: vm.selectedCountry
+            }))
+          )
+        )
+      )
+      .subscribe(({ language, selectedCountry }) => {
+        if (language) {
+          this.viewModelService.updateSelectedLanguage(language);
+          if (selectedCountry) {
+            this.translationForm.get('countryCode')?.setValue(selectedCountry.ctryValue);
+          }
+        }
       });
-    if (langSub) {
-      this.subscriptions.add(langSub);
-    }
+
+    this.viewModel
+      .pipe(
+        takeUntil(this.destroy),
+        map((vm: TranslationViewModel): string | undefined => vm.errorMessage)
+      )
+      .subscribe((errorMessage: string | undefined) => {
+        if (errorMessage) {
+          this.showMessageToUser(errorMessage);
+          this.viewModelService.clearError();
+        }
+      });
+
+    this.viewModel
+      .pipe(
+        takeUntil(this.destroy),
+        map((vm: TranslationViewModel) => vm.isAuthenticated)
+      )
+      .subscribe((isAuthenticated: boolean) => {
+        this.isAuthenticated = isAuthenticated;
+      });
   }
 
+
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   clearQueryField(): void {
@@ -84,35 +116,32 @@ export class TranslationComponent implements OnInit, OnDestroy {
   }
 
   toggleTooltip(tooltip: MatTooltip): void {
-    let isLoggedIn: boolean = false;
-    const loginSub: Subscription | undefined = this.isLoggedIn?.subscribe(
-      (value: boolean) => {
-        isLoggedIn = value;
-      });
-    this.subscriptions.add(loginSub);
-    if (!isLoggedIn) {
+    if (!this.isAuthenticated) {
       tooltip.toggle();
     }
   }
 
   handleTranslation(): void {
-    if (!this.translationForm.valid) return;
-    const choice: TranslationRequest = this.translationForm.value;
-    this.translationStateService.processTranslation(choice).subscribe((message: string | null) => {
-      if (message) this.showMessageToUser(message);
+    if (!this.translationForm.valid) {
+      this.markFormGroupTouched(this.translationForm);
+      return;
+    }
+
+    this.viewModelService.processTranslation(this.translationForm.value)
+      .pipe(takeUntil(this.destroy))
+      .subscribe();
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control: AbstractControl<any, any> | null = formGroup.get(key);
+      control?.markAsTouched();
     });
   }
 
-  private initForm(): void {
-    const previous: TranslationRequest = this.translationStateService.getPreviousChoice();
-    this.translationForm = this.formBuilder.group({
-      query: [previous.query, Validators.required],
-      langCode: [previous.langCode, Validators.required],
-      countryCode: [previous.ctryCode, Validators.required],
+  private showMessageToUser(message: string): void {
+    this.dialog.open(DialogNotificationComponent, {
+      data: { message } as TranslationDialogMessage
     });
-  }
-
-  private showMessageToUser(msg: string): void {
-    this.dialog.open(DialogNotificationComponent, { data: { message: msg } as TranslationDialogMessage });
   }
 }

@@ -4,7 +4,7 @@ import { TranslationResponse } from '../../infrastructure/translation/translatio
 import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { Translation } from '../../domain/translation/translation';
 import { Language } from '../../domain/translation/language';
-import { TranslationApplicationService } from '../../application/translation/translation-application.service';
+import { TranslationApplicationOLDService } from '../../application/translation/translation-application-OLD.service';
 import { LanguageService } from '../../domain/translation/language.service';
 import { Country } from '../../domain/translation/country';
 import { LanguageValue } from '../../domain/translation/language-value';
@@ -29,7 +29,7 @@ export class TranslationStateService {
   readonly translations: Observable<Translation[]> = this._translations.asObservable();
   readonly isLoading: Observable<boolean> = this._isLoading.asObservable();
 
-  constructor(private translationApplicationService: TranslationApplicationService,
+  constructor(private translationApplicationService: TranslationApplicationOLDService,
               private languageService: LanguageService) {
     this._languages.next(this.languageService.getSortedLanguages());
     this._countries.next(this.languageService.getSortedCountries());

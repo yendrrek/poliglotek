@@ -32,9 +32,9 @@
 <mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
 <mat-label formFieldResponsive>Kraj wyników</mat-label>
 <mat-select required formControlName="countryCode">
-  @if (autoSelectedCountries | async; as autoSelectedCountries) {
-@if (autoSelectedCountries.length > 0) {
-  @for (ctry of autoSelectedCountries; track ctry.ctryValue) {
+  @if (compatibleCountries | async; as compatibleCountries) {
+@if (compatibleCountries.length > 0) {
+  @for (ctry of compatibleCountries; track ctry.ctryValue) {
       <mat-option class="dynamic-countries-border"
         [class.first-country-item]="$first"
         [class.last-country-item]="$last"
@@ -43,27 +43,27 @@
     }
   }
 }
-@if (nonSelectedCountries | async; as nonSelectedCountries) {
-@if (nonSelectedCountries.length > 0) {
-  @for (ctry of nonSelectedCountries; track ctry.ctryValue) {
+@if (nonCompatibleCountries | async; as nonCompatibleCountries) {
+@if (nonCompatibleCountries.length > 0) {
+  @for (ctry of nonCompatibleCountries; track ctry.ctryValue) {
       <mat-option [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}</mat-option>
     }
-  } @else {
+  } <!--@else { TODO: This else block might not be needed anymore since you should always have either compatible or non compatible countries
   @if (countries | async; as countries) {
     @for (ctry of countries; track ctry.ctryValue) {
         <mat-option [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}</mat-option>
       }
     }
-  }
+  }-->
 }
 </mat-select>
 </mat-form-field>
 
-<button [disabled]="!(isLoggedIn | async)"
+<button [disabled]="!(viewModel | async)?.isAuthenticated"
 class="search-button"
 disabledInteractive
 mat-raised-button
-  [matTooltip]="!(isLoggedIn | async) ? noAccessMessage : ''"
+  [matTooltip]="!(viewModel | async)?.isAuthenticated ? noAccessMessage : ''"
 #tooltip="matTooltip"
 (touchstart)="toggleTooltip(tooltip)"
 searchButtonResponsive (click)="handleTranslation()">Znajdź i przetłumacz
@@ -76,10 +76,10 @@ searchButtonResponsive (click)="handleTranslation()">Znajdź i przetłumacz
 
 <mat-tab-group class="tabs-container">
   @if (translations | async; as translations) {
-@for (translation of translations; let i = $index; track translation.id) {
+@for (translation of translations; let i = $index; track translation.getId().toString()) {
     <mat-tab [label]="'Strona ' + (i + 1)">
-    <div class="translatedPageContainer" [innerHTML]="translation.page.body"></div>
-    <a [href]="translation.url" target="_blank" class="source-url">Źródło</a>
+    <div class="translatedPageContainer" [innerHTML]="translation.getPage().getBody()"></div>
+    <a [href]="translation.getUrl().toString()" target="_blank" class="source-url">Źródło</a>
       <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image"
     height="16" width="122">
       </mat-tab>
