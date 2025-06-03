@@ -1,15 +1,15 @@
 plugins {
     id "java"
     id "groovy"
-    id "com.github.johnrengelman.shadow"
+    id "com.gradleup.shadow"
     id "io.micronaut.application"
     id "io.micronaut.aot"
     id "org.owasp.dependencycheck"
     id "com.andrzejpiontek.version-bump"
-    id "org.ajoberstar.grgit" version "5.0.0-rc.3"
+    id "org.ajoberstar.grgit"
 }
 
-version = "0.52.4"
+version = "0.52.5"
 group = "com.poliglotek"
 
 repositories {
@@ -85,9 +85,7 @@ micronaut {
 }
 
 dependencyCheck {
-    nvd {
-        apiKey = System.getenv("nvdApiKey")
-    }
+    nvd.apiKey = System.getenv("nvdApiKey")
 }
 
 tasks.register("installGitHook", Copy) {
