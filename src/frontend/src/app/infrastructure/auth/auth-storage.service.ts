@@ -7,8 +7,6 @@ export class AuthStorageService {
 
   private readonly TOKEN_KEY: 'token' = 'token';
 
-  constructor() {}
-
   retrieveToken(): string | null {
     return sessionStorage.getItem(this.TOKEN_KEY);
   }

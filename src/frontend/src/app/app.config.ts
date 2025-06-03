@@ -4,10 +4,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { routes } from './app.routes';
 import { LoaderInterceptorService } from './infrastructure/translation/loader-interceptor.service';
-import { AUTH_PORT_OUT } from './application/auth/auth-port-out';
-import { GOOGLE_AUTH_PROVIDER_PORT_OUT } from './application/auth/google-auth-provider-port-out';
+import { AUTH_API_PORT } from './application/auth/auth-api-port';
+import { GOOGLE_AUTH_PROVIDER_PORT } from './application/auth/google-auth-provider-port';
 import { GoogleAuthProviderService } from './infrastructure/auth/google-auth-provider.service';
-import { AuthService } from './infrastructure/auth/auth.service';
+import { AuthApiAdapter } from './infrastructure/auth/auth-api-adapter';
 import { TranslationApplicationService } from './application/translation/translation-application.service';
 import { AuthFacadeService } from './application/auth/auth-facade.service';
 import { TranslationViewModelService } from './presentation/translation/translation-view-model.service';
@@ -26,13 +26,13 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimationsAsync(),
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptorService, multi: true },
-    { provide: AUTH_PORT_OUT, useClass: AuthService },
-    { provide: GOOGLE_AUTH_PROVIDER_PORT_OUT, useClass: GoogleAuthProviderService },
-    { provide: AUTH_PORT_OUT, useClass: AuthService },
-    { provide: GOOGLE_AUTH_PROVIDER_PORT_OUT, useClass: GoogleAuthProviderService },
-    { provide: TRANSLATION_REPOSITORY_PORT, useClass: TranslationStorageRepository },
-    { provide: TRANSLATION_API_PORT, useClass: TranslationApiAdapter },
+    { provide: GOOGLE_AUTH_PROVIDER_PORT, useClass: GoogleAuthProviderService },
+    { provide: GOOGLE_AUTH_PROVIDER_PORT, useClass: GoogleAuthProviderService },
+    { provide: AUTH_API_PORT, useClass: AuthApiAdapter },
     { provide: AUTH_REPOSITORY_PORT, useClass: AuthStorageRepository },
+    { provide: AUTH_API_PORT, useClass: AuthApiAdapter },
+    { provide: TRANSLATION_REPOSITORY_PORT, useClass: TranslationStorageRepository},
+    { provide: TRANSLATION_API_PORT, useClass: TranslationApiAdapter },
     TranslationApplicationService,
     AuthFacadeService,
     TranslationViewModelService

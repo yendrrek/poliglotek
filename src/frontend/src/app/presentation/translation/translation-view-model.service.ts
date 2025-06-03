@@ -67,7 +67,7 @@ export class TranslationViewModelService {
       translations: storedTranslations
     });
 
-    this.authFacadeService.isLoggedIn.subscribe((isAuthenticated: boolean) => {
+    this.authFacadeService.isAuthenticated.subscribe((isAuthenticated: boolean) => {
       this.updateState({ isAuthenticated });
     });
   }

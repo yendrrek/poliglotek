@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Translation } from '../../domain/translation/models/translation';
-import { TranslationApiPort, TranslationResult } from './translation-api-port';
-import { TranslationRepositoryPort } from './translation-repository-port';
+import { TRANSLATION_API_PORT, TranslationApiPort, TranslationResult } from './translation-api-port';
+import { TRANSLATION_REPOSITORY_PORT, TranslationRepositoryPort } from './translation-repository-port';
 import { TranslationRequest } from '../../domain/translation/models/translation-request';
 import { map, Observable, of } from 'rxjs';
 import { TranslationDomainService } from '../../domain/translation/translation-domain.service';
@@ -19,8 +19,8 @@ export interface TranslationProcessResult {
 export class TranslationApplicationService {
 
   constructor(
-    @Inject('TRANSLATION_REPOSITORY_PORT') private translationRepository: TranslationRepositoryPort,
-    @Inject('TRANSLATION_API_PORT') private translationApi: TranslationApiPort,
+    @Inject(TRANSLATION_REPOSITORY_PORT) private translationRepository: TranslationRepositoryPort,
+    @Inject(TRANSLATION_API_PORT) private translationApi: TranslationApiPort,
     private translationDomainService: TranslationDomainService
   ) {}
 

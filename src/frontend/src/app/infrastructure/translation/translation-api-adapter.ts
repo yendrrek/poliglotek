@@ -18,7 +18,7 @@ export class TranslationApiAdapter implements TranslationApiPort {
   constructor(
     private http: HttpClient,
     private authStorageService: AuthStorageService,
-  ) { }
+  ) {}
 
 
   translate(request: TranslationRequest): Observable<TranslationResult> {

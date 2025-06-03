@@ -4,7 +4,6 @@ import { Translation } from '../../domain/translation/models/translation';
 import { InjectionToken } from '@angular/core';
 
 export interface TranslationApiPort {
-
   translate(request: TranslationRequest): Observable<TranslationResult>
 }
 

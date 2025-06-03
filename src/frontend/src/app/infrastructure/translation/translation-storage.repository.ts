@@ -43,7 +43,7 @@ export class TranslationStorageRepository implements TranslationRepositoryPort {
       const stored: string | null = sessionStorage.getItem(this.TRANSLATIONS_KEY);
       if (!stored) return [];
       const parsed: any = JSON.parse(stored);
-      return parsed.map((item: any) => new Translation(
+      return parsed.map((item: any): Translation => new Translation(
           new TranslationId(item.id),
           new TranslatedPage(item.page.body, new Date(item.page.translatedAt)),
           new TranslationUrl(item.url),

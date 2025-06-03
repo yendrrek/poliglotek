@@ -3,7 +3,6 @@ import { TranslationRequest } from '../../domain/translation/models/translation-
 import { InjectionToken } from '@angular/core';
 
 export interface TranslationRepositoryPort {
-
   saveTranslations(translations: Translation[]): void;
   findAllTranslations(): Translation[];
   findTranslationById(id: string): Translation | null;

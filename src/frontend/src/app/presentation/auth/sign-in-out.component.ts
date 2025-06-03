@@ -34,10 +34,10 @@ export class SignInOutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isLoggedIn = this.authFacadeService.isLoggedIn;
+    this.isLoggedIn = this.authFacadeService.isAuthenticated;
     this.loadGoogleScript().then(() => {
       this.isLoggedIn?.subscribe((isLoggedIn: boolean) => {
-        console.info('User logged in: ', isLoggedIn);
+        console.info('User is logged in: ', isLoggedIn);
         if (!isLoggedIn) {
           this.changeDetector.detectChanges();
           this.handleGoogleSignIn();

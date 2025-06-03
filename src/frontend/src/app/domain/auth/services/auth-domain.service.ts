@@ -18,21 +18,8 @@ interface DecodedGoogleToken {
 })
 export class AuthDomainService {
 
-  decodedGoogleToken(token: string): DecodedGoogleToken {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    } catch (err) {
-      throw new Error('Invalid Google token format');
-    }
-  }
-
   createUserIdentityFromGoogleToken(googleToken: string): UserIdentity {
-    const decoded: DecodedGoogleToken = this.decodedGoogleToken(googleToken);
+    const decoded: DecodedGoogleToken = this.decodeGoogleToken(googleToken);
     return new UserIdentity(
       new GoogleClientId(decoded.aud),
       new Email(decoded.email),
@@ -49,5 +36,18 @@ export class AuthDomainService {
 
   validateAuthSession(session: AuthSession): boolean {
     return session.isValid();
+  }
+
+  private decodeGoogleToken(token: string): DecodedGoogleToken {
+    try {
+      const base64Url: string = token.split('.')[1];
+      const base64: string = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload: string = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (err) {
+      throw new Error('Invalid Google token format');
+    }
   }
 }
