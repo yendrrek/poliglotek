@@ -3,7 +3,7 @@ import { InjectionToken } from '@angular/core';
 
 export interface AuthRepositoryPort {
   saveSession(session: AuthSession): void;
-  getSession(): AuthSession | null;
+  retrieveSession(): AuthSession | null;
   clearSession(): void;
 }
 

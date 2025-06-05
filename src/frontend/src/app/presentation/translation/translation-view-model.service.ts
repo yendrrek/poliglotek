@@ -108,7 +108,7 @@ export class TranslationViewModelService {
 
   processTranslation(formValues: any): Observable<void> {
     if (!this.state.value.isAuthenticated) {
-      this.updateState({errorMessage: 'Brak dostępu. Zaloguj się, aby aktywować wyszukiwanie.'});
+      this.updateState({ errorMessage: 'Brak dostępu. Zaloguj się, aby aktywować wyszukiwanie.' });
       return of(undefined);
     }
     try {

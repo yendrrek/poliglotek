@@ -32,9 +32,9 @@ export class AuthStorageRepository {
     }
   }
 
-  getSession(): AuthSession | null {
+  retrieveSession(): AuthSession | null {
     try {
-      const stored = sessionStorage.getItem(this.SESSION_KEY);
+      const stored: string | null = sessionStorage.getItem(this.SESSION_KEY);
       if (!stored) return null;
       const parsed = JSON.parse(stored);
       const userIdentity = new UserIdentity(

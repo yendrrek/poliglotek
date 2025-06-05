@@ -1,73 +1,73 @@
 @if (isLoading | async; as isLoading) {
-@if (isLoading) {
+  @if (isLoading) {
     <div class="spinner-overlay">
       <mat-spinner mode="indeterminate"></mat-spinner>
-      </div>
+    </div>
   }
 }
 
 <form class="search-form-container" [formGroup]="translationForm" formResponsive>
-<mat-form-field class="search-form--query-input-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
-<mat-label formFieldResponsive>Szukana fraza po polsku</mat-label>
-<input required matInput type="text" formControlName="query">
-  @if (translationForm.get('query')?.value) {
-  <button matSuffix mat-icon-button aria-label="Clear"
-  (click)="clearQueryField()">
-    <mat-icon>close</mat-icon>
-    </button>
-}
-</mat-form-field>
-
-<mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
-<mat-label formFieldResponsive>Tłumacz frazę na</mat-label>
-<mat-select required formControlName="langCode">
-  @if (languages | async; as languages) {
-@for (language of languages; track language.langValue) {
-    <mat-option [value]="language.langValue">{{ language.langViewValue }}</mat-option>
-  }
-}
-</mat-select>
-</mat-form-field>
-
-<mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
-<mat-label formFieldResponsive>Kraj wyników</mat-label>
-<mat-select required formControlName="countryCode">
-  @if (compatibleCountries | async; as compatibleCountries) {
-@if (compatibleCountries.length > 0) {
-  @for (ctry of compatibleCountries; track ctry.ctryValue) {
-      <mat-option class="dynamic-countries-border"
-        [class.first-country-item]="$first"
-        [class.last-country-item]="$last"
-        [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}
-      </mat-option>
+  <mat-form-field class="search-form--query-input-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+    <mat-label formFieldResponsive>Szukana fraza po polsku</mat-label>
+    <input required matInput type="text" formControlName="query">
+    @if (translationForm.get('query')?.value) {
+      <button matSuffix mat-icon-button aria-label="Clear"
+              (click)="clearQueryField()">
+        <mat-icon>close</mat-icon>
+      </button>
     }
-  }
-}
-@if (nonCompatibleCountries | async; as nonCompatibleCountries) {
-@if (nonCompatibleCountries.length > 0) {
-  @for (ctry of nonCompatibleCountries; track ctry.ctryValue) {
-      <mat-option [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}</mat-option>
-    }
-  } <!--@else { TODO: This else block might not be needed anymore since you should always have either compatible or non compatible countries
+  </mat-form-field>
+
+  <mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+    <mat-label formFieldResponsive>Tłumacz frazę na</mat-label>
+    <mat-select required formControlName="langCode">
+      @if (languages | async; as languages) {
+        @for (language of languages; track language.langValue) {
+          <mat-option [value]="language.langValue">{{ language.langViewValue }}</mat-option>
+        }
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="select-distance select-width" hideRequiredMarker floatLabel="always" formFieldResponsive>
+    <mat-label formFieldResponsive>Kraj wyników</mat-label>
+    <mat-select required formControlName="countryCode">
+      @if (compatibleCountries | async; as compatibleCountries) {
+        @if (compatibleCountries.length > 0) {
+          @for (ctry of compatibleCountries; track ctry.ctryValue) {
+            <mat-option class="dynamic-countries-border"
+                        [class.first-country-item]="$first"
+                        [class.last-country-item]="$last"
+                        [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}
+            </mat-option>
+          }
+        }
+      }
+      @if (nonCompatibleCountries | async; as nonCompatibleCountries) {
+        @if (nonCompatibleCountries.length > 0) {
+          @for (ctry of nonCompatibleCountries; track ctry.ctryValue) {
+            <mat-option [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}</mat-option>
+          }
+        } <!--@else { TODO: This else block might not be needed anymore since you should always have either compatible or non compatible countries
   @if (countries | async; as countries) {
     @for (ctry of countries; track ctry.ctryValue) {
         <mat-option [value]="ctry.ctryValue">{{ ctry.ctryViewValue }}</mat-option>
       }
     }
   }-->
-}
-</mat-select>
-</mat-form-field>
+      }
+    </mat-select>
+  </mat-form-field>
 
-<button [disabled]="!(viewModel | async)?.isAuthenticated"
-class="search-button"
-disabledInteractive
-mat-raised-button
-  [matTooltip]="!(viewModel | async)?.isAuthenticated ? noAccessMessage : ''"
-#tooltip="matTooltip"
-(touchstart)="toggleTooltip(tooltip)"
-searchButtonResponsive (click)="handleTranslation()">Znajdź i przetłumacz
-</button>
+  <button [disabled]="!(viewModel | async)?.isAuthenticated"
+          class="search-button"
+          disabledInteractive
+          mat-raised-button
+          [matTooltip]="!(viewModel | async)?.isAuthenticated ? noAccessMessage : ''"
+          #tooltip="matTooltip"
+          (touchstart)="toggleTooltip(tooltip)"
+          searchButtonResponsive (click)="handleTranslation()">Znajdź i przetłumacz
+  </button>
 </form>
 
 <div class="header-container">
@@ -76,15 +76,15 @@ searchButtonResponsive (click)="handleTranslation()">Znajdź i przetłumacz
 
 <mat-tab-group class="tabs-container">
   @if (translations | async; as translations) {
-@for (translation of translations; let i = $index; track translation.getId().toString()) {
-    <mat-tab [label]="'Strona ' + (i + 1)">
-    <div class="translatedPageContainer" [innerHTML]="translation.getPage().getBody()"></div>
-    <a [href]="translation.getUrl().toString()" target="_blank" class="source-url">Źródło</a>
-      <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image"
-    height="16" width="122">
+    @for (translation of translations; let i = $index; track translation.getId().toString()) {
+      <mat-tab [label]="'Strona ' + (i + 1)">
+        <div class="translatedPageContainer" [innerHTML]="translation.getPage().getBody()"></div>
+        <a [href]="translation.getUrl().toString()" target="_blank" class="source-url">Źródło</a>
+        <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image"
+             height="16" width="122">
       </mat-tab>
+    }
   }
-}
 </mat-tab-group>
 
 <!-- TODO: For testing only. Comment out when not needed -->
@@ -92,7 +92,7 @@ searchButtonResponsive (click)="handleTranslation()">Znajdź i przetłumacz
 <!--      @for (page of [1, 2, 3, 4]; let i = $index; track page) {-->
 <!--        <mat-tab [label]="'Strona ' + (i + 1)">-->
 <!--          <div class="translated-page-container" [innerHTML]="'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?0Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?' + i"></div>-->
-    <!--          <a [href]="'www.test.com'" target="_blank" class="source-url">Źródło</a>-->
+<!--          <a [href]="'www.test.com'" target="_blank" class="source-url">Źródło</a>-->
 <!--          <img class="attribution-logo" ngSrc="img/google-attribution.svg" alt="Google attribution image" height="16" width="122">-->
 <!--        </mat-tab>-->
 <!--      }-->

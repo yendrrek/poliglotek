@@ -81,7 +81,7 @@ export class SignInOutComponent implements OnInit {
       client_id: '177391411152-1ciu3vrsbsnkr9qgpke4gidbf7mvl384.apps.googleusercontent.com',
       callback: (resp: GoogleSigninResponse) => {
         this.authFacadeService.handleGoogleCredentialResponse(resp).subscribe(
-          resp => console.log('Google Sign-In response', resp));
+          () => console.log('Authenticated with Google Sign-In'));
       },
       auto_select: false,
       cancel_on_tap_outside: true

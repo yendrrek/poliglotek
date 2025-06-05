@@ -31,7 +31,7 @@ export class AuthFacadeService {
   }
 
   private initialiseAuthState(): void {
-    const existingSession: AuthSession | null = this.authRepository.getSession();
+    const existingSession: AuthSession | null = this.authRepository.retrieveSession();
     if (existingSession && this.authDomainService.validateAuthSession(existingSession)) {
       this.authSessionSubject.next(existingSession);
     } else {
