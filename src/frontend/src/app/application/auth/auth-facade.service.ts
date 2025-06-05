@@ -3,7 +3,6 @@ import { BehaviorSubject, catchError, EMPTY, map, Observable, of, tap } from 'rx
 import { AUTH_API_PORT, AuthApiPort } from './auth-api-port';
 import { GOOGLE_AUTH_PROVIDER_PORT, GoogleAuthProviderPort } from './google-auth-provider-port';
 import { GoogleSigninResponse } from '../../infrastructure/auth/google-signin-response';
-import { AuthStorageService } from '../../infrastructure/auth/auth-storage.service';
 import { UserIdentity } from '../../domain/auth/models/user-identity';
 import { AuthSession } from '../../domain/auth/models/auth-session';
 import { AUTH_REPOSITORY_PORT, AuthRepositoryPort } from './auth-repository.port';
@@ -15,27 +14,19 @@ import { AuthResponse } from '../../infrastructure/auth/models/auth-response.mod
 })
 export class AuthFacadeService {
 
-  // private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  // isLoggedIn: Observable<boolean> = this.isLoggedInSubject.asObservable();
-
   private authSessionSubject: BehaviorSubject<AuthSession | null>
     = new BehaviorSubject<AuthSession | null>(null);
   readonly authSession: Observable<AuthSession | null> = this.authSessionSubject.asObservable();
   readonly isAuthenticated: Observable<boolean> = this.authSession.pipe(
     map((session: AuthSession | null) => session?.isValid() ?? false)
   );
-  readonly currentUser = this.authSession.pipe(
-    map((session: AuthSession | null) => session?.getUserIdentity() ?? null)
-  );
 
   constructor(
     @Inject(AUTH_API_PORT) private authApi: AuthApiPort,
     @Inject(AUTH_REPOSITORY_PORT) private authRepository: AuthRepositoryPort,
     @Inject(GOOGLE_AUTH_PROVIDER_PORT) private googleAuthProvider: GoogleAuthProviderPort,
-    private authStorageService: AuthStorageService,
     private authDomainService: AuthDomainService,
   ) {
-    // this.isLoggedInSubject.next(!!this.authStorageService.retrieveToken());
     this.initialiseAuthState();
   }
 
@@ -75,14 +66,6 @@ export class AuthFacadeService {
           return EMPTY;
         })
       );
-
-      //   switchMap((): Observable<never> => EMPTY),
-      //   catchError(error => {
-      //     console.error('Login failed:', error);
-      //     this.isLoggedInSubject.next(false);
-      //     return EMPTY;
-      //   })
-      // );
     } catch (err) {
       console.error('Invalid Google credentials:', err);
       this.authSessionSubject.next(null);
@@ -102,13 +85,11 @@ export class AuthFacadeService {
       tap(() => {
         this.authRepository.clearSession();
         this.authSessionSubject.next(null);
-        // this.isLoggedInSubject.next(false);
         this.googleAuthProvider.disableAutoSignIn();
         console.info('User logged out');
       }),
       catchError(err => {
         console.error('Server logout failed', err);
-        // this.isLoggedInSubject.next(false);
         this.authRepository.clearSession();
         this.authSessionSubject.next(null);
         this.googleAuthProvider.disableAutoSignIn();
