@@ -147,6 +147,10 @@ export class TranslationViewModelService {
     this.updateState({ errorMessage: undefined });
   }
 
+  getCurrentState(): TranslationViewModel {
+    return this.state.value;
+  }
+
   private updateState(partial: Partial<TranslationViewModel>): void {
     this.state.next({ ...this.state.value, ...partial });
   }

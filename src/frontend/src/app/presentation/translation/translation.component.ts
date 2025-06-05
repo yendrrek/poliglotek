@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslationViewModel, TranslationViewModelService } from './translation-view-model.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -65,20 +65,26 @@ export class TranslationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.translationForm.get('langCode')?.valueChanges
       .pipe(
-        takeUntil(this.destroy),
-        switchMap((langCode: string) => this.viewModelService.viewModel.pipe(
-            map((vm: TranslationViewModel) => ({
-              language: vm.languages?.find((l: Language) => l.langValue === langCode),
-              selectedCountry: vm.selectedCountry
-            }))
-          )
-        )
+        takeUntil(this.destroy)
       )
-      .subscribe(({ language, selectedCountry }) => {
+      .subscribe((langCode: string) => {
+        const currentState = this.viewModelService.getCurrentState();
+        const language = currentState.languages?.find((l: Language) => l.langValue === langCode);
         if (language) {
           this.viewModelService.updateSelectedLanguage(language);
-          if (selectedCountry) {
-            this.translationForm.get('countryCode')?.setValue(selectedCountry.ctryValue);
+        }
+      });
+
+    this.viewModelService.viewModel
+      .pipe(
+        takeUntil(this.destroy),
+        map((vm: TranslationViewModel) => vm.selectedCountry)
+      )
+      .subscribe((selectedCountry: Country | undefined) => {
+        if (selectedCountry) {
+          const currentCountryValue = this.translationForm.get('countryCode')?.value;
+          if (currentCountryValue !== selectedCountry.ctryValue) {
+            this.translationForm.get('countryCode')?.setValue(selectedCountry.ctryValue, { emitEvent: false });
           }
         }
       });
