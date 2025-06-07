@@ -1,0 +1,5 @@
+@if (!(isLoggedIn | async)) {
+  <div class="signin" #googleSignInButton></div>
+} @else {
+  <a class="right-menu-item log-out" mat-button aria-label="Wyloguj się" (click)="logout()">Wyloguj się</a>
+}

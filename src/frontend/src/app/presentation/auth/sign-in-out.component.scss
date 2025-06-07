@@ -3,3 +3,8 @@
   margin: 0.25rem 2.3rem 0 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
+
+.log-out {
+  text-decoration: underline solid var(--globalAngularMainColour) 2px;
+  text-underline-offset: 5px;
+}

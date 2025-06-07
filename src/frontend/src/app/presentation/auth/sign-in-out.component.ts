@@ -9,13 +9,7 @@ declare const google: any;
 
 @Component({
   selector: 'google-signin',
-  template: `
-    @if (!(isLoggedIn | async)) {
-      <div class="signin" #googleSignInButton></div>
-    } @else {
-      <a class="right-menu-item" mat-button aria-label="Wyloguj się" (click)="logout()">Wyloguj się</a>
-    }
-  `,
+  templateUrl: 'sign-in-out.component.html',
   imports: [
     AsyncPipe,
     MatAnchor
