@@ -7,11 +7,9 @@ import { TranslationDomainService } from '../../domain/translation/translation-d
 import { LanguageService } from '../../domain/translation/language.service';
 import { AuthFacadeService } from '../../application/auth/auth-facade.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  TranslationApplicationService,
-  TranslationProcessResult
-} from '../../application/translation/translation-application.service';
+import { TranslationApplicationService } from '../../application/translation/translation-application.service';
 import { TranslationRequest } from '../../domain/translation/models/translation-request';
+import { TranslationProcessResult } from '../../domain/translation/models/translation-process-result';
 
 export interface TranslationViewModel {
   languages: Language[];

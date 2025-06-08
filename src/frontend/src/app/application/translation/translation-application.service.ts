@@ -5,13 +5,7 @@ import { TRANSLATION_REPOSITORY_PORT, TranslationRepositoryPort } from './transl
 import { TranslationRequest } from '../../domain/translation/models/translation-request';
 import { map, Observable, of } from 'rxjs';
 import { TranslationDomainService } from '../../domain/translation/translation-domain.service';
-
-export interface TranslationProcessResult {
-  success: boolean;
-  translations: Translation[];
-  message?: string;
-  isDuplicate: boolean;
-}
+import { TranslationProcessResult } from '../../domain/translation/models/translation-process-result';
 
 @Injectable({
   providedIn: 'root'

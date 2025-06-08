@@ -132,10 +132,7 @@ export class TranslationComponent implements OnInit, OnDestroy {
       this.markFormGroupTouched(this.translationForm);
       return;
     }
-
-    this.viewModelService.processTranslation(this.translationForm.value)
-      .pipe(takeUntil(this.destroy))
-      .subscribe();
+    this.viewModelService.processTranslation(this.translationForm.value).pipe(takeUntil(this.destroy)).subscribe();
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {
