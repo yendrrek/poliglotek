@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { TranslationApiPort, TranslationResult } from '../../application/translation/translation-api-port';
+import { TranslationApiPort } from '../../application/translation/translation-api-port';
 import { catchError, map, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TranslationRequest } from '../../domain/translation/models/translation-request';
@@ -9,6 +9,7 @@ import { Translation } from '../../domain/translation/models/translation';
 import { TranslatedPage } from '../../domain/translation/models/translated-page';
 import { TranslationUrl } from '../../domain/translation/models/translation-url';
 import { AUTH_REPOSITORY_PORT, AuthRepositoryPort } from '../../application/auth/auth-repository.port';
+import { TranslationResponse } from './translation-response';
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +22,13 @@ export class TranslationApiAdapter implements TranslationApiPort {
   ) {}
 
 
-  translate(request: TranslationRequest): Observable<TranslationResult> {
+  translate(request: TranslationRequest): Observable<TranslationResponse> {
     const token: string | undefined = this.authRepository.retrieveSession()?.getAuthToken().toString();
     if (!token) {
       return of ({
         success: false,
-        translations: [],
-        error: 'Nieważny token dostępu. Zaloguj się ponownie.'
+        error: 'Nieważny token dostępu. Zaloguj się ponownie.',
+        data: [],
       });
     }
     const headers: HttpHeaders = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -37,21 +38,21 @@ export class TranslationApiAdapter implements TranslationApiPort {
       `&langCode=${apiRequest.langCode}` +
       `&countryCode=${apiRequest.ctryCode}`;
     return this.http.get<any>(url, { headers }).pipe(
-      map(resp => ({
+      map((resp: TranslationResponse): TranslationResponse => ({
           success: resp.success,
-          translations: resp.data.map((item: any) => new Translation(
+          error: resp.error,
+          warning: resp.warning,
+          data: resp.data.map((item: any): Translation => new Translation(
             new TranslationId(item.id),
             new TranslatedPage(item.page.body),
             new TranslationUrl(item.url)
           )),
-          warning: resp.warning,
-          error: resp.error
         }),
       ),
       catchError(err => of ({
         success: false,
-        translations: [],
-        error: err.message || 'Translation failed'
+        error: err.message || 'Translation failed',
+        data: [],
       }))
     );
   }

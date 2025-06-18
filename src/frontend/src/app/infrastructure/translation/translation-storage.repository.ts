@@ -29,8 +29,7 @@ export class TranslationStorageRepository implements TranslationRepositoryPort {
             body: t.getPage().getBody(),
             translatedAt: t.getPage().getTranslatedAt().toISOString(),
           },
-          url: t.getUrl().toString(),
-          createdAt: t.getCreatedAt().toISOString(),
+          url: t.getUrl().toString()
         })
       );
     } catch (err) {
@@ -46,8 +45,7 @@ export class TranslationStorageRepository implements TranslationRepositoryPort {
       return parsed.map((item: any): Translation => new Translation(
           new TranslationId(item.id),
           new TranslatedPage(item.page.body, new Date(item.page.translatedAt)),
-          new TranslationUrl(item.url),
-          new Date(item.createdAt)
+          new TranslationUrl(item.url)
         )
       );
     } catch (err) {

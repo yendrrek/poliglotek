@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { Translation } from '../../domain/translation/models/translation';
-import { TRANSLATION_API_PORT, TranslationApiPort, TranslationResult } from './translation-api-port';
+import { TRANSLATION_API_PORT, TranslationApiPort } from './translation-api-port';
 import { TRANSLATION_REPOSITORY_PORT, TranslationRepositoryPort } from './translation-repository-port';
 import { TranslationRequest } from '../../domain/translation/models/translation-request';
 import { map, Observable, of } from 'rxjs';
 import { TranslationDomainService } from '../../domain/translation/translation-domain.service';
 import { TranslationProcessResult } from '../../domain/translation/models/translation-process-result';
+import { TranslationResponse } from '../../infrastructure/translation/translation-response';
 
 @Injectable({
   providedIn: 'root'
@@ -29,14 +30,14 @@ export class TranslationApplicationService {
       });
     }
     return this.translationApi.translate(request).pipe(
-      map((result: TranslationResult) => {
+      map((result: TranslationResponse) => {
         if (result.success) {
-          this.translationRepository.saveTranslations(result.translations);
+          this.translationRepository.saveTranslations(result.data);
           this.translationRepository.saveLastRequest(request);
         }
         return {
           success: result.success,
-          translations: result.translations,
+          translations: result.data,
           message: result.warning || result.error,
           isDuplicate: false
         };
@@ -54,13 +55,5 @@ export class TranslationApplicationService {
 
   clearTranslationHistory(): void {
     this.translationRepository.clearAllTranslations();
-  }
-
-  removeOldTranslations(hoursThreshold: number): void { // TODO: I don't think I'll need this
-    const translations: Translation[] = this.translationRepository.findAllTranslations();
-    const recentTranslations: Translation[] = translations.filter(
-      (t: Translation) => !t.isOlderThan(hoursThreshold)
-    );
-    this.translationRepository.saveTranslations(recentTranslations);
   }
 }

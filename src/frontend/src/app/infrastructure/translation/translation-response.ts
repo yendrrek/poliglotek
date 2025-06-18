@@ -1,4 +1,4 @@
-import { Translation } from '../../domain/translation/translation';
+import { Translation } from '../../domain/translation/models/translation';
 
 export interface TranslationResponse {
   readonly success: boolean;
