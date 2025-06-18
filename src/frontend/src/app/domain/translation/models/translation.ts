@@ -8,7 +8,6 @@ export class Translation {
     private readonly id: TranslationId,
     private readonly page: TranslatedPage,
     private readonly url: TranslationUrl,
-    private readonly createdAt: Date = new Date()
   ) {}
 
   getId(): TranslationId {
@@ -23,20 +22,11 @@ export class Translation {
     return this.url;
   }
 
-  getCreatedAt(): Date {
-    return this.createdAt;
-  }
-
   isFromDomain(domain: string): boolean {
     return this.url.isFromDomain(domain);
   }
 
   containsSearchTerm(term: string): boolean {
     return this.page.contains(term);
-  }
-
-  isOlderThan(hours: number): boolean {
-    const hoursInMs = hours * 60 * 60 * 1000;
-    return Date.now() - this.createdAt.getTime() > hoursInMs;
   }
 }
