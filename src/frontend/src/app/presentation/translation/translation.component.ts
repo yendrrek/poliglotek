@@ -64,12 +64,10 @@ export class TranslationComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.translationForm.get('langCode')?.valueChanges
-      .pipe(
-        takeUntil(this.destroy)
-      )
+      .pipe(takeUntil(this.destroy))
       .subscribe((langCode: string) => {
-        const currentState = this.viewModelService.getCurrentState();
-        const language = currentState.languages?.find((l: Language) => l.langValue === langCode);
+        const currentState: TranslationViewModel = this.viewModelService.getCurrentState();
+        const language: Language | undefined = currentState.languages?.find(l => l.langValue === langCode);
         if (language) {
           this.viewModelService.updateSelectedLanguage(language);
         }
@@ -78,7 +76,7 @@ export class TranslationComponent implements OnInit, OnDestroy {
     this.viewModelService.viewModel
       .pipe(
         takeUntil(this.destroy),
-        map((vm: TranslationViewModel) => vm.selectedCountry)
+        map(vm => vm.selectedCountry)
       )
       .subscribe((selectedCountry: Country | undefined) => {
         if (selectedCountry) {

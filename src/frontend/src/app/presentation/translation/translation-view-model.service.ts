@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslationApplicationService } from '../../application/translation/translation-application.service';
 import { TranslationRequest } from '../../domain/translation/models/translation-request';
 import { TranslationProcessResult } from '../../domain/translation/models/translation-process-result';
+import { TranslationForm } from '../../domain/translation/models/translation-form';
 
 export interface TranslationViewModel {
   languages: Language[];
@@ -78,7 +79,7 @@ export class TranslationViewModelService {
 
   createTranslationForm(): FormGroup {
     const lastRequest: TranslationRequest | null = this.translationApplicationService.getLastRequest();
-    const initialValues = lastRequest ? {
+    const initialValues: TranslationForm = lastRequest ? {
       query: lastRequest?.getSearchQuery().toString(),
       langCode: lastRequest?.getLanguageCountryPair().getLanguage().langValue,
       countryCode: lastRequest?.getLanguageCountryPair().getCountry().ctryValue
@@ -100,8 +101,8 @@ export class TranslationViewModelService {
     const defaultCountry: Country = this.translationDomainService.getDefaultCountryForLanguage(language);
     const currentSite: TranslationViewModel = this.state.value;
     const nonCompatibleCountries: Country[] = currentSite.allCountries.filter(
-      (country: Country) => !compatibleCountries.some(
-        (c: Country) => c.ctryValue === country.ctryValue));
+      country => !compatibleCountries.some(
+        c => c.ctryValue === country.ctryValue));
     this.updateState({
       selectedLanguage: language,
       selectedCountry: defaultCountry,
@@ -110,7 +111,7 @@ export class TranslationViewModelService {
     });
   }
 
-  processTranslation(formValues: any): Observable<void> {
+  processTranslation(formValues: TranslationForm): Observable<void> {
     if (!this.state.value.isAuthenticated) {
       this.updateState({ errorMessage: 'Brak dostępu. Zaloguj się, aby aktywować wyszukiwanie.' });//todo:used at all?
       return of(undefined);
