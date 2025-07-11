@@ -30,7 +30,7 @@ export interface TranslationViewModel {
 })
 export class TranslationViewModelService {
 
-  private  state: BehaviorSubject<TranslationViewModel> = new BehaviorSubject<TranslationViewModel>({
+  private state: BehaviorSubject<TranslationViewModel> = new BehaviorSubject<TranslationViewModel>({
     languages: [],
     allCountries: [],
     compatibleCountries: [],
@@ -157,6 +157,6 @@ export class TranslationViewModelService {
   }
 
   private updateState(partial: Partial<TranslationViewModel>): void {
-    this.state.next({ ...this.state.value, ...partial });
+    this.state.next({ ...this.state.value, ...partial }); // immutable state update pattern
   }
 }

@@ -44,7 +44,6 @@ public class TranslationDomainService {
         return new TranslationResult(translatedPages, warning);
     }
 
-
     private List<Translation> translatePages(List<ScrapedPage> pages) {
         return pages.stream()
                 .map(this::translatePage)

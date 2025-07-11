@@ -51,7 +51,7 @@ export class TranslationApiAdapter implements TranslationApiPort {
       ),
       catchError(err => of ({
         success: false,
-        error: err.message || 'Translation failed',
+        error: err.error.error || 'Translation failed',
         data: [],
       }))
     );
