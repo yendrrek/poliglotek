@@ -36,18 +36,14 @@ public class TranslationDomainService {
         String warning = null;
         if (somePagesExceedCharacterLimit(translatedPages)) {
             warning = createCharacterLimitWarning(translatedPages);
-            translatedPages = translatedPages.stream()
-                    .filter(Objects::nonNull)
-                    .toList();
+            translatedPages = translatedPages.stream().filter(Objects::nonNull).toList();
         }
 
         return new TranslationResult(translatedPages, warning);
     }
 
     private List<Translation> translatePages(List<ScrapedPage> pages) {
-        return pages.stream()
-                .map(this::translatePage)
-                .toList();
+        return pages.stream().map(this::translatePage).toList();
     }
 
     private Translation translatePage(ScrapedPage page) {
@@ -83,7 +79,8 @@ public class TranslationDomainService {
 
     private String createCharacterLimitWarning(List<Translation> translatedPages) {
         int numberOfPagesWithTooManyCharacters = (int) translatedPages.stream().filter(Objects::isNull).count();
-        return String.format("Niektóre z wyszukanych stron przekraczają limit %s tysięcy znaków, więc nie mogą być " +
-                "przetłumaczone. Ilość tych stron: %s.", CHARACTERS_LIMIT_LOG_IN_THOUSANDS, numberOfPagesWithTooManyCharacters);
+        return String.format("Niektóre z wyszukanych stron przekraczają limit %s tysięcy znaków, " +
+                "bądź nie mogą być przetłumaczone ze względów technicznich. " +
+                "Ilość tych stron: %s.", CHARACTERS_LIMIT_LOG_IN_THOUSANDS, numberOfPagesWithTooManyCharacters);
     }
 }
