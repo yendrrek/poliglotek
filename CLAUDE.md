@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Poliglotek is a fullstack web application that enables Polish users to search and translate foreign-language content. Users enter queries in Polish, which are translated to target languages, search results are retrieved from foreign websites, and pages are translated back to Polish.
 
 **Tech Stack:**
-- Backend: Micronaut 4.8.2 with Java 21, Netty server
+- Backend: Micronaut 4.10.1 with Java 25, Netty server
 - Frontend: Angular 20 with Angular Material (Azure Blue theme)
 - Database: Google Cloud Firestore
 - APIs: Google Translate API, Google Search JSON API
@@ -109,7 +109,7 @@ cd src/frontend && npm test  # Frontend tests (Karma/Jasmine)
 
 ## Development Notes
 
-- Main application class: `com.poliglotek.PoliglotekApplication` (Note: build.gradle references old path)
+- Main application class: `com.poliglotek.Application` (Note: build.gradle references old path)
 - Uses Micronaut AOT compilation for performance
 - Version managed in `build.gradle` and `versions.properties`
 - Branch: `refactor` (current), main branch: `master`

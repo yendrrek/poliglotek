@@ -1,16 +1,16 @@
 plugins {
-    id "java"
-    id "groovy"
-    id "com.gradleup.shadow"
-    id "io.micronaut.application"
-    id "io.micronaut.aot"
-    id "org.owasp.dependencycheck"
-    id "com.andrzejpiontek.version-bump"
-    id "org.ajoberstar.grgit"
+    id 'java'
+    id 'groovy'
+    id 'com.gradleup.shadow'
+    id 'io.micronaut.application'
+    id 'io.micronaut.aot'
+    id 'org.owasp.dependencycheck'
+    id 'com.andrzejpiontek.version-bump'
+    id 'org.ajoberstar.grgit'
 }
 
-version = "0.52.21"
-group = "com.poliglotek"
+version = "0.52.22"
+group = 'com.poliglotek'
 
 repositories {
     mavenLocal()
@@ -19,57 +19,57 @@ repositories {
 
 dependencies {
     // micronaut
-    implementation platform("io.micronaut:micronaut-bom:3.10.4")
-    implementation "io.micronaut.serde:micronaut-serde-jackson"
-    implementation "io.micronaut.validation:micronaut-validation"
-    implementation "io.micronaut:micronaut-http-client"
-    implementation "io.micronaut.security:micronaut-security-oauth2"
-    implementation "io.micronaut.security:micronaut-security-jwt"
-    implementation "io.micronaut.gcp:micronaut-gcp-common"
-    implementation "io.micronaut.gcp:micronaut-gcp-logging" // google cloud logging support
-    implementation "io.micronaut.cache:micronaut-cache-core"
-    implementation "io.micronaut.cache:micronaut-cache-caffeine"
-    annotationProcessor "io.micronaut.validation:micronaut-validation-processor"
-    annotationProcessor "io.micronaut.serde:micronaut-serde-processor"
-    annotationProcessor "io.micronaut:micronaut-http-validation"
-    testImplementation "io.micronaut:micronaut-http-client"
+    implementation platform('io.micronaut.platform:micronaut-platform:4.10.1')
+    implementation 'io.micronaut.serde:micronaut-serde-jackson'
+    implementation 'io.micronaut.validation:micronaut-validation'
+    implementation 'io.micronaut:micronaut-http-client'
+    implementation 'io.micronaut.security:micronaut-security-oauth2'
+    implementation 'io.micronaut.security:micronaut-security-jwt'
+    implementation 'io.micronaut.gcp:micronaut-gcp-common'
+    implementation 'io.micronaut.gcp:micronaut-gcp-logging'// google cloud logging support
+    implementation 'io.micronaut.cache:micronaut-cache-core'
+    implementation 'io.micronaut.cache:micronaut-cache-caffeine'
+    annotationProcessor 'io.micronaut.validation:micronaut-validation-processor'
+    annotationProcessor 'io.micronaut.serde:micronaut-serde-processor'
+    annotationProcessor 'io.micronaut:micronaut-http-validation'
+    testImplementation 'io.micronaut:micronaut-http-client'
 
     // google
-    implementation "com.google.api-client:google-api-client:_"
-    implementation "com.google.cloud:google-cloud-firestore:_"
-    implementation "com.google.cloud:google-cloud-translate:_"
+    implementation 'com.google.api-client:google-api-client:_'
+    implementation 'com.google.cloud:google-cloud-firestore:_'
+    implementation 'com.google.cloud:google-cloud-translate:_'
 
     // logging
-    implementation "ch.qos.logback:logback-classic:_"
-    implementation "org.fusesource.jansi:jansi:_" // coloured console output
+    implementation 'ch.qos.logback:logback-classic:_'
+    implementation 'org.fusesource.jansi:jansi:_'// coloured console output
 
     // web scraping
-    implementation "org.jsoup:jsoup:_" // static pages
-    implementation "org.seleniumhq.selenium:selenium-java:_" // dynamic pages
+    implementation 'org.jsoup:jsoup:_'// static pages
+    implementation 'org.seleniumhq.selenium:selenium-java:_'// dynamic pages
 
     // testing
-    testImplementation "net.bytebuddy:byte-buddy:_" // to mock classes and generate mock implementations
-    testImplementation "org.objenesis:objenesis:_" // to mock classes without default constructors
+    testImplementation 'net.bytebuddy:byte-buddy:_' // to mock classes and generate mock implementations
+    testImplementation 'org.objenesis:objenesis:_'// to mock classes without default constructors
 
-    implementation "org.yaml:snakeyaml:_"
+    implementation 'org.yaml:snakeyaml:_'
 //    implementation "com.mailgun:mailgun-java:_"
 }
 
 application {
-    mainClass = "com.poliglotek.Application"
+    mainClass = 'com.poliglotek.Application'
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion("25")
-    targetCompatibility = JavaVersion.toVersion("25")
+    sourceCompatibility = JavaVersion.toVersion('25')
+    targetCompatibility = JavaVersion.toVersion('25')
 }
 
 micronaut {
-    runtime "netty"
-    testRuntime "spock2"
+    runtime 'netty'
+    testRuntime 'spock2'
     processing {
         incremental true
-        annotations "com.poliglotek.*"
+        annotations 'com.poliglotek.*'
     }
     aot {
         // https://micronaut-projects.github.io/micronaut-aot/latest/guide/
@@ -85,12 +85,12 @@ micronaut {
 }
 
 dependencyCheck {
-    nvd.apiKey = System.getenv("nvdApiKey")
+    nvd.apiKey = System.getenv('nvdApiKey')
 }
 
-tasks.register("installGitHook", Copy) {
-    from new File(rootProject.rootDir, "scripts/pre-commit")
-    into { new File(rootProject.rootDir, ".git/hooks") }
+tasks.register('installGitHook', Copy) {
+    from new File(rootProject.rootDir, 'scripts/pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks') }
     filePermissions {
         user {
             read = true
@@ -110,43 +110,43 @@ tasks.register("installGitHook", Copy) {
     }
 }
 
-tasks.named("compileJava") {
+tasks.named('compileJava') {
     dependsOn installGitHook
 }
 
 versionBump{ }
 
-tasks.register("buildFrontend", Exec) {
-    def environment = System.getenv("MICRONAUT_ENVIRONMENTS")
-    workingDir "src/frontend"
-    if (environment == "dev") {
-        println("Building front-end for dev environment")
-        commandLine "npm", "run", "build-dev"
+tasks.register('buildFrontend', Exec) {
+    def environment = System.getenv('MICRONAUT_ENVIRONMENTS')
+    workingDir 'src/frontend'
+    if (environment == 'dev') {
+        println('Building front-end for dev environment')
+        commandLine 'npm', 'run', 'build-dev'
     } else {
-        println("Building front-end for prod environment")
-        commandLine "npm", "run", "build-prod"
+        println('Building front-end for prod environment')
+        commandLine'npm', 'run', 'build-prod'
     }
 }
 
-tasks.register("copyFrontend", Copy) {
+tasks.register('copyFrontend', Copy) {
     dependsOn buildFrontend
-    from "src/frontend/dist/frontend"
-    into "src/main/resources/public"
+    from 'src/frontend/dist/frontend'
+    into 'src/main/resources/public'
 }
 
-tasks.named("copyFrontend") {
-    outputs.dir("src/main/resources/public")
+tasks.named('copyFrontend') {
+    outputs.dir('src/main/resources/public')
 }
 
-tasks.named("processResources") {
+tasks.named('processResources') {
     dependsOn copyFrontend
 }
 
-tasks.named("classes") {
+tasks.named('classes') {
     dependsOn copyFrontend
 }
 
-tasks.named("inspectRuntimeClasspath") {
+tasks.named('inspectRuntimeClasspath') {
     dependsOn copyFrontend
 }
 
